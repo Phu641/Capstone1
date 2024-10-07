@@ -1,0 +1,90 @@
+/* Styles for the header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.logo img {
+  width: 100px;
+  /* margin-left: 200px; Di chuyển logo sang phải */
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  /* margin-right: 150px; Di chuyển cả khối hành động sang phải */
+}
+
+.nav-button {
+  background-color: #fff;
+  border: 1px solid #7D7D7D;
+  color: #7D7D7D;
+  border-radius: 5px;
+  padding: 8px 15px;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.menu-icon {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #7D7D7D;
+}
+
+.hamburger-icon, .avatar-icon {
+  font-size: 24px;
+  margin-left: 10px;
+}
+
+/* Navigation menu styles */
+.navigation {
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  background-color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  border-radius: 5px;
+  width: 220px;
+}
+
+.navigation ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.navigation li {
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  padding: 3px;
+}
+
+.navigation li a {
+  text-decoration: none;
+  color: #7D7D7D;
+  display: flex;
+  align-items: center;
+}
+
+.navigation li:hover {
+  background-color: #d4dde6;
+  border-radius: 5px;
+}
+
+.navigation hr {
+  border: none;
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 10px 0;
+}
+
+.navigation li a svg {
+  margin-right: 8px;
+}
