@@ -84,6 +84,7 @@ import { GenerateOtp, GeneratePassword, GenerateSalt, GenerateSignature, onReque
 import { Customer } from '../models';
 
 export const CustomerSignUp = (req: Request, res: Response, next: NextFunction) => {
+
     const customerInputs = plainToClass(CreateCustomerInputs, req.body);
 
     validate(customerInputs, {
@@ -92,26 +93,29 @@ export const CustomerSignUp = (req: Request, res: Response, next: NextFunction) 
         forbidNonWhitelisted: true,
     })
     .then((inputErrors) => {
-        if (inputErrors.length > 0) {
-            return Promise.reject({ status: 400, errors: inputErrors });
-        }
+
+        if (inputErrors.length > 0)   return Promise.reject({ status: 400, errors: inputErrors });
+
 
         const { idCard, email, password, firstName, lastName, phone, address } = customerInputs;
 
         return GenerateSalt()
         .then((salt) => {
+
             return GeneratePassword(password, salt).then((userPassword) => {
+
                 return { salt, userPassword };
+
             });
+
         })
         .then(({ salt, userPassword }) => {
+
             const { OTP, expiry } = GenerateOtp();
 
             return Customer.findOne({ where: { email: email } })
             .then((existedCustomer) => {
-                if (existedCustomer) {
-                    return Promise.reject({ status: 400, message: 'User existing with email' });
-                }
+                if (existedCustomer) return Promise.reject({ status: 400, message: 'User existing with email' });
 
                 return Customer.create({
                     idCard,
@@ -126,10 +130,14 @@ export const CustomerSignUp = (req: Request, res: Response, next: NextFunction) 
                     isVerified: false,
                     address
                 });
+
             })
             .then((result) => {
+
                 if (result) {
+
                     return onRequestOTP(OTP, phone).then(() => {
+
                         const signature = GenerateSignature({
                             customerID: result.customerID as number,
                             email: result.email,
@@ -137,20 +145,20 @@ export const CustomerSignUp = (req: Request, res: Response, next: NextFunction) 
                         });
 
                         res.status(201).json({ signature, isVerified: result.isVerified, email: result.email });
+
                     });
-                } else {
-                    return Promise.reject({ status: 400, message: 'Error with sign up' });
-                }
+
+                } else return Promise.reject({ status: 400, message: 'Error with sign up' });
             });
         });
     })
     .catch((error) => {
-        if (error.status && error.errors) {
-            res.status(error.status).json(error.errors);
-        } else if (error.status && error.message) {
-            res.status(error.status).json(error.message);
-        } else {
-            next(error);
-        }
+
+        if (error.status && error.errors) res.status(error.status).json(error.errors);
+
+        else if (error.status && error.message) res.status(error.status).json(error.message);
+        
+        else next(error);
+
     });
 };

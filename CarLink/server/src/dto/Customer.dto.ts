@@ -15,11 +15,11 @@ export class CreateCustomerInputs {
     password!: string;
 
     @IsNotEmpty()
-    @Length(7, 12)
+    @Length(3, 12)
     firstName!: string;
 
     @IsNotEmpty()
-    @Length(7, 12)
+    @Length(3, 12)
     lastName!: string;
 
     @IsNotEmpty()
