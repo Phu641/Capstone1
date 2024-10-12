@@ -10,13 +10,11 @@
 
 .logo img {
   width: 100px;
-  /* margin-left: 200px; Di chuyển logo sang phải */
 }
 
 .actions {
   display: flex;
   align-items: center;
-  /* margin-right: 150px; Di chuyển cả khối hành động sang phải */
 }
 
 .nav-button {
@@ -39,6 +37,18 @@
 .hamburger-icon, .avatar-icon {
   font-size: 24px;
   margin-left: 10px;
+}
+
+.user-icon {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #7D7D7D;
+  margin-left: 10px;
+}
+
+.user-icon .avatar-icon {
+  font-size: 24px;
 }
 
 /* Navigation menu styles */
@@ -87,4 +97,63 @@
 
 .navigation li a svg {
   margin-right: 8px;
+}
+
+/* Màn hình máy tính bảng và điện thoại */
+@media (max-width: 63.9375em) {
+  .header {
+    padding: 8px 15px;
+  }
+
+  .logo img {
+    width: 80px;
+  }
+
+  .nav-button {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+
+  .hamburger-icon, .avatar-icon {
+    font-size: 20px;
+  }
+
+  .navigation {
+    width: 200px;
+  }
+}
+
+/* Màn hình điện thoại */
+@media (max-width: 46.1875em) {
+  .header {
+    padding: 5px 10px;
+  }
+
+  .logo img {
+    width: 60px;
+  }
+
+  .nav-button {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    margin-right: 10px;
+  }
+
+  .hamburger-icon, .avatar-icon {
+    font-size: 18px;
+    margin-left: 5px;
+  }
+
+  .navigation {
+    width: 180px;
+    right: 10px;
+  }
+
+  .navigation li {
+    margin: 8px 0;
+  }
+
+  .navigation li a {
+    font-size: 0.9rem;
+  }
 }

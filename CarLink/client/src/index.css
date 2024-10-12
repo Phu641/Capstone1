@@ -1,12 +1,12 @@
 :root {
   --primary: #1f3e72;
-  --secondary: rgba(255, 255, 255, 0.78);
+  --secondary: rgba(255, 255, 255, 0.9);
   --black: #131110;
   --blue-gradient: linear-gradient(97.05deg, #4066ff 3.76%, #2949c6 100%);
   --orange-gradient: linear-gradient(270deg, #ffb978 0%, #ff922d 100%);
   --blue: #4066ff;
   --lightBlue: #eeeeff;
-  --shadow: 0px 23px 21px -8px rgba(136, 160, 255, 0.25);
+  --shadow: 0px 10px 20px rgba(136, 160, 255, 0.2);
 }
 
 * {
@@ -16,25 +16,41 @@
   font-family: "Poppins", sans-serif;
   scroll-behavior: smooth;
 }
-a {
-  color: inherit;
-  text-decoration: none;
+
+body {
+  background-color: #f5f7fa;
+  color: var(--black);
+  line-height: 1.6;
 }
+
+a {
+  color: var(--blue);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #2949c6;
+}
+
 .paddings {
-  padding: 1.5rem;
+  padding: 2rem;
 }
 
 .innerWidth {
   width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .flexCenter {
   display: flex;
-  row-gap: 2rem;
+  gap: 2rem;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
 }
+
 .flexStart {
   display: flex;
   justify-content: flex-start;
@@ -53,12 +69,14 @@ a {
   align-items: center;
   flex-direction: column;
 }
+
 .flexColStart {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
 }
+
 .flexColEnd {
   display: flex;
   flex-direction: column;
@@ -67,41 +85,46 @@ a {
 }
 
 .primaryText {
-  color: #1f3e72;
-  font-weight: bold;
-  font-size: 2rem;
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 2.5rem;
+  line-height: 1.2;
+  margin-bottom: 1rem;
 }
 
 .secondaryText {
-  color: rgb(140 139 139);
-  font-size: 0.9rem;
+  color: #6b7280;
+  font-size: 1rem;
+  line-height: 1.5;
 }
+
 .orangeText {
-  color: orange;
-  font-size: 1.5rem;
+  color: #ff922d;
+  font-size: 1.8rem;
   font-weight: 600;
 }
 
 .button {
   font-weight: 500;
-  padding: 0.6rem 1.4rem;
+  padding: 0.8rem 1.6rem;
   color: white;
-  background-color: var(--blue);
+  background: var(--blue-gradient);
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   transition: all 300ms ease-in;
+  box-shadow: var(--shadow);
 }
 
-button:hover {
+.button:hover {
   cursor: pointer;
-  transform: scale(1.1);
+  transform: translateY(-2px);
+  box-shadow: 0px 15px 25px rgba(136, 160, 255, 0.3);
 }
 
 /* media queries */
 @media (min-width: 1536px) {
   .innerWidth {
-    max-width: 1280px;
-    margin: auto;
+    max-width: 1400px;
   }
 }
 
@@ -113,15 +136,18 @@ button:hover {
 
 @media (min-width: 1280px), (min-width: 768px) {
   .paddings {
-    padding: 2rem;
+    padding: 3rem;
   }
 }
 
 @media (max-width: 640px) {
   .primaryText {
-    font-size: 1.5rem;
+    font-size: 2rem;
   }
   .orangeText {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
+  }
+  .paddings {
+    padding: 1.5rem;
   }
 }

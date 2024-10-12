@@ -1,25 +1,33 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Header.css"; // Import file CSS
 import { FaBars, FaUserCircle, FaCarAlt, FaQuestionCircle, FaGift, FaPhone, FaGavel, FaShieldAlt, FaTools, FaCalculator } from "react-icons/fa"; // Import icon từ react-icons
 
 const Header = () => {
   const [isNavVisible, setIsNavVisible] = useState(false);
+  const navigate = useNavigate();
 
   const toggleNav = () => {
     setIsNavVisible(!isNavVisible);
   };
 
+  const handleBecomePartner = () => {
+    navigate("/login");
+  };
+
   return (
     <header className="header">
       <div className="logo">
-        <img src="/logo1.jpg" alt="LOGO"/>
+        {/* <img src="/logo.jpg" alt="LOGO"/> */}
       </div>
 
       <div className="actions">
-        <button className="become-host nav-button">Become partner</button>
+        <button className="become-host nav-button" onClick={handleBecomePartner}>Become partner</button>
 
         <div className="menu-icon" onClick={toggleNav}>
           <FaBars className="hamburger-icon" />
+        </div>
+        <div className="user-icon" onClick={() => navigate('/login')}>
           <FaUserCircle className="avatar-icon" />
         </div>
 
