@@ -1,5 +1,5 @@
-import { Table, Column, Model, ForeignKey, DataType, BelongsTo, PrimaryKey, AutoIncrement, HasMany } from 'sequelize-typescript';
-import { Customer, Favorite, Images } from '.';
+import { Table, Column, Model, ForeignKey, DataType, BelongsTo, PrimaryKey, AutoIncrement, HasMany, HasOne } from 'sequelize-typescript';
+import { Customer, Favorite, Images, Overview } from '.';
 
 @Table({
   tableName: 'cars',
@@ -15,38 +15,14 @@ export class Car extends Model {
   @Column(DataType.INTEGER)
   customerID!: number;
 
-  @Column(DataType.STRING)
-  name!: string;
-
-  @Column(DataType.DECIMAL)
-  pricePerDay!: number;
-
-  @Column(DataType.STRING)
-  description!: string;
-
-  @Column(DataType.STRING)
-  address!: string;
-
   @Column(DataType.BOOLEAN)
   isAvailable!: boolean;
-
-  @Column(DataType.BOOLEAN)
-  automaticTranmission!: boolean;
 
   @Column(DataType.BOOLEAN)
   delivery!: boolean;
 
   @Column(DataType.BOOLEAN)
   selfPickUp!: boolean;
-
-  @Column(DataType.INTEGER)
-  seat!: number;
-
-  @Column(DataType.STRING)
-  fuel!: string;
-
-  @Column(DataType.STRING)
-  fuelConsumption!: string;
 
    @BelongsTo(() => Customer)
    customer!: Customer;
@@ -57,5 +33,8 @@ export class Car extends Model {
 
    @HasMany(() => Images)
    carImages!: Images[];
+
+   @HasOne(() => Overview)
+  overview!: Overview;
 
 }
