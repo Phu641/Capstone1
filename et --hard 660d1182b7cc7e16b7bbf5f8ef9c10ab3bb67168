@@ -1,0 +1,58 @@
+[33mcommit adb47dc836bf6a6b707a90c21f4d6cc0d9f10258[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Merge: 660d1182 fafc6e77
+Author: Sung23092003 <hsung230903@gmail.com>
+Date:   Thu Oct 17 09:39:57 2024 +0700
+
+    Car Detail and view all cars
+
+[33mcommit 660d1182b7cc7e16b7bbf5f8ef9c10ab3bb67168[m
+Author: Sung23092003 <hsung230903@gmail.com>
+Date:   Thu Oct 17 09:05:39 2024 +0700
+
+    Detail Car
+
+[33mcommit fafc6e7713b46918dff157595ffb0c3f2d460dea[m
+Merge: 2005a7b6 e19b3ee9
+Author: Phu641 <phamphuhoa203@gmail.com>
+Date:   Sat Oct 12 23:01:43 2024 +0700
+
+    Merge branch 'master' of https://github.com/Phu641/Capstone1
+
+[33mcommit 2005a7b669c0bd35436d8040d8ebcd6c2fe12d8c[m
+Author: Phu641 <phamphuhoa203@gmail.com>
+Date:   Sat Oct 12 22:58:32 2024 +0700
+
+    authenticate and verify user
+
+[33mcommit e19b3ee99db838b34ccbbf12875d7d49d3a4732e[m
+Merge: 9c763edd bc9d96a0
+Author: Phu641 <113625745+Phu641@users.noreply.github.com>
+Date:   Sat Oct 12 22:49:37 2024 +0700
+
+    Merge pull request #1 from Phu641/new-function/component
+    
+    Add new component: Footer
+
+[33mcommit bc9d96a00a6b9470c150c529fc6228b80d22b3aa[m
+Author: Trainning28 <letranninh@dtu.edu.vn>
+Date:   Sat Oct 12 15:26:14 2024 +0700
+
+    Add new component: Footer
+
+[33mcommit 9c763edd70debfd3d5a2c428b2da5c8821e03438[m
+Author: Phu641 <phamphuhoa203@gmail.com>
+Date:   Fri Oct 11 00:18:48 2024 +0700
+
+    sign up function
+
+[33mcommit 6fecb6b2d98beb00f9f7280cb4f76d00f65f727b[m
+Author: Phu641 <phamphuhoa203@gmail.com>
+Date:   Thu Oct 10 20:25:11 2024 +0700
+
+    set up model
+
+[33mcommit e011f8a5ea3c39e981e13fbdd59d603028c26558[m
+Author: Phu641 <phamphuhoa203@gmail.com>
+Date:   Mon Oct 7 16:28:08 2024 +0700
+
+    homepage v1
