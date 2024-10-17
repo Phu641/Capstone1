@@ -1,0 +1,40 @@
+.payment-container {
+    background-color: #f7f7f7; 
+    padding: 20px; 
+    border-radius: 10px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    margin: 0 auto; 
+    padding: 58px 26px;
+  }
+  
+  .payment{
+    display: flex;
+    align-items: center;
+    padding: 6px 0;
+  }
+  
+  
+  .payment input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #000d6b;
+  }
+  
+  .payment label {
+      font-weight: 600;
+      color: #000d6b;
+    }
+  
+  .paymment__matterCard-img{
+      max-width: 300px;
+  }
+    
+  .payment button {
+      padding: 8px 15px;
+      border-radius: 5px;
+      background: #000d6b;
+      color: #fff;
+      border: none;
+      outline: none;
+    }
+    
