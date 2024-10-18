@@ -2,9 +2,10 @@ import React from "react";
 // import { Container, Row, Col } from "reactstrap";
 import { Container, Row, Col, Form, FormGroup, Label, Input } from "reactstrap";
 import carData from "../src/assets/data/carData.js";
-import PickupDropbox from "../src/components/UI/pickupAndDropoff";
+// import PickupDropbox from "../src/components/UI/pickupAndDropoff";
 import Sidebar from "../src/components/UI/siderBar";
 import CarItem from "../src/components/UI/CarItem";
+import SeachBar from"../src/components/SearchBar/SearchBar";
 const CarListing = () => {
     return (
         <section>
@@ -12,7 +13,8 @@ const CarListing = () => {
             {/* Pickup and Drop-off */}
             <Row className="mb-5">
               <Col lg="12">
-                <PickupDropbox /> 
+                {/* <PickupDropbox />  */}
+                <SeachBar /> 
               </Col>
             </Row>
     
