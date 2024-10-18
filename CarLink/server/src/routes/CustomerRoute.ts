@@ -1,5 +1,5 @@
 import express from 'express';
-import { CustomerLogIn, CustomerSignUp, CustomerVerify, onRequestOTP } from '../controllers';
+import { CustomerLogIn, CustomerSignUp, CustomerVerify, EditCustomerProfile, GetCustomerProfile, onRequestOTP } from '../controllers';
 import { Authenticate } from '../middlewares';
 
 const router = express.Router();
@@ -18,5 +18,11 @@ router.get('/otp', onRequestOTP as any);
 
 //VERIFY USER
 router.post('/verify', CustomerVerify as any);
+
+//VIEW PROFILE
+router.get('/profile', GetCustomerProfile as any);
+
+//EDIT CUSTOMER PROFILE
+router.patch('/profile', EditCustomerProfile as any);
 
 export { router as CustomerRoute}

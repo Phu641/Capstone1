@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
-import { CreateCustomerInputs, UserLoginInputs } from '../dto';
+import { CreateCustomerInputs, UserLoginInputs, EditCustomerProfileInputs } from '../dto';
 import { GeneratePassword, GenerateSalt, GenerateSignature, ValidatePassword, GenerateOtp } from '../utility';
 import { Customer, Role } from '../models';
 import path from 'path';
@@ -10,7 +10,7 @@ dotenv.config({ path: path.resolve(__dirname, '.././.env') });
 const nodemailer = require("nodemailer");
 
 
-
+/**------------------------------PROFILE SECTION------------------------------------------ */
 
 //CUSTOMER SIGN UP
 export const CustomerSignUp = async(req: Request, res: Response, next: NextFunction) => {
@@ -136,7 +136,7 @@ export const sendEmailService = async(email: string, OTP: number) => {
 
 
     const info = await transporter.sendMail({
-        from: '"CAR LINK" <phamphuhoa203@gmail.com>', // sender address
+        from: '"CAR LINK" <carlinkwebsite@gmail.com>', // sender address
         to: email, // list of receivers
         subject: "SEND EMAIL", // Subject line
         text: "Reply on your request", // plain text body
@@ -215,3 +215,59 @@ export const CustomerVerify = async(req: Request, res: Response, next: NextFunct
     return res.status(400).json('Error with otp validation');
 
 }
+
+//GET PROFILE
+export const GetCustomerProfile = async(req: Request, res: Response, next: NextFunction) => {
+
+    const customer = req.user;
+
+    if(customer) {
+
+        const profile = await Customer.findOne(customer.customerID);
+
+        if(profile) return res.status(200).json(profile);
+
+    }
+
+    return res.status(400).json('Error with  fetch profile');
+    
+}
+
+//EDIT CUSTOMER PROFILE
+export const EditCustomerProfile = async(req: Request, res: Response, next: NextFunction) => {
+
+    const customer = req.user;
+
+    const profileInputs = plainToClass( EditCustomerProfileInputs, req.body);
+
+    const profileErrors = await validate(profileInputs, {
+        skipMissingProperties: false, // Không bỏ qua các thuộc tính còn thiếu
+        whitelist: true, // Loại bỏ các thuộc tính không xác thực khỏi đối tượng
+        forbidNonWhitelisted: true, // Ném ra lỗi nếu có bất kỳ thuộc tính nào không nằm trong danh sách cho phép
+    });
+
+    if(profileErrors.length > 0) return res.status(400).json(profileErrors);
+
+    const { firstName, lastName, address } = profileInputs;
+
+    if(customer) {
+
+        const profile = await Customer.findOne(customer.customerID);
+
+        if(profile) {
+
+            profile.firstName = firstName;
+            profile.lastName = lastName;
+            profile.address = address;
+
+            const result = await profile.save();
+            
+            return res.status(200).json(result);
+
+        }
+
+    }
+    
+}
+
+/**------------------------------BOOKING SECTION------------------------------------------ */

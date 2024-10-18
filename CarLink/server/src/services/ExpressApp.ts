@@ -1,7 +1,7 @@
 import express, { Application } from 'express';
 const morgan = require('morgan');
 import path from 'path';
-import { CustomerRoute, EyesBookingRoute } from '../routes';
+import { CustomerRoute, EyesBookingRoute, OwnerRoute } from '../routes';
 
 export default async (app: Application) => {
 
@@ -11,6 +11,7 @@ export default async (app: Application) => {
 
     app.use('/customer', CustomerRoute);
     app.use('/searching', EyesBookingRoute);
+    app.use('/owner', OwnerRoute);
 
     return app;
 

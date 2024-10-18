@@ -32,6 +32,20 @@ export class CreateCustomerInputs {
 
 }
 
+export class EditCustomerProfileInputs {
+
+    
+    @Length(3, 16)
+    firstName!: string;
+
+    @Length(3, 16)
+    lastName!: string;
+
+    @Length(3, 16)
+    address!: string;
+
+}
+
 export class UserLoginInputs {
 
     @IsEmail()
