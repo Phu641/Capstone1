@@ -6,6 +6,8 @@ import { Container, Row, Col } from "reactstrap";
 import { useParams } from "react-router-dom";
 import BookingForm from "../src/components/UI/BookingForm";
 import PaymentMethod from "../src/components/UI/PaymentMethod";
+import PickupDropbox from "../src/components/UI/pickupAndDropoff";
+
 
 const CarDetails = () => {
   const { slug } = useParams();
@@ -24,6 +26,11 @@ const CarDetails = () => {
   return (
     <section>
       <Container>
+      <Row className="mb-5">
+              <Col lg="12">
+                <PickupDropbox /> 
+              </Col>
+            </Row>
         <Row>
           <Col lg="6">
             <img src={currentImage} alt={singleCarItem.carName} className="w-100" />
