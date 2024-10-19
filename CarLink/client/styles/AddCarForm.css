@@ -1,0 +1,105 @@
+.add-car-form {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+h2 {
+  text-align: center;
+  color: #333;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+
+.grid-item {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+  padding: 8px;
+  height: 48px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+/* Features grid styling */
+/* Full-width heading styling */
+.features-heading {
+  grid-column: span 5; /* Make the heading span across all columns */
+  margin-top: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: left; /* Align text to the left (adjust if necessary) */
+}
+
+/* Features grid styling */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* Five equal-width columns */
+  gap: 20px; /* Space between each fieldset */
+  margin-top: 10px; /* Reduce margin after heading */
+  width: 100%; /* Ensure grid takes the full available width */
+  box-sizing: border-box;
+}
+
+fieldset {
+  border: none; /* Remove the default fieldset border */
+  padding: 0;
+}
+
+legend {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px; /* Add space below the legend */
+}
+
+label {
+  display: block;
+  margin-bottom: 8px; /* Add space between each checkbox */
+  font-size: 14px;
+}
+
+input[type="checkbox"] {
+  margin-right: 8px; /* Space between checkbox and label text */
+  vertical-align: middle;
+}
+
+@media (max-width: 768px) {
+  .features-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .features-heading {
+    grid-column: span 2;
+  }
+}
+
+button {
+  background-color: #000d6b;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: rgb(27, 46, 143);
+}

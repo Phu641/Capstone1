@@ -1,7 +1,18 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import "./Header.css"; // Import file CSS
-import { FaBars, FaUserCircle, FaCarAlt, FaQuestionCircle, FaGift, FaPhone, FaGavel, FaShieldAlt, FaTools, FaCalculator } from "react-icons/fa"; // Import icon từ react-icons
+import {
+  FaBars,
+  FaUserCircle,
+  FaCarAlt,
+  FaQuestionCircle,
+  FaGift,
+  FaPhone,
+  FaGavel,
+  FaShieldAlt,
+  FaTools,
+  FaCalculator,
+} from "react-icons/fa"; // Import icon từ react-icons
 
 const Header = () => {
   const navLinks = [
@@ -14,7 +25,6 @@ const Header = () => {
 
   const [isNavVisible, setIsNavVisible] = useState(false);
   const navigate = useNavigate();
-  
 
   const toggleNav = () => {
     setIsNavVisible(!isNavVisible);
@@ -26,7 +36,7 @@ const Header = () => {
 
   return (
     <header className="header">
-<a className="logo-container">
+      <a className="logo-container">
         <img src="/logo.jpg" alt="Logo" className="logo-container__img" />
       </a>
 
@@ -41,34 +51,81 @@ const Header = () => {
         </ul>
       </nav>
 
-      <div className="logo">
-        {/* <img src="/logo.jpg" alt="LOGO"/> */}
-      </div>
+      <div className="logo">{/* <img src="/logo.jpg" alt="LOGO"/> */}</div>
 
       <div className="actions">
-        <button className="become-host nav-button" onClick={handleBecomePartner}>Become partner</button>
+        <button
+          className="become-host nav-button"
+          onClick={handleBecomePartner}
+        >
+          Become partner
+        </button>
 
         <div className="menu-icon" onClick={toggleNav}>
           <FaBars className="hamburger-icon" />
         </div>
-        <div className="user-icon" onClick={() => navigate('/login')}>
+        <div className="user-icon" onClick={() => navigate("/login")}>
           <FaUserCircle className="avatar-icon" />
         </div>
 
         {isNavVisible && (
           <nav className="navigation">
             <ul>
-              <li><a href="/login">Log in</a></li>
-              <li><a href="/signup">Sign up</a></li>
-              <li><a href="/become-host"><FaCarAlt /> Become partner</a></li>
+              <li>
+                <a href="/login">Log in</a>
+              </li>
+              <li>
+                <a href="/signup">Sign up</a>
+              </li>
+              <li>
+                <a href="/become-host">
+                  <FaCarAlt />
+                  Become partner
+                </a>
+              </li>
+              <li>
+                <a href="/add-car">
+                  <FaCarAlt />
+                  Add Car
+                </a>
+              </li>
               <hr />
-              <li><a href="/how-it-works"><FaQuestionCircle /> How CarLink works</a></li>
-              <li><a href="/gift-cards"><FaGift /> Gift cards</a></li>
-              <li><a href="/contact-support"><FaPhone /> Contact support</a></li>
-              <li><a href="/legal"><FaGavel /> Legal</a></li>
-              <li><a href="/insurance"><FaShieldAlt /> Insurance & protection</a></li>
-              <li><a href="/host-tools"><FaTools /> Host tools</a></li>
-              <li><a href="/calculator"><FaCalculator /> Calculator</a></li>
+              <li>
+                <a href="/how-it-works">
+                  <FaQuestionCircle />
+                  How CarLink works
+                </a>
+              </li>
+              <li>
+                <Link href="/gift-cards">
+                  <FaGift /> Gift cards
+                </Link>
+              </li>
+              <li>
+                <a href="/contact-support">
+                  <FaPhone /> Contact support
+                </a>
+              </li>
+              <li>
+                <a href="/legal">
+                  <FaGavel /> Legal
+                </a>
+              </li>
+              <li>
+                <a href="/insurance">
+                  <FaShieldAlt /> Insurance & protection
+                </a>
+              </li>
+              <li>
+                <a href="/host-tools">
+                  <FaTools /> Host tools
+                </a>
+              </li>
+              <li>
+                <a href="/calculator">
+                  <FaCalculator /> Calculator
+                </a>
+              </li>
             </ul>
           </nav>
         )}
