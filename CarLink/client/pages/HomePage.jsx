@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from '../src/components/Header/Header.jsx';
 import Slider from '../src/components/Slider/Slider.jsx';
+import Property from '../src/components/Property/Property.jsx';
 //import Footer from '../src/components/Footer/Footer.jsx';
 
 const HomePage = () => {
@@ -10,6 +11,8 @@ const HomePage = () => {
       <div>
         <div className="white-gradient"/>
         <Slider/>
+        {/* <PropertyCard/> */}
+        <Property/>
         {/* <Footer/> */}
       </div>
       {/* <Companies/>

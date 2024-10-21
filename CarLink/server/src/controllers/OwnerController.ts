@@ -101,3 +101,5 @@ export const AddCar = async(req: Request, res: Response, next: NextFunction) => 
     return res.status(500).json('something went wrong with add car');
 
 }
+
+//UPDATE CAR
