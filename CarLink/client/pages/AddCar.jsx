@@ -87,9 +87,9 @@ const AddCarForm = () => {
 
   return (
     <form className="add-car-form" onSubmit={handleSubmit}>
-      <h2>Add Your Car</h2>
+      <h2>Thêm thông tin về xe của bạn</h2>
       <div className="grid-container">
-        <div className="grid-item">
+        {/* <div className="grid-item">
           <label>Listing Title (*)</label>
           <input
             type="text"
@@ -99,9 +99,9 @@ const AddCarForm = () => {
             placeholder="Enter title here"
             required
           />
-        </div>
+        </div> */}
         <div className="grid-item">
-          <label>Model (*)</label>
+          <label>Mẫu xe (*)</label>
           <input
             type="text"
             name="model"
@@ -111,7 +111,7 @@ const AddCarForm = () => {
           />
         </div>
         <div className="grid-item">
-          <label>Type (*)</label>
+          <label>Loại xe (*)</label>
           <select name="type" value={formData.type} onChange={handleChange}>
             <option value="Crossover">Crossover</option>
             <option value="Sedan">Sedan</option>
@@ -120,7 +120,7 @@ const AddCarForm = () => {
           </select>
         </div>
         <div className="grid-item">
-          <label>Year (*)</label>
+          <label>Năm sản xuất (*)</label>
           <input
             type="number"
             name="year"
@@ -129,18 +129,18 @@ const AddCarForm = () => {
             required
           />
         </div>
-        <div className="grid-item">
-          <label>Condition</label>
+        {/* <div className="grid-item">
+          <label>Tình trạng</label>
           <select
             name="condition"
             value={formData.condition}
             onChange={handleChange}
           >
-            <option value="Used">Used</option>
-            <option value="New">New</option>
+            <option value="Used">Qua sử dụng</option>
+            <option value="New">Mới</option>
           </select>
-        </div>
-        <div className="grid-item">
+        </div> */}
+        {/* <div className="grid-item">
           <label>Stock Number</label>
           <input
             type="text"
@@ -148,8 +148,8 @@ const AddCarForm = () => {
             value={formData.stockNumber}
             onChange={handleChange}
           />
-        </div>
-        <div className="grid-item">
+        </div> */}
+        {/* <div className="grid-item">
           <label>VIN Number</label>
           <input
             type="text"
@@ -157,30 +157,30 @@ const AddCarForm = () => {
             value={formData.vinNumber}
             onChange={handleChange}
           />
-        </div>
-        <div className="grid-item">
-          <label>Mileage</label>
+        </div> */}
+        {/* <div className="grid-item">
+          <label>Quãng đường đã đi</label>
           <input
             type="text"
             name="mileage"
             value={formData.mileage}
             onChange={handleChange}
           />
-        </div>
+        </div> */}
         <div className="grid-item">
-          <label>Transmission</label>
+          <label>Hộp số</label>
           <select
             name="transmission"
             value={formData.transmission}
             onChange={handleChange}
           >
-            <option value="Manual Transmission">Manual Transmission</option>
+            <option value="Manual Transmission">Hộp số sàn</option>
             <option value="Automatic Transmission">
-              Automatic Transmission
+              Hộp số tự động
             </option>
           </select>
         </div>
-        <div className="grid-item">
+        {/* <div className="grid-item">
           <label> Driver Type (*)</label>
           <select
             name="driverType"
@@ -194,8 +194,8 @@ const AddCarForm = () => {
             <option value="4WD">4WD</option>
             <option value="WD">WD</option>
           </select>
-        </div>
-        <div className="grid-item">
+        </div> */}
+        {/* <div className="grid-item">
           <label>Engine Size</label>
           <input
             type="text"
@@ -203,8 +203,8 @@ const AddCarForm = () => {
             value={formData.engineSize}
             onChange={handleChange}
           />
-        </div>
-        <div className="grid-item">
+        </div> */}
+        {/* <div className="grid-item">
           <label>Cylinders</label>
           <input
             type="number"
@@ -212,26 +212,24 @@ const AddCarForm = () => {
             value={formData.cylinders}
             onChange={handleChange}
           />
-        </div>
+        </div> */}
 
         <div className="grid-item">
-          <label> Fuel Type (*)</label>
+          <label> Loại nhiên liệu</label>
           <select name="FuelType" value={formData.type} onChange={handleChange}>
-            <option value="Petro">Petro</option>
-            <option value="Diesel">Diesel</option>
-            <option value="Electric">Electric</option>
-            <option value="Gasoline">Gasoline</option>
-            <option value="Hybrid">Hybrid</option>
+            <option value="Petro">Xăng</option>
+            <option value="Diesel">Dầu Diesel</option>
+            <option value="Electric">Điện</option>
           </select>
         </div>
-        <div className="grid-item">
+        {/* <div className="grid-item">
           <label> Doors (*)</label>
           <select name="doors" value={formData.type} onChange={handleChange}>
             <option value="4">4</option>
             <option value="2">2</option>
           </select>
-        </div>
-        <div className="grid-item">
+        </div> */}
+        {/* <div className="grid-item">
           <label>Color</label>
           <select name="color" value={formData.color} onChange={handleChange}>
             <option value="Black">Black</option>
@@ -240,17 +238,17 @@ const AddCarForm = () => {
             <option value="Blue">Blue</option>
             <option value="Silver">Silver</option>
           </select>
-        </div>
+        </div> */}
         <div className="grid-item">
-          <label>Seats</label>
+          <label>Số ghế</label>
           <input
-            type="number"
+            type="text"
             name="seats"
             value={formData.seats}
             onChange={handleChange}
           />
         </div>
-        <div className="grid-item">
+        {/* <div className="grid-item">
           <label>City MPG</label>
           <input
             type="number"
@@ -258,8 +256,8 @@ const AddCarForm = () => {
             value={formData.cityMPG}
             onChange={handleChange}
           />
-        </div>
-        <div className="grid-item">
+        </div> */}
+        {/* <div className="grid-item">
           <label>Highway MPG</label>
           <input
             type="number"
@@ -267,34 +265,34 @@ const AddCarForm = () => {
             value={formData.highwayMPG}
             onChange={handleChange}
           />
-        </div>
+        </div> */}
         <div>
-          <label>Sale Price</label>
+          <label>Giá cho thuê</label>
           <input
             type="text"
             name="salePrice"
             value={formData.salePrice}
             onChange={handleChange}
-            placeholder="Enter Sale Price"
+            placeholder="Nhập giá cho thuê theo ngày"
           />
-        </div>
+        </div>  
         <div>
-          <label>Address</label>
+          <label>Địa chỉ</label>
           <input
             type="text"
             name="address"
             value={formData.salePrice}
             onChange={handleChange}
-            placeholder="Enter Adrress"
+            placeholder="Nhập địa chỉ của xe"
           />
         </div>
         <div style={{ marginTop: "20px", gridColumn: "span 2" }}>
-          <label>Description</label>
+          <label>Mô tả</label>
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
-            placeholder="Enter a description"
+            placeholder="Thêm mô tả về xe của bạn ( ví dụ như tình trạng xe của bạn hiện tại khác so với ảnh trên website như gãy kính, trầy xướt,...)"
             rows="5"
             style={{ width: "200%" }}
           />
@@ -304,7 +302,7 @@ const AddCarForm = () => {
       <Feature />
       <div>
         <button className="add-car-btn" onClick={handleSubmit}>
-          Add Car
+          Gửi thông tin đến CarLink
         </button>
       </div>
     </form>

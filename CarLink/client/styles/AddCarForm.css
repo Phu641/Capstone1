@@ -16,6 +16,7 @@ h2 {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 15px;
+  align-items: center;
 }
 
 .grid-item {
@@ -76,6 +77,10 @@ label {
 input[type="checkbox"] {
   margin-right: 8px; /* Space between checkbox and label text */
   vertical-align: middle;
+}
+
+.description {
+  height: 100px;
 }
 
 @media (max-width: 768px) {

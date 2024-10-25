@@ -17,17 +17,16 @@ const Feature = () => {
 
   return (
     <div className="feature-container">
-      <h2>Select Listing Features</h2>
+      <h2>Các tiện nghi khác</h2>
       <div className="feature-grid">
         <div className="feature-section">
-          <h3>Request Price Label</h3>
           <label>
             <input
               type="checkbox"
-              name="A/C: Front"
+              name="map"
               onChange={handleCheckboxChange}
             />
-            A/C: Front
+            Bản đồ
           </label>
           <label>
             <input
@@ -35,7 +34,7 @@ const Feature = () => {
               name="A/C: Rear"
               onChange={handleCheckboxChange}
             />
-            A/C: Rear
+            Camera hành trình
           </label>
           <label>
             <input
@@ -43,15 +42,7 @@ const Feature = () => {
               name="Backup Camera"
               onChange={handleCheckboxChange}
             />
-            Backup Camera
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="Cruise Control"
-              onChange={handleCheckboxChange}
-            />
-            Cruise Control
+            Cảnh báo tốc độ
           </label>
           <label>
             <input
@@ -59,27 +50,18 @@ const Feature = () => {
               name="Navigation"
               onChange={handleCheckboxChange}
             />
-            Navigation
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="Power Locks"
-              onChange={handleCheckboxChange}
-            />
-            Power Locks
+            Lốp dự phòng
           </label>
         </div>
 
         <div className="feature-section">
-          <h3>Entertainment</h3>
           <label>
             <input
               type="checkbox"
               name="AM/FM Stereo"
               onChange={handleCheckboxChange}
             />
-            AM/FM Stereo
+            Bluetooth
           </label>
           <label>
             <input
@@ -87,7 +69,7 @@ const Feature = () => {
               name="CD Player"
               onChange={handleCheckboxChange}
             />
-            CD Player
+            Camera lùi
           </label>
           <label>
             <input
@@ -95,7 +77,7 @@ const Feature = () => {
               name="DVD System"
               onChange={handleCheckboxChange}
             />
-            DVD System
+            Cửa sổ trời
           </label>
           <label>
             <input
@@ -103,35 +85,18 @@ const Feature = () => {
               name="MP3 Player"
               onChange={handleCheckboxChange}
             />
-            MP3 Player
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="Portable Audio"
-              onChange={handleCheckboxChange}
-            />
-            Portable Audio
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="Premium Audio"
-              onChange={handleCheckboxChange}
-            />
-            Premium Audio
+            Màn hình DVD
           </label>
         </div>
 
         <div className="feature-section">
-          <h3>Safety</h3>
           <label>
             <input
               type="checkbox"
               name="Airbag: Driver"
               onChange={handleCheckboxChange}
             />
-            Airbag: Driver
+            Camera 360
           </label>
           <label>
             <input
@@ -139,7 +104,7 @@ const Feature = () => {
               name="Airbag: Passenger"
               onChange={handleCheckboxChange}
             />
-            Airbag: Passenger
+            Cảm biến lốp
           </label>
           <label>
             <input
@@ -147,16 +112,9 @@ const Feature = () => {
               name="Antilock Brakes"
               onChange={handleCheckboxChange}
             />
-            Antilock Brakes
+            Định vị GPS
           </label>
-          <label>
-            <input
-              type="checkbox"
-              name="Bluetooth"
-              onChange={handleCheckboxChange}
-            />
-            Bluetooth
-          </label>
+          
           <label>
             <input
               type="checkbox"

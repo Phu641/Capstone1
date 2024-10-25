@@ -15,7 +15,7 @@ const Fieldset = () => {
 
   return (
     <fieldset className="upload-fieldset">
-      <legend>Upload Your Photos</legend>
+      <legend>Đăng tải hình ảnh về xe của bạn</legend>
       <div className="photo-upload-container">
         {images.map((image, index) => (
           <div className="upload-box" key={index}>
@@ -27,7 +27,7 @@ const Fieldset = () => {
               />
             ) : (
               <label className="upload-label" htmlFor={`upload-${index}`}>
-                Add a Photo
+                Thêm ảnh
                 <input
                   type="file"
                   id={`upload-${index}`}
@@ -40,7 +40,7 @@ const Fieldset = () => {
           </div>
         ))}
       </div>
-      <p className="warning">*You must upload at least one photo</p>
+      <p className="warning">*Bạn phải thêm ít nhất một ảnh</p>
     </fieldset>
   );
 };
