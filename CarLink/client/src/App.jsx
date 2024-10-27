@@ -8,7 +8,7 @@ import ForgotPasswordForm from "./components/ForgotPassword/ForgotPasswordForm";
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
 import AddCar from "../pages/AddCar";
-
+import DashboardAdmin from "../pages/DashboardAdmin";
 function App() {
   return (
     <Router>
@@ -22,6 +22,7 @@ function App() {
         <Route path="/signup" element={<SignupForm />} />
         <Route path="/forgot-password" element={<ForgotPasswordForm />} />
         <Route path="/add-car" element={<AddCar />} />
+        <Route path="/dashboardAdmin" element={<DashboardAdmin />} />
       </Routes>
       <Footer />
     </Router>

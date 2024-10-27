@@ -1,3 +1,4 @@
+import { FlowValidateListInstance } from "twilio/lib/rest/studio/v2/flowValidate";
 import sequelize from "./Sequelize";
 
 export default async () => {
