@@ -1,5 +1,5 @@
 import express from 'express';
-import dbConnection from './services/Database';
+import dbConnection from './services/DatabaseConnection';
 import App from './services/ExpressApp';
 import path from 'path';
 const dotenv = require('dotenv');

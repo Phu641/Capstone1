@@ -1,5 +1,5 @@
 import { Table, Column, Model, ForeignKey, DataType, BelongsTo, PrimaryKey, AutoIncrement, HasOne } from 'sequelize-typescript';
-import { Car, Transaction } from '.';
+import { Car, Transaction, Report } from '.';
 
 @Table({
   tableName: 'bookings',
@@ -29,6 +29,9 @@ export class Booking extends Model {
 
   @BelongsTo(() => Car)
   cars!: Car;
+
+  @HasOne(() => Report)
+  report!: Report;
 
   @HasOne(() => Transaction)
   transactions!: Transaction;
