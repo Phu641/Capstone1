@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./UserList.css";
+import styles from "./UserList.module.css";
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
@@ -20,7 +20,7 @@ const UserList = () => {
   }, []);
 
   return (
-    <div className="user-list">
+    <div className={styles.userList}>
       <h2>Danh sách người dùng</h2>
       <table>
         <thead>

@@ -1,5 +1,5 @@
 import React from 'react';
-import './Property.css';
+import styles from './Property.module.css';
 
 const brands = [
   { name: 'Acura', logo: '1.png' },
@@ -12,12 +12,12 @@ const brands = [
 
 const Property = () => {
   return (
-    <div className="property-container">
+    <div className={styles.propertyContainer}>
       <h2>Browse By Brands</h2>
-      <div className="brands-grid">
+      <div className={styles.brandsGrid}>
         {brands.map((brand) => (
-          <div key={brand.name} className="brand-card">
-            <img src={brand.logo} alt={`${brand.name} logo`} className="brand-logo" />
+          <div key={brand.name} className={styles.brandCard}>
+            <img src={brand.logo} alt={`${brand.name} logo`} className={styles.brandLogo} />
             <p>{brand.name}</p>
           </div>
         ))}

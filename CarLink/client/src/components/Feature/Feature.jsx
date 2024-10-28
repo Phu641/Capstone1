@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./Feature.css";
+import styles from "./Feature.module.css";
 
 const Feature = () => {
   const [selectedFeatures, setSelectedFeatures] = useState([]);
@@ -16,10 +16,10 @@ const Feature = () => {
   };
 
   return (
-    <div className="feature-container">
+    <div className={styles.featureContainer}>
       <h2>Các tiện nghi khác</h2>
-      <div className="feature-grid">
-        <div className="feature-section">
+      <div className={styles.featureGrid}>
+        <div className={styles.featureSection}>
           <label>
             <input
               type="checkbox"
@@ -54,7 +54,7 @@ const Feature = () => {
           </label>
         </div>
 
-        <div className="feature-section">
+        <div className={styles.featureSection}>
           <label>
             <input
               type="checkbox"
@@ -89,7 +89,7 @@ const Feature = () => {
           </label>
         </div>
 
-        <div className="feature-section">
+        <div className={styles.featureSection}>
           <label>
             <input
               type="checkbox"
@@ -114,7 +114,7 @@ const Feature = () => {
             />
             Định vị GPS
           </label>
-          
+
           <label>
             <input
               type="checkbox"
@@ -133,7 +133,7 @@ const Feature = () => {
           </label>
         </div>
 
-        <div className="feature-section">
+        <div className={styles.featureSection}>
           <h3>Windows</h3>
           <label>
             <input
@@ -185,7 +185,7 @@ const Feature = () => {
           </label>
         </div>
 
-        <div className="feature-section">
+        <div className={styles.featureSection}>
           <h3>Seats</h3>
           <label>
             <input

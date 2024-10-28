@@ -1,13 +1,13 @@
 import React from "react";
-import "./Slider.css";
+import styles from "./Slider.module.css";
 import SearchBar from "../SearchBar/SearchBar";
 import backgroundImage from '/background.png';
 
 const Slider = () => {
 
   return (
-    <section className="slider-wrapper">
-        <div className="slider-container"
+    <section className={styles.sliderWrapper}>
+        <div className={styles.sliderContainer}
         style={{
           backgroundImage: `url(${backgroundImage})`,
           height: '800px',
@@ -17,7 +17,7 @@ const Slider = () => {
         }}
         >
 
-       <div className="paddings search-component">
+       <div className={styles.paddings}>
           <SearchBar/>
        </div>
     </div>

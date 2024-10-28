@@ -1,18 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "./Footer.css";
+import styles from "./Footer.module.css";
 import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
-import { SiAppstore, SiGoogleplay } from "react-icons/si";
-import { IoLanguage } from "react-icons/io5";
+
 
 const Footer = () => {
   return (
-    <footer className="footer">
-      <div className="footer-container">
-        <div className="footer-top">
-          <div className="footer-section">
+    <footer className={styles.footer}>
+      <div className={styles.footerContainer}>
+        <div className={styles.footerTop}>
+          <div className={styles.footerSection}>
             <h3>Vehicle types</h3>
-            <ul className="footer-list">
+            <ul className={styles.footerList}>
               <li>
                 <Link to="/car-rental">Car rental</Link>
               </li>
@@ -47,9 +46,9 @@ const Footer = () => {
               </li>
             </ul>
           </div>
-          <div className="footer-section">
+          <div className={styles.footerSection}>
             <h3>Makes</h3>
-            <ul className="footer-list">
+            <ul className={styles.footerList}>
               <li>
                 <Link to="/audi-rental">Audi rental</Link>
               </li>
@@ -83,8 +82,8 @@ const Footer = () => {
             </ul>
           </div>
         </div>
-        <div className="footer-main">
-          <div className="footer-column">
+        <div className={styles.footerMain}>
+          <div className={styles.footerColumn}>
             <h3>Explore</h3>
             <ul>
               <li>
@@ -98,24 +97,24 @@ const Footer = () => {
               </li>
             </ul>
           </div>
-          <div className="footer-column social">
-            <div className="social-icons">
-              <div className="facebook-icon">
+          <div className={`${styles.footerColumn} ${styles.social}`}>
+            <div className={styles.socialIcons}>
+              <div className={styles.facebookIcon}>
                 <FaFacebookF />
               </div>
-              <div className="twitter-icon">
+              <div className={styles.twitterIcon}>
                 <FaTwitter />
               </div>
-              <div className="instagram-icon">
+              <div className={styles.instagramIcon}>
                 <FaInstagram />
               </div>
-              <div className="youtube-icon">
+              <div className={styles.youtubeIcon}>
                 <FaYoutube />
               </div>
             </div>
           </div>
         </div>
-        <div className="footer-bottom">
+        <div className={styles.footerBottom}>
           <ul>
             <li>
               <Link to="/terms">Terms</Link>
