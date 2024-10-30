@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import "./Header.css"; // Import file CSS
+import styles from "./Header.module.css";
 import {
   FaBars,
   FaUserCircle,
@@ -35,13 +35,13 @@ const Header = () => {
   };
 
   return (
-    <header className="header">
-      <a className="logo-container">
-        <img src="/logo.jpg" alt="Logo" className="logo-container__img" />
+    <header className={styles.header}>
+      <a className={styles.logoContainer}>
+        <img src="/logo.jpg" alt="Logo" className={styles.logoContainerImg} />
       </a>
 
       {/* Main navigation links */}
-      <nav className="main-nav">
+      <nav className={styles.mainNav}>
         <ul>
           {navLinks.map((link, index) => (
             <li key={index}>
@@ -51,25 +51,25 @@ const Header = () => {
         </ul>
       </nav>
 
-      <div className="logo">{/* <img src="/logo.jpg" alt="LOGO"/> */}</div>
+      <div className={styles.logo}>{/* <img src="/logo.jpg" alt="LOGO"/> */}</div>
 
-      <div className="actions">
+      <div className={styles.actions}>
         <button
-          className="become-host nav-button"
+          className={`${styles.becomeHost} ${styles.navButton}`}
           onClick={handleBecomePartner}
         >
           Become partner
         </button>
 
-        <div className="menu-icon" onClick={toggleNav}>
-          <FaBars className="hamburger-icon" />
+        <div className={styles.menuIcon} onClick={toggleNav}>
+          <FaBars className={styles.hamburgerIcon} />
         </div>
-        <div className="user-icon" onClick={() => navigate("/login")}>
-          <FaUserCircle className="avatar-icon" />
+        <div className={styles.userIcon} onClick={() => navigate("/login")}>
+          <FaUserCircle className={styles.avatarIcon} />
         </div>
 
         {isNavVisible && (
-          <nav className="navigation">
+          <nav className={styles.navigation}>
             <ul>
               <li>
                 <a href="/login">Log in</a>

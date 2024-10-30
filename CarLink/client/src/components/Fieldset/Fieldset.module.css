@@ -1,4 +1,4 @@
-.upload-fieldset {
+.uploadFieldset {
   border: 1px solid #ccc;
   padding: 20px;
   width: fit-content;
@@ -6,20 +6,20 @@
   text-align: center;
 }
 
-legend {
+.legend {
   color: #000d6b;
   font-size: 1.5em;
   font-weight: bold;
   margin-bottom: 10px;
 }
 
-.photo-upload-container {
+.photoUploadContainer {
   display: flex;
   justify-content: space-between;
   gap: 10px;
 }
 
-.upload-box {
+.uploadBox {
   width: 120px;
   height: 120px;
   border: 2px dashed #000d6b;
@@ -30,7 +30,7 @@ legend {
   cursor: pointer;
 }
 
-.upload-label {
+.uploadLabel {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -41,13 +41,13 @@ legend {
   font-weight: bold;
 }
 
-.uploaded-image {
+.uploadedImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.file-input {
+.fileInput {
   display: none;
 }
 
