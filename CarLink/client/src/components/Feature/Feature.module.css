@@ -29,7 +29,9 @@
 }
 
 input[type="checkbox"] {
-  width: 18px; /* Chỉnh kích thước của ô checkbox nhỏ lại */
+  width: 18px;
+  /* Chỉnh kích thước của ô checkbox nhỏ lại */
   height: 18px;
-  margin-right: 10px; /* Khoảng cách giữa checkbox và label */
+  margin-right: 10px;
+  /* Khoảng cách giữa checkbox và label */
 }
