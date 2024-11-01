@@ -13,20 +13,20 @@ const ForgotPasswordForm = () => {
         <FontAwesomeIcon icon={faArrowLeft} />
       </button>
       <form className={styles.forgotPasswordForm}>
-        <h2>Quên Mật Khẩu</h2>
+        <h2 className={styles.title}>Quên Mật Khẩu</h2>
         
         <div className={styles.formGroup}>
-          <label htmlFor="email">
+          <label className={styles.label} htmlFor="email">
             <FontAwesomeIcon icon={faEnvelope} /> Email
           </label>
-          <input type="email" id="email" placeholder="Nhập email của bạn" />
+          <input className={styles.input} type="email" id="email" placeholder="Nhập email của bạn" />
         </div>
 
         <button type="submit" className={styles.resetPasswordButton}>Đặt Lại Mật Khẩu</button>
 
-        <p className={styles.backToLogin}>
-          <Link to="/login">Quay Lại Đăng Nhập</Link>
-        </p>
+        <div className={styles.backToLogin}>
+          <Link className={styles.backToLoginLink} to="/login">Quay Lại Đăng Nhập</Link>
+        </div>
       </form>
     </div>
   );
