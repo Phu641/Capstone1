@@ -1,0 +1,40 @@
+{
+    "2":{"name":"Thành phố Đà Nẵng",
+    "districts":{
+        "76":"Huyện Hòa Vang",
+        "77":"Huyện Hoàng Sa",
+        "78":"Quận Cẩm Lệ",
+        "79":"Quận Hải Châu",
+        "80":"Quận Liên Chiểu",
+        "81":"Quận Ngũ Hành Sơn",
+        "82":"Quận Sơn Trà",
+        "83":"Quận Thanh Khê"}},
+    "5":{"name":"Thành phố Hồ Chí Minh",
+    "districts":{
+        "131":"Huyện Bình Chánh",
+        "132":"Huyện Cần Giờ",
+        "133":"Huyện Củ Chi",
+        "134":"Huyện Hóc Môn",
+        "135":"Huyện Nhà Bè",
+        "136":"Quận 1",
+        "137":"Quận 10",
+        "138":"Quận 11",
+        "139":"Quận 12",
+        "140":"Quận 2",
+        "141":"Quận 3",
+        "142":"Quận 4",
+        "143":"Quận 5",
+        "144":"Quận 6",
+        "145":"Quận 7",
+        "146":"Quận 8",
+        "147":"Quận 9",
+        "148":"Quận Bình Tân",
+        "149":"Quận Bình Thạnh",
+        "150":"Quận Gò Vấp",
+        "151":"Quận Phú Nhuận",
+        "152":"Quận Tân Bình",
+        "153":"Quận Tân Phú",
+        "154":"Quận Thủ Đức"
+        }
+    }
+}
