@@ -8,7 +8,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.logo-container {
+.logoContainer {
   display: flex;             
   align-items: center;       
   justify-content: center;   
@@ -16,28 +16,28 @@
   padding: 10px;          
 }
 
-.logo-container__img {
+.logoContainerImg {
   max-width: 350px;         
   height: 80px;             
 }
 
-.main-nav {
+.mainNav {
   flex-grow: 1; 
   display: flex; 
   justify-content: center; 
 }
 
-.main-nav ul {
+.mainNav ul {
   display: flex;
   list-style-type: none;
   padding: 0; 
 }
 
-.main-nav ul li {
+.mainNav ul li {
   margin: 0 20px; 
 }
 
-.main-nav ul li a {
+.mainNav ul li a {
   text-decoration: none; 
   color: #333; 
   opacity: 0.8;
@@ -45,7 +45,7 @@
   transition: color 0.3s ease; 
 }
 
-.main-nav ul li a:hover {
+.mainNav ul li a:hover {
   /* color: #007bff;  */
   opacity: 1;
 }
@@ -59,7 +59,13 @@
   align-items: center;
 }
 
-.nav-button {
+.becomeHost:hover {
+  background-color: #1E90FF;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.navButton {
   background-color: #fff;
   border: 1px solid #7D7D7D;
   color: #7D7D7D;
@@ -69,19 +75,19 @@
   margin-right: 20px;
 }
 
-.menu-icon {
+.menuIcon {
   display: flex;
   align-items: center;
   cursor: pointer;
   color: #7D7D7D;
 }
 
-.hamburger-icon, .avatar-icon {
+.hamburgerIcon, .avatarIcon {
   font-size: 24px;
   margin-left: 10px;
 }
 
-.user-icon {
+.userIcon {
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -89,7 +95,7 @@
   margin-left: 10px;
 }
 
-.user-icon .avatar-icon {
+.userIcon .avatarIcon {
   font-size: 24px;
 }
 
@@ -97,13 +103,14 @@
 .navigation {
   z-index: 1;
   position: absolute;
-  top: 60px;
-  right: 20px;
+  top: 70px;
+  right: 38px;
   background-color: white;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: 10px;
   border-radius: 5px;
   width: 220px;
+  margin-top: 10px; /* Added margin to create space between navigation and button */
 }
 
 .navigation ul {
@@ -152,12 +159,12 @@
     width: 80px;
   }
 
-  .nav-button {
+  .navButton {
     padding: 6px 12px;
     font-size: 0.9rem;
   }
 
-  .hamburger-icon, .avatar-icon {
+  .hamburgerIcon, .avatarIcon {
     font-size: 20px;
   }
 
@@ -176,13 +183,13 @@
     width: 60px;
   }
 
-  .nav-button {
+  .navButton {
     padding: 5px 10px;
     font-size: 0.8rem;
     margin-right: 10px;
   }
 
-  .hamburger-icon, .avatar-icon {
+  .hamburgerIcon, .avatarIcon {
     font-size: 18px;
     margin-left: 5px;
   }

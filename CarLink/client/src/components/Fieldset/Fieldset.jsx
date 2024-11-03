@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./Fieldset.css";
+import "./Fieldset.module.css";
 
 const Fieldset = () => {
   const [images, setImages] = useState([null, null, null, null, null]);
@@ -14,24 +14,24 @@ const Fieldset = () => {
   };
 
   return (
-    <fieldset className="upload-fieldset">
-      <legend>Đăng tải hình ảnh về xe của bạn</legend>
-      <div className="photo-upload-container">
+    <fieldset className="uploadFieldset">
+      <legend className="legend">Đăng tải hình ảnh về xe của bạn</legend>
+      <div className="photoUploadContainer">
         {images.map((image, index) => (
-          <div className="upload-box" key={index}>
+          <div className="uploadBox" key={index}>
             {image ? (
               <img
                 src={image}
                 alt={`upload-${index}`}
-                className="uploaded-image"
+                className="uploadedImage"
               />
             ) : (
-              <label className="upload-label" htmlFor={`upload-${index}`}>
+              <label className="uploadLabel" htmlFor={`upload-${index}`}>
                 Thêm ảnh
                 <input
                   type="file"
                   id={`upload-${index}`}
-                  className="file-input"
+                  className="fileInput"
                   onChange={(e) => handleImageUpload(e, index)}
                   accept="image/*"
                 />

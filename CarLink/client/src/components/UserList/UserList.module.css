@@ -1,0 +1,47 @@
+.userList {
+  margin: 20px;
+  padding: 20px;
+  backgroundColor: #ffffff;
+  borderRadius: 8px;
+  boxShadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.userList h2 {
+  fontSize: 1.5rem;
+  marginBottom: 20px;
+  color: #333;
+}
+
+.userList table {
+  width: 100%;
+  borderCollapse: collapse;
+  marginTop: 10px;
+}
+
+.userList thead tr {
+  backgroundColor: #0dcaf0;
+  color: #ffffff;
+  textAlign: left;
+}
+
+.userList th,
+.userList td {
+  padding: 12px 15px;
+  borderBottom: 1px solid #ddd;
+}
+
+.userList tbody tr:nth-child(even) {
+  backgroundColor: #f9f9f9;
+}
+
+.userList tbody tr:hover {
+  backgroundColor: #f1f1f1;
+}
+
+.userList th {
+  fontWeight: bold;
+}
+
+.userList td {
+  color: #555;
+}
