@@ -24,7 +24,7 @@ const SearchBar = () => {
           <FaMapMarkerAlt className={styles.icon} />
           <input
             type="text"
-            placeholder="Enter place"
+            placeholder="Nhập địa chỉ của bạn"
             value={place}
             onChange={handlePlaceChange}
           />
@@ -51,7 +51,7 @@ const SearchBar = () => {
         </div>
 
         <button className={styles.searchButton} onClick={handleSearch}>
-          Search
+          Tìm kiếm
         </button>
       </div>
     </section>
