@@ -18,12 +18,13 @@ const Slider = () => {
       >
         <div className={styles.paddings}>
           <SearchBar />
+          <br />
           <div className="primaryText"
             style={{
               color: "white",
               textAlign: "center"
             }}
-          >Hành trình của bạn luôn có CarLink đồng hành!</div>
+          >HÀNH TRÌNH CỦA BẠN LUÔN CÓ CARLINK ĐỒNG HÀNH!</div>
         </div>
       </div>
     </section>
