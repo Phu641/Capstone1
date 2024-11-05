@@ -8,7 +8,7 @@ const UserList = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch("API_ENDPOINT"); // Thay 'API_ENDPOINT' bằng URL của API
+        const response = await fetch(""); // Thay 'API_ENDPOINT' bằng URL của API
         const data = await response.json();
         setUsers(data); // Cập nhật dữ liệu từ API vào state
       } catch (error) {
