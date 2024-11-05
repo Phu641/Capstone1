@@ -21,7 +21,7 @@ export const Authenticate = async(req: Request, res: Response, next: NextFunctio
 
         next();
 
-    } else return res.status(500).json('user is not authorize');
+    } else return res.status(500).json('Người dùng này chưa được phân quyền!');
 
 }
 

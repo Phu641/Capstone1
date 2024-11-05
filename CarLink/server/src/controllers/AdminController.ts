@@ -15,7 +15,7 @@ export const GetAllUsers = async(req: Request, res: Response, next: NextFunction
 
         const users = await Customer.findAll();
 
-        if(!users) return res.status(400).json('No user added');
+        if(!users) return res.status(400).json('Chưa có người dùng nào');
         
         return res.status(200).json(users);
         
@@ -40,6 +40,30 @@ export const GetAnUser = async(req: Request, res: Response, next: NextFunction) 
 
 }
 
+//DELETE A USER
+export const DeleteUser = async(req: Request, res: Response, next: NextFunction) => {
+
+    try {
+        
+        const userID = req.params.id;
+
+        const user = await Customer.findByPk(userID);
+
+        if(!user) return res.status(400).json('Người dùng không tồn tại!');
+
+        await user.destroy();
+
+        return res.status(200).json('Người dùng và những thông tin liên quan đã được xoá thành công!');
+
+    } catch (error) {
+
+        res.status(500).json('Lỗi!')
+
+    }
+
+}
+
+
 //GET ALL CARS
 export const GetAllCars = async(req: Request, res: Response, next: NextFunction) => {
 
@@ -47,7 +71,7 @@ export const GetAllCars = async(req: Request, res: Response, next: NextFunction)
 
         const cars = await Car.findAll();
 
-        if(!cars) return res.status(400).json('No car added');
+        if(!cars) return res.status(400).json('Chưa có xe nào được thêm!');
         
         return res.status(200).json(cars);
         
@@ -67,7 +91,7 @@ export const GetACar = async(req: Request, res: Response, next: NextFunction) =>
         const carID = req.params.id;
         const car = await Car.findOne({where: {carID: carID}});
 
-        res.status(200).json(car);
+        return res.status(200).json(car);
 
     } catch (error) {
 
@@ -76,3 +100,31 @@ export const GetACar = async(req: Request, res: Response, next: NextFunction) =>
     }
 
 }
+
+//DELETE A CAR
+export const DeleteCar = async(req: Request, res: Response, next: NextFunction) => {
+
+    try {
+        
+        const carID = req.params.id;
+
+        const car = await Car.findByPk(carID);
+
+        if(!car) return res.status(400).json('Xe không tồn tại!');
+
+        await car.destroy();
+
+        return res.status(200).json('Xe đã được xoá thành công!');
+
+    } catch (error) {
+
+        res.status(500).json('Lỗi!')
+
+    }
+
+}
+
+//ACCEPT ADD CAR
+
+
+//DECLINE ADD CAR
