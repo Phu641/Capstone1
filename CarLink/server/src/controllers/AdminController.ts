@@ -8,6 +8,8 @@ export const FindOwner = async(id: number | undefined, email?: string) => {
     else return await Customer.findOne({where: {customerID: id}});
 }
 
+/**-------------------------------------------User-------------------------------------------------- */
+
 //GET ALL USERS
 export const GetAllUsers = async(req: Request, res: Response, next: NextFunction) => {
 
@@ -63,6 +65,8 @@ export const DeleteUser = async(req: Request, res: Response, next: NextFunction)
 
 }
 
+
+/**------------------------------------------------------Car--------------------------------------------------------- */
 
 //GET ALL CARS
 export const GetAllCars = async(req: Request, res: Response, next: NextFunction) => {
@@ -125,6 +129,27 @@ export const DeleteCar = async(req: Request, res: Response, next: NextFunction) 
 }
 
 //ACCEPT ADD CAR
+export const AcceptCar = async (req: Request, res: Response) => {
+
+    try {
+        const carID = req.params.id;
+
+        const car = await Car.findByPk(carID);
+        if (!car) return res.status(404).json('Xe không tồn tại!');
+
+        car.isAvailable = true; // Duyệt xe
+        await car.save();
+
+        return res.status(200).json('Xe đã được admin duyệt!' );
+
+    } catch (error) {
+
+        console.error('Lỗi khi duyệt xe:', error);
+        return res.status(500).json({ message: 'Lỗi máy chủ!' });
+
+    }
+
+};
 
 
 //DECLINE ADD CAR

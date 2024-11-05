@@ -1,7 +1,13 @@
 import express from 'express';
-import { DeleteCar, DeleteUser, GetACar, GetAllCars, GetAllUsers, GetAnUser } from '../controllers/AdminController';
+import { AcceptCar, DeleteCar, DeleteUser, GetACar, GetAllCars, GetAllUsers, GetAnUser } from '../controllers/AdminController';
+import { AdminMiddleware, Authenticate } from '../middlewares';
 
 const router = express.Router();
+
+//AUTHENTICATION
+router.use(Authenticate as any);
+
+router.use(AdminMiddleware as any);
 
 //GET ALL USERS
 router.get('/all-users', GetAllUsers as any);
@@ -18,7 +24,10 @@ router.get('/all-cars', GetAllCars as any);
 //GET A CAR
 router.get('/car/:id', GetACar as any);
 
-//DELETE USER
+//DELETE (DECLINE) CAR
 router.delete('/car/:id', DeleteCar as any);
+
+//ACCEPT CAR
+router.patch('/car/:id', AcceptCar as any);
 
 export { router as AdminRoute}

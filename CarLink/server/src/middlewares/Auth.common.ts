@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { AuthPayload } from "../dto";
 import { ValidateSignature } from "../utility";
+import { Role } from "../models";
 
 
 declare global {
