@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import "./Header.css"; // Import file CSS
+import styles from "./Header.module.css";
 import {
   FaBars,
   FaUserCircle,
@@ -16,11 +16,11 @@ import {
 
 const Header = () => {
   const navLinks = [
-    { path: "/home", display: "Home" },
-    { path: "/about", display: "About" },
-    { path: "/cars", display: "Cars" },
-    { path: "/blogs", display: "Blog" },
-    { path: "/contact", display: "Contact" },
+    { path: "/home", display: "Trang chủ" },
+    { path: "/about", display: "Chúng tôi" },
+    { path: "/cars", display: "Xe" },
+    { path: "/blogs", display: "Bài viết" },
+    { path: "/contact", display: "Liên hệ" },
   ];
 
   const [isNavVisible, setIsNavVisible] = useState(false);
@@ -35,13 +35,13 @@ const Header = () => {
   };
 
   return (
-    <header className="header">
-      <a className="logo-container">
-        <img src="/logo.jpg" alt="Logo" className="logo-container__img" />
+    <header className={styles.header}>
+      <a className={styles.logoContainer}>
+        <img src="/logo.jpg" alt="Logo" className={styles.logoContainerImg} />
       </a>
 
       {/* Main navigation links */}
-      <nav className="main-nav">
+      <nav className={styles.mainNav}>
         <ul>
           {navLinks.map((link, index) => (
             <li key={index}>
@@ -51,79 +51,79 @@ const Header = () => {
         </ul>
       </nav>
 
-      <div className="logo">{/* <img src="/logo.jpg" alt="LOGO"/> */}</div>
+      <div className={styles.logo}>{/* <img src="/logo.jpg" alt="LOGO"/> */}</div>
 
-      <div className="actions">
+      <div className={styles.actions}>
         <button
-          className="become-host nav-button"
+          className={`${styles.becomeHost} ${styles.navButton}`}
           onClick={handleBecomePartner}
         >
-          Become partner
+          Trở thành đối tác
         </button>
 
-        <div className="menu-icon" onClick={toggleNav}>
-          <FaBars className="hamburger-icon" />
+        <div className={styles.menuIcon} onClick={toggleNav}>
+          <FaBars className={styles.hamburgerIcon} />
         </div>
-        <div className="user-icon" onClick={() => navigate("/login")}>
-          <FaUserCircle className="avatar-icon" />
+        <div className={styles.userIcon} onClick={() => navigate("/login")}>
+          <FaUserCircle className={styles.avatarIcon} />
         </div>
 
         {isNavVisible && (
-          <nav className="navigation">
+          <nav className={styles.navigation}>
             <ul>
               <li>
-                <a href="/login">Log in</a>
+                <a href="/login">Đăng nhập</a>
               </li>
               <li>
-                <a href="/signup">Sign up</a>
+                <a href="/signup">Đăng kí</a>
               </li>
               <li>
                 <a href="/become-host">
                   <FaCarAlt />
-                  Become partner
+                  Trở thành đối tác
                 </a>
               </li>
               <li>
                 <a href="/add-car">
                   <FaCarAlt />
-                  Add Car
+                  Thêm xe
                 </a>
               </li>
               <hr />
               <li>
                 <a href="/how-it-works">
                   <FaQuestionCircle />
-                  How CarLink works
+                  CarLink hoạt động như thế nào?
                 </a>
               </li>
               <li>
                 <Link href="/gift-cards">
-                  <FaGift /> Gift cards
+                  <FaGift /> Thẻ quà tặng
                 </Link>
               </li>
               <li>
                 <a href="/contact-support">
-                  <FaPhone /> Contact support
+                  <FaPhone /> Liên hệ hỗ trợ
                 </a>
               </li>
               <li>
                 <a href="/legal">
-                  <FaGavel /> Legal
+                  <FaGavel /> Chính sách
                 </a>
               </li>
               <li>
                 <a href="/insurance">
-                  <FaShieldAlt /> Insurance & protection
+                  <FaShieldAlt /> Bảo hiểm và bảo dưỡng
                 </a>
               </li>
               <li>
                 <a href="/host-tools">
-                  <FaTools /> Host tools
+                  <FaTools /> Công cụ
                 </a>
               </li>
               <li>
                 <a href="/calculator">
-                  <FaCalculator /> Calculator
+                  <FaCalculator /> Tính toán
                 </a>
               </li>
             </ul>

@@ -5,28 +5,28 @@
     font-family: 'Arial', sans-serif;
 }
 
-.footer-container {
+.footerContainer {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
 }
 
-.footer-top {
+.footerTop {
     display: flex;
     justify-content: space-between;
     margin-bottom: 40px;
 }
 
-.footer-section {
+.footerSection {
     flex: 1;
     margin-right: 30px;
 }
 
-.footer-section:last-child {
+.footerSection:last-child {
     margin-right: 0;
 }
 
-.footer-section h3 {
+.footerSection h3 {
     font-size: 20px;
     margin-bottom: 20px;
     color: #1a1a1a;
@@ -34,23 +34,23 @@
     letter-spacing: 1px;
 }
 
-.footer-list {
+.footerList {
     list-style-type: none;
     padding: 0;
     columns: 2;
     column-gap: 30px;
 }
 
-.footer-list li {
+.footerList li {
     margin-bottom: 12px;
     transition: transform 0.2s ease;
 }
 
-.footer-list li:hover {
+.footerList li:hover {
     transform: translateX(5px);
 }
 
-.footer-list a {
+.footerList a {
     color: black;
     text-decoration: none;
     transition: color 0.2s ease;
@@ -58,11 +58,11 @@
     line-height: 1.6;
 }
 
-.footer-list a:hover {
+.footerList a:hover {
     color: #007bff;
 }
 
-.footer-main {
+.footerMain {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -71,111 +71,111 @@
     border-bottom: 1px solid #e0e0e0;
 }
 
-.footer-column {
+.footerColumn {
     flex: 1;
     margin-right: 30px;
 }
 
-.footer-column:last-child {
+.footerColumn:last-child {
     margin-right: 0;
 }
 
-.footer-column h3 {
+.footerColumn h3 {
     font-size: 20px;
     margin-bottom: 20px;
     color: #1a1a1a;
     font-weight: 600;
 }
 
-.footer-column ul {
+.footerColumn ul {
     list-style-type: none;
     padding: 0;
 }
 
-.footer-column ul li {
+.footerColumn ul li {
     margin-bottom: 10px;
     transition: transform 0.2s ease;
 }
 
-.footer-column ul li:hover {
+.footerColumn ul li:hover {
     transform: translateX(5px);
 }
 
-.footer-column ul li a {
+.footerColumn ul li a {
     color: black;
     text-decoration: none;
     transition: color 0.2s ease;
     font-size: 16px;
 }
 
-.footer-column ul li a:hover {
+.footerColumn ul li a:hover {
     color: #007bff;
 }
 
-.social-icons {
+.socialIcons {
     display: flex;
     gap: 20px;
 }
 
-.social-icons svg {
+.socialIcons svg {
     font-size: 30px;
 }
 
-.social-icons .facebook-icon svg,
-.social-icons .twitter-icon svg,
-.social-icons .instagram-icon svg,
-.social-icons .youtube-icon svg {
+.socialIcons .facebookIcon svg,
+.socialIcons .twitterIcon svg,
+.socialIcons .instagramIcon svg,
+.socialIcons .youtubeIcon svg {
     transition: transform 0.3s ease, color 0.3s ease;
 }
 
-.social-icons .facebook-icon svg:hover {
+.socialIcons .facebookIcon svg:hover {
     color: #0165E1;
     transform: translateY(-5px);
 }
 
-.social-icons .twitter-icon svg:hover {
+.socialIcons .twitterIcon svg:hover {
     color: #1da1f2;
     transform: translateY(-5px);
 }
 
-.social-icons .instagram-icon svg:hover {
+.socialIcons .instagramIcon svg:hover {
     color: #e4405f;
     transform: translateY(-5px);
 }
 
-.social-icons .youtube-icon svg:hover {
+.socialIcons .youtubeIcon svg:hover {
     color: #ff0000;
     transform: translateY(-5px);
 }
 
-.footer-bottom {
+.footerBottom {
     padding-top: 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.footer-bottom ul {
+.footerBottom ul {
     display: flex;
     list-style-type: none;
     padding: 0;
 }
 
-.footer-bottom ul li {
+.footerBottom ul li {
     margin-right: 20px;
 }
 
-.footer-bottom ul li:last-child {
+.footerBottom ul li:last-child {
     margin-right: 0;
 }
 
-.footer-bottom ul li a {
+.footerBottom ul li a {
     color: black;
     text-decoration: none;
     font-size: 14px;
     transition: color 0.2s ease;
 }
 
-.footer-bottom ul li a:hover {
+.footerBottom ul li a:hover {
     color: #007bff;
 }

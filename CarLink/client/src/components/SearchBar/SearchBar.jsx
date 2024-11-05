@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./SearchBar.css";
+import styles from "./SearchBar.module.css";
 import { FaMapMarkerAlt, FaCalendarAlt } from "react-icons/fa"; // Icon
 import DatePicker from "react-datepicker"; // Import DatePicker
 import "react-datepicker/dist/react-datepicker.css"; // Import CSS cho DatePicker
@@ -18,20 +18,20 @@ const SearchBar = () => {
   };
 
   return (
-    <section className="s-wapper">
-      <div className="search-bar">
-        <div className="input-container">
-          <FaMapMarkerAlt className="icon" />
+    <section className={styles.sWrapper}>
+      <div className={styles.searchBar}>
+        <div className={styles.inputContainer}>
+          <FaMapMarkerAlt className={styles.icon} />
           <input
             type="text"
-            placeholder="Enter place"
+            placeholder="Nhập địa chỉ của bạn"
             value={place}
             onChange={handlePlaceChange}
           />
         </div>
 
-        <div className="input-container">
-          <FaCalendarAlt className="icon" />
+        <div className={styles.inputContainer}>
+          <FaCalendarAlt className={styles.icon} />
           <DatePicker
             selected={startDate}
             onChange={(date) => setStartDate(date)}
@@ -40,8 +40,8 @@ const SearchBar = () => {
           />
         </div>
 
-        <div className="input-container">
-          <FaCalendarAlt className="icon" />
+        <div className={styles.inputContainer}>
+          <FaCalendarAlt className={styles.icon} />
           <DatePicker
             selected={endDate}
             onChange={(date) => setEndDate(date)}
@@ -50,8 +50,8 @@ const SearchBar = () => {
           />
         </div>
 
-        <button className="search-button button" onClick={handleSearch}>
-          Search
+        <button className={styles.searchButton} onClick={handleSearch}>
+          Tìm kiếm
         </button>
       </div>
     </section>

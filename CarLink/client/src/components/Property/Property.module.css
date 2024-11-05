@@ -1,23 +1,23 @@
-.property-container {
+.propertyContainer {
     text-align: center;
     padding: 40px 20px;
     background-color: #f8f9fab4;
   }
   
-  h2 {
+  .title {
     font-size: 24px;
     color: #2b2d42;
     margin-bottom: 20px;
   }
   
-  .brands-grid {
+  .brandsGrid {
     display: flex;
     justify-content: center;
     gap: 20px;
     flex-wrap: wrap;
   }
   
-  .brand-card {
+  .brandCard {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -31,19 +31,18 @@
     justify-content: center;
   }
   
-  .brand-card:hover {
+  .brandCard:hover {
     transform: translateY(-5px);
   }
   
-  .brand-logo {
+  .brandLogo {
     width: 60px;
     height: auto;
     margin-bottom: 10px;
   }
   
-  p {
+  .brandName {
     font-size: 16px;
     color: #2b2d42;
     font-weight: 500;
   }
-  

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import './LoginForm.css';
+import styles from './LoginForm.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faLock, faEye, faEyeSlash, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faLock, faEyeSlash, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
@@ -9,47 +9,47 @@ const LoginForm = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="login-container">
-      <button className="back-button" onClick={() => navigate('/')}>
+    <div className={styles.loginContainer}>
+      <button className={styles.backButton} onClick={() => navigate('/')}>
         <FontAwesomeIcon icon={faArrowLeft} />
       </button>
-      <form className="login-form">
+      <form className={styles.loginForm}>
         <h2>Đăng nhập</h2>
 
-        <div className="form-group">
+        <div className={styles.formGroup}>
           <label htmlFor="username">
             <FontAwesomeIcon icon={faUser} /> Tên đăng nhập
           </label>
           <input type="text" id="username" placeholder="Nhập tên đăng nhập" />
         </div>
 
-        <div className="form-group">
+        <div className={styles.formGroup}>
           <label htmlFor="password">
             <FontAwesomeIcon icon={faLock} /> Mật khẩu
           </label>
-          <div className="password-input">
+          <div className={styles.passwordInput}>
             <input
               type={showPassword ? "text" : "password"}
               id="password"
               placeholder="••••••••"
             />
-            <FontAwesomeIcon
+            {/* <FontAwesomeIcon
               icon={showPassword ? faEyeSlash : faEye}
               onClick={() => setShowPassword(!showPassword)}
-            />
+            /> */}
           </div>
         </div>
 
-        <button type="submit" className="login-button">Đăng nhập</button>
+        <button type="submit" className={styles.loginButton}>Đăng nhập</button>
 
-        <div className="additional-links">
-          <p className="forgot-password">
+        <div className={styles.additionalLinks}>
+          <p className={styles.forgotPassword}>
             <Link to="/forgot-password">Quên mật khẩu?</Link>
           </p>
         </div>
 
-        <div className="signup-links">
-          <p className="signup-account">
+        <div className={styles.signupLinks}>
+          <p className={styles.signupAccount}>
             <Link to="/signup" onClick={() => navigate('/signup')}>Chưa có tài khoản? Đăng ký</Link>
           </p>
         </div>
