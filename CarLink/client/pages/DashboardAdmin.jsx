@@ -1,38 +1,89 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/DashboardAdmin.css";
 import RevenueChart from "../src/components/Chart/RevenueChart";
 import UserList from "../src/components/UserList/UserList";
 
 const DashboardAdmin = () => {
   const [showUserList, setShowUserList] = useState(false);
-  const [showDashboard, setShowDashboard] = useState(true); // Thêm state để hiển thị biểu đồ
+  const [showDashboard, setShowDashboard] = useState(true);
+  const [activePage, setActivePage] = useState("dashboard");
+
+  // State để lưu trữ dữ liệu từ API
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    activeCars: 0,
+    totalRentals: 0,
+    revenue: 0,
+  });
+
+  // Sử dụng useEffect để gọi API khi component được render
+  useEffect(() => {
+    // Hàm gọi API
+    const fetchStats = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/api/"); api
+        const data = await response.json();
+        setStats(data); // Giả định rằng data chứa thông tin bạn cần
+      } catch (error) {
+        console.error("Lỗi khi gọi API:", error);
+      }
+    };
+
+    fetchStats(); // Gọi hàm fetchStats để lấy dữ liệu
+  }, []);
 
   const handleManageUsersClick = () => {
-    setShowUserList(true); // Bật trạng thái để hiển thị bảng UserList
-    setShowDashboard(false); // Tắt trạng thái biểu đồ
+    setShowUserList(true);
+    setShowDashboard(false);
+    setActivePage("manageUsers");
   };
 
   const handleDashboardClick = () => {
-    setShowDashboard(true); // Bật trạng thái để hiển thị biểu đồ
-    setShowUserList(false); // Tắt trạng thái bảng UserList
+    setShowDashboard(true);
+    setShowUserList(false);
+    setActivePage("dashboard");
   };
 
   return (
     <div className="dashboard-container">
-      {/* Sidebar */}
+
       <div className="sidebar">
         <ul>
-          <li onClick={handleDashboardClick}>Dashboard</li> {/* Nhấn vào để về trang Dashboard */}
-          <li onClick={handleManageUsersClick}>Manage Users</li>
-          <li>Manage Cars</li>
-          <li>Kiểm duyệt xe</li>
-          <li>Kiểm duyệt Booking</li>
-          <li>Phản hồi của khách hàng</li>
-          <li>Cài đặt</li>
+          <li 
+            className={activePage === "dashboard" ? "active" : ""}
+            onClick={handleDashboardClick}
+          >
+            Dashboard
+          </li>
+          <li 
+            className={activePage === "manageUsers" ? "active" : ""}
+            onClick={handleManageUsersClick}
+          >
+            Manage Users
+          </li>
+          <li 
+            className={activePage === "vehicleApproval" ? "active" : ""}
+          >
+            Kiểm duyệt xe
+          </li>
+          <li 
+            className={activePage === "bookingApproval" ? "active" : ""}
+          >
+            Kiểm duyệt Booking
+          </li>
+          <li 
+            className={activePage === "customerFeedback" ? "active" : ""}
+          >
+            Phản hồi của khách hàng
+          </li>
+          <li 
+            className={activePage === "settings" ? "active" : ""}
+          >
+            Cài đặt
+          </li>
         </ul>
       </div>
 
-      {/* Main Content */}
       <div className="main-content">
         {showUserList ? (
           <UserList />
@@ -45,19 +96,19 @@ const DashboardAdmin = () => {
                 <div className="dashboard-stats">
                   <div className="stat-card">
                     <h3>Tổng người dùng trên hệ thống</h3>
-                    <p>120</p>
+                    <p>{stats.totalUsers}</p>
                   </div>
                   <div className="stat-card">
                     <h3>Tổng xe đang hoạt động cho thuê</h3>
-                    <p>50</p>
+                    <p>{stats.activeCars}</p>
                   </div>
                   <div className="stat-card">
                     <h3>Tổng lượt thuê</h3>
-                    <p>300</p>
+                    <p>{stats.totalRentals}</p>
                   </div>
                   <div className="stat-card">
                     <h3>Doanh thu</h3>
-                    <p>450,000,000 VND</p>
+                    <p>{stats.revenue} VND</p>
                   </div>
                 </div>
 
