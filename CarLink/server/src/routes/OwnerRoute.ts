@@ -1,7 +1,7 @@
 import express from "express";
 import { AddCar } from "../controllers";
 import multer from 'multer';
-import { Authenticate } from "../middlewares";
+import { Authenticate, checkRole } from "../middlewares";
 
 const router = express.Router();
 
@@ -24,8 +24,9 @@ const imageStorage = multer.diskStorage({
 const images = multer({ storage: imageStorage }).array('images', 10);
 
 
-//MIDDLEWARE AUTHENTICATION
+//MIDDLEWARE AUTHENTICATION & AUTHORIZATION
 router.use(Authenticate as any);
+router.use(checkRole(['owner', 'admin']) as any);
 
 //ADD CAR
 router.post('/add-car', images as any, AddCar as any);

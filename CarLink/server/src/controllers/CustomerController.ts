@@ -13,7 +13,7 @@ const nodemailer = require("nodemailer");
 /**------------------------------PROFILE SECTION------------------------------------------ */
 
 //CUSTOMER SIGN UP
-export const CustomerSignUp = async(req: Request, res: Response, next: NextFunction) => {
+export const CustomerSignUp = async (req: Request, res: Response, next: NextFunction) => {
 
     const customerInputs = plainToClass(CreateCustomerInputs, req.body);
 
@@ -23,7 +23,7 @@ export const CustomerSignUp = async(req: Request, res: Response, next: NextFunct
         forbidNonWhitelisted: true, // Ném ra lỗi nếu có bất kỳ thuộc tính nào không nằm trong danh sách cho phép
     });
 
-    if(inputErrors.length > 0) return res.status(400).json(inputErrors);
+    if (inputErrors.length > 0) return res.status(400).json(inputErrors);
 
     const { idCard, email, password, firstName, lastName, phone, address } = customerInputs;
 
@@ -32,7 +32,7 @@ export const CustomerSignUp = async(req: Request, res: Response, next: NextFunct
 
     const { OTP, otpExpiry } = GenerateOtp();
 
-    const existedCustomer = await Customer.findOne({where: {email: email}});
+    const existedCustomer = await Customer.findOne({ where: { email: email } });
 
     if(existedCustomer) return res.status(400).json('Người dùng đã tồn tại với email này!');
 
@@ -53,7 +53,7 @@ export const CustomerSignUp = async(req: Request, res: Response, next: NextFunct
 
     });
 
-    if(result) {
+    if (result) {
 
         await Role.create({
             customerID: result.customerID,
@@ -68,7 +68,7 @@ export const CustomerSignUp = async(req: Request, res: Response, next: NextFunct
         });
 
         //SEND THE RESULT TO CLIENT
-        return res.status(201).json({signature: signature, isVerified: result.isVerified, email: result.email});
+        return res.status(201).json({ signature: signature, isVerified: result.isVerified, email: result.email });
 
     }
 
@@ -79,7 +79,7 @@ export const CustomerSignUp = async(req: Request, res: Response, next: NextFunct
 
 
 //CUSTOMER LOG IN
-export const CustomerLogIn = async(req: Request, res: Response, next: NextFunction) => {
+export const CustomerLogIn = async (req: Request, res: Response, next: NextFunction) => {
 
     const loginInputs = plainToClass(UserLoginInputs, req.body);
 
@@ -89,17 +89,17 @@ export const CustomerLogIn = async(req: Request, res: Response, next: NextFuncti
         forbidNonWhitelisted: true, // Ném ra lỗi nếu có bất kỳ thuộc tính nào không nằm trong danh sách cho phép
     });
 
-    if(loginErrors.length > 0) return res.status(400).json(loginErrors);
+    if (loginErrors.length > 0) return res.status(400).json(loginErrors);
 
     const { email, password } = loginInputs;
 
-    const customer = await Customer.findOne({where: { email: email }});
+    const customer = await Customer.findOne({ where: { email: email } });
 
-    if(customer) {
+    if (customer) {
 
         const validation = await ValidatePassword(password, customer.password, customer.salt);
 
-        if(validation) {
+        if (validation) {
 
             //GENERATE THE SIGNATURE
             const signature = GenerateSignature({
@@ -122,15 +122,15 @@ export const CustomerLogIn = async(req: Request, res: Response, next: NextFuncti
 }
 
 //SEND EMAIL
-export const sendEmailService = async(email: string, OTP: number) => {
+export const sendEmailService = async (email: string, OTP: number) => {
 
     const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 587,
         secure: false, // true for port 465, false for other ports
         auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASSWORD,
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASSWORD,
         },
     });
 
@@ -148,17 +148,17 @@ export const sendEmailService = async(email: string, OTP: number) => {
 }
 
 //REQUEST OTP
-export const onRequestOTP = async(req: Request, res: Response, next: NextFunction) => {
+export const onRequestOTP = async (req: Request, res: Response, next: NextFunction) => {
 
     const customer = req.user;
 
     try {
-        
-        if(customer) {
 
-            const profile = await Customer.findOne({where: {email: customer.email}});
+        if (customer) {
 
-            if(profile) {
+            const profile = await Customer.findOne({ where: { email: customer.email } });
+
+            if (profile) {
                 await sendEmailService(profile.email, profile.OTP);
                 return res.json('OTP đã được gửi đến email của bạn')
             }
@@ -180,18 +180,18 @@ export const onRequestOTP = async(req: Request, res: Response, next: NextFunctio
 }
 
 //VERIFY USER
-export const CustomerVerify = async(req: Request, res: Response, next: NextFunction) => {
+export const CustomerVerify = async (req: Request, res: Response, next: NextFunction) => {
 
-    const {OTP} = req.body;
+    const { OTP } = req.body;
     const customer = req.user;
 
-    if(customer) {
+    if (customer) {
 
-        const profile = await Customer.findOne({where: {customerID: customer.customerID}});
+        const profile = await Customer.findOne({ where: { customerID: customer.customerID } });
 
-        if(profile) {
+        if (profile) {
 
-            if(profile.OTP === parseInt(OTP) && profile.otpExpiry >= new Date()) {
+            if (profile.OTP === parseInt(OTP) && profile.otpExpiry >= new Date()) {
 
                 profile.isVerified = true;
 
@@ -204,7 +204,7 @@ export const CustomerVerify = async(req: Request, res: Response, next: NextFunct
                     isVerified: updatedCustomerResponse.isVerified
                 });
 
-                return res.status(200).json({signature: signature, isVerified: updatedCustomerResponse.isVerified, email: updatedCustomerResponse.email});
+                return res.status(200).json({ signature: signature, isVerified: updatedCustomerResponse.isVerified, email: updatedCustomerResponse.email });
 
             }
 
@@ -217,28 +217,27 @@ export const CustomerVerify = async(req: Request, res: Response, next: NextFunct
 }
 
 //GET PROFILE
-export const GetCustomerProfile = async(req: Request, res: Response, next: NextFunction) => {
+export const GetCustomerProfile = async (req: Request, res: Response, next: NextFunction) => {
 
     const customer = req.user;
 
-    if(customer) {
+    if (customer) {
 
         const profile = await Customer.findOne(customer.customerID);
 
-        if(profile) return res.status(200).json(profile);
+        if (profile) return res.status(200).json(profile);
 
     }
 
     return res.status(400).json('Lỗi không thể xem profile!');
-    
 }
 
 //EDIT CUSTOMER PROFILE
-export const EditCustomerProfile = async(req: Request, res: Response, next: NextFunction) => {
+export const EditCustomerProfile = async (req: Request, res: Response, next: NextFunction) => {
 
     const customer = req.user;
 
-    const profileInputs = plainToClass( EditCustomerProfileInputs, req.body);
+    const profileInputs = plainToClass(EditCustomerProfileInputs, req.body);
 
     const profileErrors = await validate(profileInputs, {
         skipMissingProperties: false, // Không bỏ qua các thuộc tính còn thiếu
@@ -246,28 +245,49 @@ export const EditCustomerProfile = async(req: Request, res: Response, next: Next
         forbidNonWhitelisted: true, // Ném ra lỗi nếu có bất kỳ thuộc tính nào không nằm trong danh sách cho phép
     });
 
-    if(profileErrors.length > 0) return res.status(400).json(profileErrors);
+    if (profileErrors.length > 0) return res.status(400).json(profileErrors);
 
     const { firstName, lastName, address } = profileInputs;
 
-    if(customer) {
+    if (customer) {
 
         const profile = await Customer.findOne(customer.customerID);
 
-        if(profile) {
+        if (profile) {
 
             profile.firstName = firstName;
             profile.lastName = lastName;
             profile.address = address;
 
             const result = await profile.save();
-            
+
             return res.status(200).json(result);
 
         }
 
     }
-    
+
+}
+
+//GET CURRENT ROLE
+export const GetCurrentRole = async (req: Request, res: Response) => {
+    try {
+        const user = req.user;
+        if (!user) {
+            return res.status(401).json({ error: "User not authenticated" });
+        }
+
+        const role = await Role.findOne({
+            where: { customerID: user.customerID }
+        });
+
+        res.json({
+            user: user.email,
+            role: role?.type,
+        });
+    } catch (error) {
+        res.status(500).json({ error: "Could not fetch role" });
+    }
 }
 
 /**------------------------------FAVORITE SECTION------------------------------------------ */
