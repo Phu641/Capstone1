@@ -29,6 +29,6 @@ router.patch('/profile', EditCustomerProfile as any);
 router.use('/profile', checkRole(['user', 'owner', 'admin']) as any);
 
 //GET CURRENT ROLE
-router.get('/check-role', GetCurrentRole as any);
+router.get('/check-role', GetCurrentRole as any); 
 
 export { router as CustomerRoute}

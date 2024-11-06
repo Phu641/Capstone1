@@ -16,11 +16,11 @@ import {
 
 const Header = () => {
   const navLinks = [
-    { path: "/home", display: "Home" },
-    { path: "/about", display: "About" },
-    { path: "/cars", display: "Cars" },
+    { path: "/home", display: "Trang chủ" },
+    { path: "/about", display: "Giới thiệu" },
+    { path: "/cars", display: "Thuê xe" },
     { path: "/blogs", display: "Blog" },
-    { path: "/contact", display: "Contact" },
+    { path: "/contact", display: "Liên hệ" },
   ];
 
   const [isNavVisible, setIsNavVisible] = useState(false);
@@ -40,7 +40,6 @@ const Header = () => {
         <img src="/logo.jpg" alt="Logo" className={styles.logoContainerImg} />
       </a>
 
-      {/* Main navigation links */}
       <nav className={styles.mainNav}>
         <ul>
           {navLinks.map((link, index) => (
@@ -51,14 +50,12 @@ const Header = () => {
         </ul>
       </nav>
 
-      <div className={styles.logo}>{/* <img src="/logo.jpg" alt="LOGO"/> */}</div>
-
       <div className={styles.actions}>
         <button
-          className={`${styles.becomeHost} ${styles.navButton}`}
+          className={styles.becomeHost}
           onClick={handleBecomePartner}
         >
-          Become partner
+          Trở thành đối tác
         </button>
 
         <div className={styles.menuIcon} onClick={toggleNav}>
@@ -72,58 +69,58 @@ const Header = () => {
           <nav className={styles.navigation}>
             <ul>
               <li>
-                <a href="/login">Log in</a>
+                <a href="/login">Đăng nhập</a>
               </li>
               <li>
-                <a href="/signup">Sign up</a>
+                <a href="/signup">Đăng ký</a>
               </li>
               <li>
-                <a href="/become-host">
+                <a href="/login">
                   <FaCarAlt />
-                  Become partner
+                  Trở thành đối tác
                 </a>
               </li>
               <li>
                 <a href="/add-car">
                   <FaCarAlt />
-                  Add Car
+                  Đăng xe cho thuê
                 </a>
               </li>
               <hr />
               <li>
                 <a href="/how-it-works">
                   <FaQuestionCircle />
-                  How CarLink works
+                  CarLink làm việc như thế nào?
                 </a>
               </li>
               <li>
                 <Link href="/gift-cards">
-                  <FaGift /> Gift cards
+                  <FaGift /> Voucher
                 </Link>
               </li>
               <li>
                 <a href="/contact-support">
-                  <FaPhone /> Contact support
+                  <FaPhone /> Liên hệ hỗ trợ
                 </a>
               </li>
               <li>
                 <a href="/legal">
-                  <FaGavel /> Legal
+                  <FaGavel /> Thông tin pháp lý
                 </a>
               </li>
               <li>
                 <a href="/insurance">
-                  <FaShieldAlt /> Insurance & protection
+                  <FaShieldAlt /> Thông tin bảo hiểm
                 </a>
               </li>
               <li>
                 <a href="/host-tools">
-                  <FaTools /> Host tools
+                  <FaTools /> Công cụ quản lý
                 </a>
               </li>
               <li>
                 <a href="/calculator">
-                  <FaCalculator /> Calculator
+                  <FaCalculator /> Máy tính
                 </a>
               </li>
             </ul>

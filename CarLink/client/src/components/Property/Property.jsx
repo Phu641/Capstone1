@@ -13,7 +13,7 @@ const brands = [
 const Property = () => {
   return (
     <div className={styles.propertyContainer}>
-      <h2>Browse By Brands</h2>
+      <h2>Đặc Biệt</h2>
       <div className={styles.brandsGrid}>
         {brands.map((brand) => (
           <div key={brand.name} className={styles.brandCard}>

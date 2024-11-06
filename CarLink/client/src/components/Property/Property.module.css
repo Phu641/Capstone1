@@ -1,12 +1,11 @@
 .propertyContainer {
   text-align: center;
-  padding: 40px 20px;
   background-color: #f8f9fab4;
 }
 
-.title {
-  font-size: 24px;
-  color: #2b2d42;
+.propertyContainer h2 {
+  font-size: 2rem;
+  color: #333;
   margin-bottom: 20px;
 }
 
@@ -23,16 +22,16 @@
   align-items: center;
   background-color: white;
   padding: 20px;
-  border-radius: 15px;
+  border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease;
   width: 130px;
-  height: 130px;
+  max-height: 19vh;
   justify-content: center;
 }
 
 .brandCard:hover {
-  transform: translateY(-5px);
+  transform: translateY(-2px);
 }
 
 .brandLogo {

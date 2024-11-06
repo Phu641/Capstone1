@@ -2,12 +2,14 @@ import express from 'express';
 import dbConnection from './services/DatabaseConnection';
 import App from './services/ExpressApp';
 import path from 'path';
+const cors = require('cors');
 const dotenv = require('dotenv');
 dotenv.config({ path: path.resolve(__dirname, './.env') });
 
 const StartServer = async() => {
 
   const app = express();
+  app.use(cors());
 
   await dbConnection();
 
