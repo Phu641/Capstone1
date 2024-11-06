@@ -17,9 +17,9 @@ import {
 const Header = () => {
   const navLinks = [
     { path: "/home", display: "Trang chủ" },
-    { path: "/about", display: "Chúng tôi" },
-    { path: "/cars", display: "Xe" },
-    { path: "/blogs", display: "Bài viết" },
+    { path: "/about", display: "Giới thiệu" },
+    { path: "/cars", display: "Thuê xe" },
+    { path: "/blogs", display: "Blog" },
     { path: "/contact", display: "Liên hệ" },
   ];
 
@@ -40,7 +40,6 @@ const Header = () => {
         <img src="/logo.jpg" alt="Logo" className={styles.logoContainerImg} />
       </a>
 
-      {/* Main navigation links */}
       <nav className={styles.mainNav}>
         <ul>
           {navLinks.map((link, index) => (
@@ -51,11 +50,9 @@ const Header = () => {
         </ul>
       </nav>
 
-      <div className={styles.logo}>{/* <img src="/logo.jpg" alt="LOGO"/> */}</div>
-
       <div className={styles.actions}>
         <button
-          className={`${styles.becomeHost} ${styles.navButton}`}
+          className={styles.becomeHost}
           onClick={handleBecomePartner}
         >
           Trở thành đối tác
@@ -75,10 +72,10 @@ const Header = () => {
                 <a href="/login">Đăng nhập</a>
               </li>
               <li>
-                <a href="/signup">Đăng kí</a>
+                <a href="/signup">Đăng ký</a>
               </li>
               <li>
-                <a href="/become-host">
+                <a href="/login">
                   <FaCarAlt />
                   Trở thành đối tác
                 </a>
@@ -86,7 +83,7 @@ const Header = () => {
               <li>
                 <a href="/add-car">
                   <FaCarAlt />
-                  Thêm xe
+                  Đăng xe cho thuê
                 </a>
               </li>
               <hr />
@@ -98,7 +95,7 @@ const Header = () => {
               </li>
               <li>
                 <Link href="/gift-cards">
-                  <FaGift /> Thẻ quà tặng
+                  <FaGift /> Voucher
                 </Link>
               </li>
               <li>
@@ -123,7 +120,7 @@ const Header = () => {
               </li>
               <li>
                 <a href="/calculator">
-                  <FaCalculator /> Tính toán
+                  <FaCalculator /> Máy tính
                 </a>
               </li>
             </ul>

@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { AuthPayload } from "../dto";
 import { ValidateSignature } from "../utility";
+import { Role } from "../models";
 
 
 declare global {
@@ -21,7 +22,7 @@ export const Authenticate = async(req: Request, res: Response, next: NextFunctio
 
         next();
 
-    } else return res.status(500).json('user is not authorize');
+    } else return res.status(500).json('Người dùng này chưa được phân quyền!');
 
 }
 

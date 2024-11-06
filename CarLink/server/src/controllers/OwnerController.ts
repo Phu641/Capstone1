@@ -15,25 +15,13 @@ export const AddCar = async(req: Request, res: Response, next: NextFunction) => 
 
         const { 
             delivery,
-            selfPickUp, 
-            listingTitle, 
+            selfPickUp,
             model, 
             type, 
-            year, 
-            condition, 
-            stockNumber, 
-            vinNumber, 
-            mileage, 
-            transmission, 
-            driverType, 
-            engineSize, 
-            cylinders, 
-            fuelType, 
-            doors, 
-            color, 
-            seats, 
-            cityMPG, 
-            highwayMPG, 
+            year,
+            transmission,
+            fuelType,
+            seats,
             pricePerDay, 
             address, 
             description 
@@ -86,7 +74,7 @@ export const AddCar = async(req: Request, res: Response, next: NextFunction) => 
 
     }
 
-    return res.status(500).json('something went wrong with add car');
+    return res.status(500).json('Đã có lỗi xảy ra với việc thêm xe!');
 
 }
 

@@ -25,6 +25,7 @@ body {
   background-color: #f5f7fa;
   color: var(--black);
   line-height: 1.6;
+  padding-top: 80px;
 }
 
 h1,
@@ -78,7 +79,7 @@ a:hover {
 }
 
 section {
-  padding: 50px 0px;
+  padding: 20px 0px;
 }
 
 

@@ -42,7 +42,7 @@
   border-radius: 12px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 450px;
+  max-width: 500px;
   transition: all 0.3s ease;
 }
 
@@ -63,7 +63,8 @@
   align-items: center;
   margin-bottom: 0.75rem;
   color: #555;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 1rem;
 }
 
 .formGroup label svg {
@@ -80,41 +81,15 @@
   border-radius: 6px;
   font-size: 1rem;
   transition: border-color 0.3s ease;
+  background-color: #f8f9fa;
   height: 50px;
-  /* Đặt chiều cao cố định cho cả hai loại input */
   box-sizing: border-box;
-  /* Đảm bảo padding không làm tăng kích thước tổng thể */
 }
 
 .formGroup input[type="text"]:focus,
 .formGroup input[type="password"]:focus {
   border-color: #1877f2;
   outline: none;
-}
-
-.passwordInput {
-  position: relative;
-}
-
-.passwordInput input {
-  padding-right: 2.5rem;
-}
-
-.passwordInput .faEye,
-.passwordInput .faEyeSlash {
-  position: absolute;
-  right: 0.75rem;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  color: #888;
-  font-size: 1.2rem;
-  transition: color 0.3s ease;
-}
-
-.passwordInput .faEye:hover,
-.passwordInput .faEyeSlash:hover {
-  color: #1877f2;
 }
 
 .loginButton {
@@ -138,7 +113,7 @@
 .forgotPassword,
 .signupAccount {
   text-align: center;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
 }
 
 .forgotPassword a,
@@ -146,31 +121,11 @@
   color: #1877f2;
   text-decoration: none;
   font-weight: 500;
-  transition: color 0.3s;
+  transition: color 0.3s ease;
 }
 
 .forgotPassword a:hover,
 .signupAccount a:hover {
-  color: #166fe5;
-  text-decoration: underline;
-}
-
-.terms {
-  font-size: 0.9rem;
-  color: #666;
-  text-align: center;
-  margin-top: 1.5rem;
-  line-height: 1.4;
-}
-
-.terms a {
-  color: #1877f2;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s;
-}
-
-.terms a:hover {
   color: #166fe5;
   text-decoration: underline;
 }
@@ -184,12 +139,7 @@
   }
 
   .backButton {
-    top: 15px;
-    left: 15px;
-    padding: 8px 12px;
-    font-size: 0.9rem;
-    width: 35px;
-    height: 35px;
+    display: none;
   }
 
   .loginForm h2 {
@@ -214,11 +164,9 @@
     padding: 0.8rem;
     font-size: 0.9rem;
     height: 45px;
-    /* Điều chỉnh chiều cao cho màn hình nhỏ hơn */
   }
 
   .loginButton {
-    padding: 0.9rem;
     font-size: 1rem;
   }
 
@@ -238,12 +186,7 @@
   }
 
   .backButton {
-    top: 10px;
-    left: 10px;
-    padding: 6px 10px;
-    font-size: 0.8rem;
-    width: 30px;
-    height: 30px;
+    display: none;
   }
 
   .loginForm h2 {
@@ -271,7 +214,6 @@
   }
 
   .loginButton {
-    padding: 0.8rem;
     font-size: 0.9rem;
   }
 
