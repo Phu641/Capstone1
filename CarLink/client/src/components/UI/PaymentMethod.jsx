@@ -10,19 +10,19 @@ const PaymentMethod = () => {
     <div className="payment-container">
         <div className="payment">
           <label htmlFor="" className="d-flex align-items-center gap-2">
-            <input type="checkbox" /> Direct Bank Transfer
+            <input type="checkbox" />Chuyển khoản Ngân hàng Trực tiếp
           </label>
         </div>
 
         <div className="payment mt-3">
           <label htmlFor="" className="d-flex align-items-center gap-2">
-            <input type="checkbox" /> Cheque Payment
+            <input type="checkbox" />Thanh toán bằng Séc
           </label>
         </div>
 
         <div className="payment mt-3 d-flex align-items-center justify-content-between">
           <label htmlFor="" className="d-flex align-items-center gap-2">
-            <input type="checkbox" /> Master Card
+            <input type="checkbox" /> Thẻ MasterCard
           </label>
           <img className="paymment__matterCard-img" src={masterCard} alt="" />
         </div>
@@ -36,12 +36,12 @@ const PaymentMethod = () => {
 
         <div className="payment mt-3">
           <label htmlFor="" className="d-flex align-items-center gap-2">
-            <input type="checkbox" /> Offline payment
+            <input type="checkbox" /> Thanh toán Ngoại tuyến
           </label>
         </div>
 
         <div className="payment text-end mt-5">
-          <button>Reserve Now</button>
+          <button>Đặt Ngay</button>
         </div>
       </div>
     </>

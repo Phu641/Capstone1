@@ -35,12 +35,12 @@ const carData = [
     model: "Model 3",
     price: 50,
     speed: "20kmpl",
-    numberOfSeat:"4 People",
+    numberOfSeat:"4 người",
     gps: "GPS Navigation",
     seatType: "Heated seats",
     automatic: "Automatic",
     description:
-      "Description: MITSUBISHI XPANDER 2019",
+      "Mô tả: MITSUBISHI XPANDER 2019",
   },
 
   {
@@ -53,12 +53,12 @@ const carData = [
     model: "Model-2",
     price: 50,
     speed: "20kmpl",
-    numberOfSeat:"4 People",
+    numberOfSeat:"4 người",
     gps: "GPS Navigation",
     seatType: "Heated seats",
     automatic: "Automatic",
     description:
-      "Description: MITSUBISHI XPANDER 2023",
+      "Mô tả: MITSUBISHI XPANDER 2023",
   },
 
   {
@@ -71,12 +71,12 @@ const carData = [
     model: "Model-2",
     price: 65,
     speed: "20kmpl",
-    numberOfSeat:"4 People",
+    numberOfSeat:"4 người",
     gps: "GPS Navigation",
     seatType: "Heated seats",
     automatic: "Automatic",
     description:
-      "Description: TOYOTA FORTUNER 2013",
+      "Mô tả: TOYOTA FORTUNER 2013",
   },
 
   {
@@ -89,12 +89,12 @@ const carData = [
     model: "Model-2",
     price: 70,
     speed: "20kmpl",
-    numberOfSeat:"4 People",
+    numberOfSeat:"4 người",
     gps: "GPS Navigation",
     seatType: "Heated seats",
     automatic: "Automatic",
     description:
-      "Description: VINFAST LUX SA 2019",
+      "Mô tả: VINFAST LUX SA 2019",
   },
 
   {
@@ -107,12 +107,12 @@ const carData = [
     model: "Model-2",
     price: 45,
     speed: "20kmpl",
-    numberOfSeat:"4 People",
+    numberOfSeat:"4 người",
     gps: "GPS Navigation",
     seatType: "Heated seats",
     automatic: "Automatic",
     description:
-      "Description: ZOTYE T800 2020",
+      "Mô tả: ZOTYE T800 2020",
   },
 
   {
@@ -125,12 +125,12 @@ const carData = [
     model: "Model-2",
     price: 85,
     speed: "20kmpl",
-    numberOfSeat:"4 People",
+    numberOfSeat:"4 người",
     gps: "GPS Navigation",
     seatType: "Heated seats",
     automatic: "Automatic",
     description:
-      "Description: VINFAST LUX SA 2022",
+      "Mô tả: VINFAST LUX SA 2022",
   },
 ];
 

@@ -28,7 +28,7 @@
   }
   
   .time__picker::before {
-    content: "Journey Time";
+    content: "Giờ";
     color: #7c8a97;
     margin-right: 0.5rem;
   }

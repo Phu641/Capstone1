@@ -11,7 +11,6 @@ const Slider = () => {
         style={{
           backgroundImage: `url(${backgroundImage})`,
           height: '800px',
-          
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
