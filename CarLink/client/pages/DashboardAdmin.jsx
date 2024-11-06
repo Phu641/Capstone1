@@ -21,7 +21,7 @@ const DashboardAdmin = () => {
     // Hàm gọi API
     const fetchStats = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/"); api
+        const response = await fetch(""); //api
         const data = await response.json();
         setStats(data); // Giả định rằng data chứa thông tin bạn cần
       } catch (error) {

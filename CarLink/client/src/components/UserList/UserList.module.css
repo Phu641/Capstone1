@@ -20,7 +20,7 @@
 
 .userList thead tr {
   backgroundColor: #0dcaf0;
-  color: #ffffff;
+  color: #000000;
   textAlign: left;
 }
 
@@ -31,11 +31,11 @@
 }
 
 .userList tbody tr:nth-child(even) {
-  backgroundColor: #f9f9f9;
+  backgroundColor: #000000;
 }
 
 .userList tbody tr:hover {
-  backgroundColor: #f1f1f1;
+  backgroundColor: #000000;
 }
 
 .userList th {
