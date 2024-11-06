@@ -90,7 +90,7 @@ const Header = () => {
               <li>
                 <a href="/how-it-works">
                   <FaQuestionCircle />
-                  CarLink làm việc như thế nào?
+                  CarLink hoạt động như thế nào?
                 </a>
               </li>
               <li>
@@ -105,17 +105,17 @@ const Header = () => {
               </li>
               <li>
                 <a href="/legal">
-                  <FaGavel /> Thông tin pháp lý
+                  <FaGavel /> Chính sách
                 </a>
               </li>
               <li>
                 <a href="/insurance">
-                  <FaShieldAlt /> Thông tin bảo hiểm
+                  <FaShieldAlt /> Bảo hiểm và bảo dưỡng
                 </a>
               </li>
               <li>
                 <a href="/host-tools">
-                  <FaTools /> Công cụ quản lý
+                  <FaTools /> Công cụ
                 </a>
               </li>
               <li>

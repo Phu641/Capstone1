@@ -34,7 +34,7 @@ export const CustomerSignUp = async (req: Request, res: Response, next: NextFunc
 
     const existedCustomer = await Customer.findOne({ where: { email: email } });
 
-    if (existedCustomer) return res.status(400).json('User existing with email');
+    if(existedCustomer) return res.status(400).json('Người dùng đã tồn tại với email này!');
 
     const result = await Customer.create({
 
@@ -72,7 +72,7 @@ export const CustomerSignUp = async (req: Request, res: Response, next: NextFunc
 
     }
 
-    return res.status(400).json('Error with sign up');
+    return res.status(400).json('Sai email hoặc mật khẩu!');
 
 }
 
@@ -117,7 +117,7 @@ export const CustomerLogIn = async (req: Request, res: Response, next: NextFunct
 
     }
 
-    return res.status(404).json('Login error');
+    return res.status(404).json('Sai email hoặc mật khẩu!');
 
 }
 
@@ -160,7 +160,7 @@ export const onRequestOTP = async (req: Request, res: Response, next: NextFuncti
 
             if (profile) {
                 await sendEmailService(profile.email, profile.OTP);
-                return res.json('OTP is sent to your email')
+                return res.json('OTP đã được gửi đến email của bạn')
             }
 
             return res.json({
@@ -212,7 +212,7 @@ export const CustomerVerify = async (req: Request, res: Response, next: NextFunc
 
     }
 
-    return res.status(400).json('Error with otp validation');
+    return res.status(400).json('Xảy ra lỗi trong việc xác nhận OTP!');
 
 }
 
@@ -229,8 +229,7 @@ export const GetCustomerProfile = async (req: Request, res: Response, next: Next
 
     }
 
-    return res.status(400).json('Error with  fetch profile');
-
+    return res.status(400).json('Lỗi không thể xem profile!');
 }
 
 //EDIT CUSTOMER PROFILE
