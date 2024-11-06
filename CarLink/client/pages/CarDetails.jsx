@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"; 
+import { useEffect, useState } from "react";
 
 import carData from "../src/assets/data/carData.js";
 import { Container, Row, Col } from "reactstrap";
@@ -7,7 +7,6 @@ import { useParams } from "react-router-dom";
 import BookingForm from "../src/components/UI/BookingForm";
 import PaymentMethod from "../src/components/UI/PaymentMethod";
 import PickupDropbox from "../src/components/UI/pickupAndDropoff";
-
 
 const CarDetails = () => {
   const { slug } = useParams();
@@ -26,25 +25,35 @@ const CarDetails = () => {
   return (
     <section>
       <Container>
-      <Row className="mb-5">
-              <Col lg="12">
-                <PickupDropbox /> 
-              </Col>
-            </Row>
+        <Row className="mb-5">
+          <Col lg="12">
+            <PickupDropbox />
+          </Col>
+        </Row>
         <Row>
           <Col lg="6">
-            <img src={currentImage} alt={singleCarItem.carName} className="w-100" />
+            <img
+              src={currentImage}
+              alt={singleCarItem.carName}
+              className="w-100"
+            />
             <div className="image-thumbnails d-flex mt-2">
-              {[singleCarItem.imgUrl, ...singleCarItem.images || []].map((img, index) => (
-                <img
-                  key={index}
-                  src={img}
-                  alt={`Thumbnail ${index}`}
-                  className="thumbnail"
-                  onClick={() => handleImageClick(img)}
-                  style={{ cursor: "pointer", width: "100px", marginRight: "10px" }}
-                />
-              ))}
+              {[singleCarItem.imgUrl, ...(singleCarItem.images || [])].map(
+                (img, index) => (
+                  <img
+                    key={index}
+                    src={img}
+                    alt={`Thumbnail ${index}`}
+                    className="thumbnail"
+                    onClick={() => handleImageClick(img)}
+                    style={{
+                      cursor: "pointer",
+                      width: "100px",
+                      marginRight: "10px",
+                    }}
+                  />
+                )
+              )}
             </div>
           </Col>
 
@@ -67,34 +76,60 @@ const CarDetails = () => {
                 </span>
               </div>
 
-              <p className="section__description">{singleCarItem.description}</p>
+              <p className="section__description">
+                {singleCarItem.description}
+              </p>
 
-              <div className="d-flex align-items-center mt-3" style={{ columnGap: "4rem" }}>
+              <div
+                className="d-flex align-items-center mt-3"
+                style={{ columnGap: "4rem" }}
+              >
                 <span className="d-flex align-items-center gap-1 section__description">
-                  <i className="ri-roadster-line" style={{ color: "#f9a826" }}></i>{" "}
+                  <i
+                    className="ri-roadster-line"
+                    style={{ color: "#f9a826" }}
+                  ></i>{" "}
                   {singleCarItem.model}
                 </span>
                 <span className="d-flex align-items-center gap-1 section__description">
-                  <i className="ri-settings-2-line" style={{ color: "#f9a826" }}></i>{" "}
+                  <i
+                    className="ri-settings-2-line"
+                    style={{ color: "#f9a826" }}
+                  ></i>{" "}
                   {singleCarItem.automatic}
                 </span>
                 <span className="d-flex align-items-center gap-1 section__description">
-                  <i className="ri-timer-flash-line" style={{ color: "#f9a826" }}></i>{" "}
+                  <i
+                    className="ri-timer-flash-line"
+                    style={{ color: "#f9a826" }}
+                  ></i>{" "}
                   {singleCarItem.speed}
                 </span>
               </div>
 
-              <div className="d-flex align-items-center mt-3" style={{ columnGap: "2.8rem" }}>
+              <div
+                className="d-flex align-items-center mt-3"
+                style={{ columnGap: "2.8rem" }}
+              >
                 <span className="d-flex align-items-center gap-1 section__description">
-                  <i className="ri-map-pin-line" style={{ color: "#f9a826" }}></i>{" "}
+                  <i
+                    className="ri-map-pin-line"
+                    style={{ color: "#f9a826" }}
+                  ></i>{" "}
                   {singleCarItem.gps}
                 </span>
                 <span className="d-flex align-items-center gap-1 section__description">
-                  <i className="ri-wheelchair-line" style={{ color: "#f9a826" }}></i>{" "}
+                  <i
+                    className="ri-wheelchair-line"
+                    style={{ color: "#f9a826" }}
+                  ></i>{" "}
                   {singleCarItem.seatType}
                 </span>
                 <span className="d-flex align-items-center gap-1 section__description">
-                  <i className="ri-building-2-line" style={{ color: "#f9a826" }}></i>{" "}
+                  <i
+                    className="ri-building-2-line"
+                    style={{ color: "#f9a826" }}
+                  ></i>{" "}
                   {singleCarItem.brand}
                 </span>
               </div>

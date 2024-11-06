@@ -21,11 +21,7 @@ const Feature = () => {
       <div className="feature-grid">
         <div className="feature-section">
           <label>
-            <input
-              type="checkbox"
-              name="map"
-              onChange={handleCheckboxChange}
-            />
+            <input type="checkbox" name="map" onChange={handleCheckboxChange} />
             Bản đồ
           </label>
           <label>
@@ -114,94 +110,36 @@ const Feature = () => {
             />
             Định vị GPS
           </label>
-          
-          <label>
-            <input
-              type="checkbox"
-              name="Hands-Free"
-              onChange={handleCheckboxChange}
-            />
-            Hands-Free
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="Fog Lights"
-              onChange={handleCheckboxChange}
-            />
-            Fog Lights
-          </label>
         </div>
 
         <div className="feature-section">
-          <h3>Windows</h3>
           <label>
             <input
               type="checkbox"
               name="Power Windows"
               onChange={handleCheckboxChange}
             />
-            Power Windows
+            Cửa sổ điện
           </label>
-          <label>
-            <input
-              type="checkbox"
-              name="Windows Defroster"
-              onChange={handleCheckboxChange}
-            />
-            Windows Defroster
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="Rear Window"
-              onChange={handleCheckboxChange}
-            />
-            Rear Window
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="Wiper Tinted Glass"
-              onChange={handleCheckboxChange}
-            />
-            Wiper Tinted Glass
-          </label>
+
           <label>
             <input
               type="checkbox"
               name="Sunroof"
               onChange={handleCheckboxChange}
             />
-            Sunroof
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="Tow Package"
-              onChange={handleCheckboxChange}
-            />
-            Tow Package
+            Cửa sổ trời
           </label>
         </div>
 
         <div className="feature-section">
-          <h3>Seats</h3>
-          <label>
-            <input
-              type="checkbox"
-              name="Bucket Seats"
-              onChange={handleCheckboxChange}
-            />
-            Bucket Seats
-          </label>
           <label>
             <input
               type="checkbox"
               name="Heated Seats"
               onChange={handleCheckboxChange}
             />
-            Heated Seats
+            Ghế sưởi
           </label>
           <label>
             <input
@@ -209,15 +147,7 @@ const Feature = () => {
               name="Leather Interior"
               onChange={handleCheckboxChange}
             />
-            Leather Interior
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="Memory Seats"
-              onChange={handleCheckboxChange}
-            />
-            Memory Seats
+            Ghế da
           </label>
           <label>
             <input
@@ -225,15 +155,7 @@ const Feature = () => {
               name="Power Seats"
               onChange={handleCheckboxChange}
             />
-            Power Seats
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="Third Row Seats"
-              onChange={handleCheckboxChange}
-            />
-            Third Row Seats
+            Ghế chỉnh điện
           </label>
         </div>
       </div>

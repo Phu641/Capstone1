@@ -2,32 +2,76 @@ import { useState } from "react";
 import "../styles/AddCarForm.css";
 import Feature from "../src/components/Feature/Feature";
 import Fieldset from "../src/components/Fieldset/Fieldset";
+import PropTypes from "prop-types";
+
+const useCarForm = (initialValues) => {
+  const [formData, setFormData] = useState(initialValues);
+  const [error, setError] = useState(null);
+
+  const validateForm = () => {
+    if (!formData.model) return "Mẫu xe là bắt buộc.";
+    if (
+      !formData.year ||
+      isNaN(formData.year) ||
+      formData.year < 1900 ||
+      formData.year > new Date().getFullYear()
+    )
+      return "Năm sản xuất không hợp lệ.";
+    if (
+      !formData.pricePerDay ||
+      isNaN(formData.pricePerDay) ||
+      formData.pricePerDay <= 0
+    )
+      return "Giá cho thuê phải là một số dương.";
+    if (!formData.address) return "Địa chỉ là bắt buộc.";
+    return null;
+  };
+
+  const handleChange = (e) => {
+    const { name, value, type, checked, files } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === "file" ? files : type === "checkbox" ? checked : value,
+      features:
+        type === "checkbox"
+          ? { ...prevData.features, [name]: checked }
+          : prevData.features,
+    }));
+  };
+
+  const handleFeaturesChange = (features) => {
+    setFormData((prevData) => ({ ...prevData, features }));
+  };
+
+  const handleImagesChange = (images) => {
+    setFormData((prevData) => ({ ...prevData, photos: images }));
+  };
+
+  return {
+    formData,
+    error,
+    setError,
+    validateForm,
+    handleChange,
+    handleFeaturesChange,
+    handleImagesChange,
+  };
+};
 
 const AddCarForm = () => {
-  const [formData, setFormData] = useState({
-    title: "",
-    listingTitle: "BMV",
+  const initialValues = {
+    listingTitle: "BMW",
     model: "X5",
     type: "Crossover",
     year: "2022",
     condition: "Used",
-    stockNumber: "",
-    vinNumber: "",
-    mileage: "",
     transmission: "Manual Transmission",
-    driverType: "FWD",
-    engineSize: "",
-    cylinders: "1",
     fuelType: "Petrol",
-    doors: "4",
-    color: "Black",
     seats: "1",
-    cityMPG: "18",
-    highwayMPG: "28",
-    description: "",
-    regularPrice: "",
-    photos: [null, null, null, null, null],
+    pricePerDay: "",
     address: "",
+    description: "",
+    photos: [],
     features: {
       acFront: false,
       acRear: false,
@@ -60,253 +104,192 @@ const AddCarForm = () => {
       powerSeats: false,
       thirdRowSeats: false,
     },
-  });
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    if (type === "checkbox") {
-      setFormData({
-        ...formData,
-        features: {
-          ...formData.features,
-          [name]: checked,
-        },
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
   };
 
-  const handleSubmit = (e) => {
+  const {
+    formData,
+    error,
+    setError,
+    validateForm,
+    handleChange,
+    handleFeaturesChange,
+    handleImagesChange,
+  } = useCarForm(initialValues);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Quan trọng nhất hàm này : login thì mới có dữ liệu user để check, cơ bản là setup hết rồi
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
+    setIsSubmitting(true);
+    setError(null);
+
+    const formDataToSend = new FormData();
+    Object.keys(formData).forEach((key) => {
+      if (key === "photos") {
+        Array.from(formData.photos).forEach((file) =>
+          formDataToSend.append("photos", file)
+        );
+      } else if (key === "features") {
+        formDataToSend.append("features", JSON.stringify(formData.features));
+      } else {
+        formDataToSend.append(key, formData[key]);
+      }
+    });
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("User is not authenticated");
+
+      const response = await fetch("http://localhost:3000/owner/add-car", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: formDataToSend,
+      });
+
+      if (!response.ok)
+        throw new Error("Failed to submit car details. Please try again.");
+      alert("Car details submitted successfully!");
+    } catch (error) {
+      setError(
+        error.message || "Failed to submit car details. Please try again."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <form className="add-car-form" onSubmit={handleSubmit}>
       <h2>Thêm thông tin về xe của bạn</h2>
+      {error && <p className="error">{error}</p>}
       <div className="grid-container">
-        {/* <div className="grid-item">
-          <label>Listing Title (*)</label>
-          <input
-            type="text"
-            name="listingTitle"
-            value={formData.listingTitle}
-            onChange={handleChange}
-            placeholder="Enter title here"
-            required
-          />
-        </div> */}
-        <div className="grid-item">
-          <label>Mẫu xe (*)</label>
-          <input
-            type="text"
-            name="model"
-            value={formData.model}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="grid-item">
-          <label>Loại xe (*)</label>
-          <select name="type" value={formData.type} onChange={handleChange}>
-            <option value="Crossover">Crossover</option>
-            <option value="Sedan">Sedan</option>
-            <option value="SUV">SUV</option>
-            <option value="Truck">Truck</option>
-          </select>
-        </div>
-        <div className="grid-item">
-          <label>Năm sản xuất (*)</label>
-          <input
-            type="number"
-            name="year"
-            value={formData.year}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        {/* <div className="grid-item">
-          <label>Tình trạng</label>
-          <select
-            name="condition"
-            value={formData.condition}
-            onChange={handleChange}
-          >
-            <option value="Used">Qua sử dụng</option>
-            <option value="New">Mới</option>
-          </select>
-        </div> */}
-        {/* <div className="grid-item">
-          <label>Stock Number</label>
-          <input
-            type="text"
-            name="stockNumber"
-            value={formData.stockNumber}
-            onChange={handleChange}
-          />
-        </div> */}
-        {/* <div className="grid-item">
-          <label>VIN Number</label>
-          <input
-            type="text"
-            name="vinNumber"
-            value={formData.vinNumber}
-            onChange={handleChange}
-          />
-        </div> */}
-        {/* <div className="grid-item">
-          <label>Quãng đường đã đi</label>
-          <input
-            type="text"
-            name="mileage"
-            value={formData.mileage}
-            onChange={handleChange}
-          />
-        </div> */}
-        <div className="grid-item">
-          <label>Hộp số</label>
-          <select
-            name="transmission"
-            value={formData.transmission}
-            onChange={handleChange}
-          >
-            <option value="Manual Transmission">Hộp số sàn</option>
-            <option value="Automatic Transmission">
-              Hộp số tự động
-            </option>
-          </select>
-        </div>
-        {/* <div className="grid-item">
-          <label> Driver Type (*)</label>
-          <select
-            name="driverType"
-            value={formData.type}
-            onChange={handleChange}
-          >
-            <option value="FWD">FWD</option>
-            <option value="2WD">2WD</option>
-            <option value="3WD">3WD</option>
-            <option value="3WD">3WD</option>
-            <option value="4WD">4WD</option>
-            <option value="WD">WD</option>
-          </select>
-        </div> */}
-        {/* <div className="grid-item">
-          <label>Engine Size</label>
-          <input
-            type="text"
-            name="engineSize"
-            value={formData.engineSize}
-            onChange={handleChange}
-          />
-        </div> */}
-        {/* <div className="grid-item">
-          <label>Cylinders</label>
-          <input
-            type="number"
-            name="cylinders"
-            value={formData.cylinders}
-            onChange={handleChange}
-          />
-        </div> */}
-
-        <div className="grid-item">
-          <label> Loại nhiên liệu</label>
-          <select name="FuelType" value={formData.type} onChange={handleChange}>
-            <option value="Petro">Xăng</option>
-            <option value="Diesel">Dầu Diesel</option>
-            <option value="Electric">Điện</option>
-          </select>
-        </div>
-        {/* <div className="grid-item">
-          <label> Doors (*)</label>
-          <select name="doors" value={formData.type} onChange={handleChange}>
-            <option value="4">4</option>
-            <option value="2">2</option>
-          </select>
-        </div> */}
-        {/* <div className="grid-item">
-          <label>Color</label>
-          <select name="color" value={formData.color} onChange={handleChange}>
-            <option value="Black">Black</option>
-            <option value="White">White</option>
-            <option value="Red">Red</option>
-            <option value="Blue">Blue</option>
-            <option value="Silver">Silver</option>
-          </select>
-        </div> */}
-        <div className="grid-item">
-          <label>Số ghế</label>
-          <input
-            type="text"
-            name="seats"
-            value={formData.seats}
-            onChange={handleChange}
-          />
-        </div>
-        {/* <div className="grid-item">
-          <label>City MPG</label>
-          <input
-            type="number"
-            name="cityMPG"
-            value={formData.cityMPG}
-            onChange={handleChange}
-          />
-        </div> */}
-        {/* <div className="grid-item">
-          <label>Highway MPG</label>
-          <input
-            type="number"
-            name="highwayMPG"
-            value={formData.highwayMPG}
-            onChange={handleChange}
-          />
-        </div> */}
-        <div>
-          <label>Giá cho thuê</label>
-          <input
-            type="text"
-            name="salePrice"
-            value={formData.salePrice}
-            onChange={handleChange}
-            placeholder="Nhập giá cho thuê theo ngày"
-          />
-        </div>  
-        <div>
-          <label>Địa chỉ</label>
-          <input
-            type="text"
-            name="address"
-            value={formData.salePrice}
-            onChange={handleChange}
-            placeholder="Nhập địa chỉ của xe"
-          />
-        </div>
+        <FormField
+          label="Mẫu xe (*)"
+          name="model"
+          type="text"
+          value={formData.model}
+          onChange={handleChange}
+          required
+        />
+        <FormSelect
+          label="Loại xe (*)"
+          name="type"
+          value={formData.type}
+          onChange={handleChange}
+          options={["Crossover", "Sedan", "SUV", "Truck"]}
+        />
+        <FormField
+          label="Năm sản xuất (*)"
+          name="year"
+          type="number"
+          value={formData.year}
+          onChange={handleChange}
+          required
+        />
+        <FormSelect
+          label="Hộp số"
+          name="transmission"
+          value={formData.transmission}
+          onChange={handleChange}
+          options={["Manual Transmission", "Automatic Transmission"]}
+        />
+        <FormSelect
+          label="Loại nhiên liệu"
+          name="fuelType"
+          value={formData.fuelType}
+          onChange={handleChange}
+          options={["Petrol", "Diesel", "Electric"]}
+        />
+        <FormField
+          label="Số ghế"
+          name="seats"
+          type="text"
+          value={formData.seats}
+          onChange={handleChange}
+        />
+        <FormField
+          label="Giá cho thuê"
+          name="pricePerDay"
+          type="text"
+          value={formData.pricePerDay}
+          onChange={handleChange}
+          placeholder="Nhập giá cho thuê theo ngày"
+        />
+        <FormField
+          label="Địa chỉ"
+          name="address"
+          type="text"
+          value={formData.address}
+          onChange={handleChange}
+          placeholder="Nhập địa chỉ của xe"
+        />
         <div style={{ marginTop: "20px", gridColumn: "span 2" }}>
           <label>Mô tả</label>
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
-            placeholder="Thêm mô tả về xe của bạn ( ví dụ như tình trạng xe của bạn hiện tại khác so với ảnh trên website như gãy kính, trầy xướt,...)"
+            placeholder="Thêm mô tả về xe của bạn..."
             rows="5"
             style={{ width: "200%" }}
           />
         </div>
       </div>
-      <Fieldset />
-      <Feature />
-      <div>
-        <button className="add-car-btn" onClick={handleSubmit}>
-          Gửi thông tin đến CarLink
-        </button>
-      </div>
+      <Fieldset onImagesChange={handleImagesChange} />
+      <Feature onFeaturesChange={handleFeaturesChange} />
+      <button className="add-car-btn" type="submit" disabled={isSubmitting}>
+        {isSubmitting ? "Đang gửi..." : "Gửi thông tin đến CarLink"}
+      </button>
     </form>
   );
+};
+
+const FormField = ({ label, name, type, value, onChange, ...props }) => (
+  <div className="grid-item">
+    <label>{label}</label>
+    <input
+      type={type}
+      name={name}
+      value={value}
+      onChange={onChange}
+      {...props}
+    />
+  </div>
+);
+
+FormField.propTypes = {
+  label: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  onChange: PropTypes.func.isRequired,
+};
+
+const FormSelect = ({ label, name, value, onChange, options }) => (
+  <div className="grid-item">
+    <label>{label}</label>
+    <select name={name} value={value} onChange={onChange}>
+      {options.map((option) => (
+        <option key={option} value={option}>
+          {option}
+        </option>
+      ))}
+    </select>
+  </div>
+);
+
+FormSelect.propTypes = {
+  label: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  options: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default AddCarForm;

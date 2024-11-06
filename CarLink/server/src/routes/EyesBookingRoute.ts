@@ -1,15 +1,12 @@
-import express from 'express';
+import express from "express";
+import { GetAllCars } from "../controllers";
 
 const router = express.Router();
 
-
 //CAR AVAILABILITY
-router.get('/cars');
+router.get("/cars", GetAllCars as any);
 
 //DETAIL
-router.get('/car/:id');
+router.get("/car/:id");
 
-
-
-
-export {router as EyesBookingRoute}
+export { router as EyesBookingRoute };
