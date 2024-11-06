@@ -1,0 +1,47 @@
+.propertyContainer {
+  text-align: center;
+  background-color: #f8f9fab4;
+}
+
+.propertyContainer h2 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.brandsGrid {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.brandCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+  width: 130px;
+  max-height: 19vh;
+  justify-content: center;
+}
+
+.brandCard:hover {
+  transform: translateY(-2px);
+}
+
+.brandLogo {
+  width: 60px;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.brandName {
+  font-size: 16px;
+  color: #2b2d42;
+  font-weight: 500;
+}

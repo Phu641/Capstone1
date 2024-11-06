@@ -1,0 +1,37 @@
+.featureContainer {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+}
+
+.featureSection {
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.featureSection h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.featureSection label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+input[type="checkbox"] {
+  width: 18px;
+  /* Chỉnh kích thước của ô checkbox nhỏ lại */
+  height: 18px;
+  margin-right: 10px;
+  /* Khoảng cách giữa checkbox và label */
+}

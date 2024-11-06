@@ -1,0 +1,57 @@
+.uploadFieldset {
+  border: 1px solid #ccc;
+  padding: 20px;
+  width: fit-content;
+  margin: 20px auto;
+  text-align: center;
+}
+
+.legend {
+  color: #000d6b;
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.photoUploadContainer {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.uploadBox {
+  width: 120px;
+  height: 120px;
+  border: 2px dashed #000d6b;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.uploadLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  color: #888;
+  font-weight: bold;
+}
+
+.uploadedImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fileInput {
+  display: none;
+}
+
+.warning {
+  color: red;
+  margin-top: 10px;
+}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./UserList.css";
+import styles from "./UserList.module.css";
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
@@ -8,7 +8,7 @@ const UserList = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch("API_ENDPOINT"); // Thay 'API_ENDPOINT' bằng URL của API
+        const response = await fetch(""); // Thay 'API_ENDPOINT' bằng URL của API
         const data = await response.json();
         setUsers(data); // Cập nhật dữ liệu từ API vào state
       } catch (error) {
@@ -20,7 +20,7 @@ const UserList = () => {
   }, []);
 
   return (
-    <div className="user-list">
+    <div className={styles.userList}>
       <h2>Danh sách người dùng</h2>
       <table>
         <thead>

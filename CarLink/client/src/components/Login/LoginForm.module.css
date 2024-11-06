@@ -1,0 +1,226 @@
+.loginContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  position: relative;
+}
+
+.backButton {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 10px 15px;
+  background-color: #1877f2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.backButton:hover {
+  background-color: #166fe5;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(24, 119, 242, 0.2);
+}
+
+.backButton svg {
+  font-size: 1.2rem;
+}
+
+.loginForm {
+  background-color: white;
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  transition: all 0.3s ease;
+}
+
+.loginForm h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.formGroup label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  color: #555;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.formGroup label svg {
+  margin-right: 0.75rem;
+  font-size: 1.3rem;
+  color: #1877f2;
+}
+
+.formGroup input[type="text"],
+.formGroup input[type="password"] {
+  width: 100%;
+  padding: 0.9rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  background-color: #f8f9fa;
+  height: 50px;
+  box-sizing: border-box;
+}
+
+.formGroup input[type="text"]:focus,
+.formGroup input[type="password"]:focus {
+  border-color: #1877f2;
+  outline: none;
+}
+
+.loginButton {
+  width: 100%;
+  height: 50px;
+  background-color: #1877f2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.loginButton:hover {
+  background-color: #166fe5;
+  transform: translateY(-2px);
+}
+
+.forgotPassword,
+.signupAccount {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.forgotPassword a,
+.signupAccount a {
+  color: #1877f2;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.forgotPassword a:hover,
+.signupAccount a:hover {
+  color: #166fe5;
+  text-decoration: underline;
+}
+
+/* Màn hình máy tính bảng và điện thoại*/
+@media (max-width: 63.9375em) {
+  .loginForm {
+    padding: 2rem;
+    margin: 1rem;
+    max-width: 90%;
+  }
+
+  .backButton {
+    display: none;
+  }
+
+  .loginForm h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .formGroup {
+    margin-bottom: 1.2rem;
+  }
+
+  .formGroup label {
+    font-size: 0.9rem;
+  }
+
+  .formGroup label svg {
+    font-size: 1.1rem;
+  }
+
+  .formGroup input[type="text"],
+  .formGroup input[type="password"] {
+    padding: 0.8rem;
+    font-size: 0.9rem;
+    height: 45px;
+  }
+
+  .loginButton {
+    font-size: 1rem;
+  }
+
+  .forgotPassword,
+  .signupAccount,
+  .terms {
+    font-size: 0.8rem;
+    margin-top: 1.2rem;
+  }
+}
+
+/* Màn hình điện thoại */
+@media (max-width: 46.1875em) {
+  .loginForm {
+    padding: 1.5rem;
+    margin: 0.5rem;
+  }
+
+  .backButton {
+    display: none;
+  }
+
+  .loginForm h2 {
+    font-size: 1.6rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .formGroup {
+    margin-bottom: 1rem;
+  }
+
+  .formGroup label {
+    font-size: 0.8rem;
+  }
+
+  .formGroup label svg {
+    font-size: 1rem;
+  }
+
+  .formGroup input[type="text"],
+  .formGroup input[type="email"],
+  .formGroup input[type="password"] {
+    padding: 0.7rem;
+    font-size: 0.8rem;
+  }
+
+  .loginButton {
+    font-size: 0.9rem;
+  }
+
+  .forgotPassword,
+  .signupAccount,
+  .terms {
+    font-size: 0.7rem;
+    margin-top: 1rem;
+  }
+}

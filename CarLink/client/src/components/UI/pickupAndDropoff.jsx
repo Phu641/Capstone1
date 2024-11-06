@@ -24,11 +24,11 @@ const pickupdropbox = (props) => {
   return (
     <div className="pickup-dropbox">
     <Col>
-        <h3>Diểm đón</h3>
+        <h3>Pick-Up</h3>
         <div className="input-form">
             <div className="form-row">
                 <select className="input-form">
-                    <option value="">Vị trí</option>
+                    <option value="">Locations</option>
                     {locations.map((location, index) => (
                         <option key={index} value={location}>{location}</option>
                     ))}
@@ -39,7 +39,7 @@ const pickupdropbox = (props) => {
                             placeholder="Date" // Placeholder for date input
                         />
                 <select>
-                    <option value="">Giờ</option>
+                    <option value="">Time</option>
                     {times.map((time, index) => (
                         <option key={index} value={time}>{time}</option>
                     ))}
@@ -48,18 +48,18 @@ const pickupdropbox = (props) => {
         </div>
     </Col>
     <Col>
-        <h3>Điểm trả</h3>
+        <h3>Drop-Off</h3>
         <div className="input-form">
             <div className="form-row">
                 <select>
-                    <option value="">Vị trí</option>
+                    <option value="">Locations</option>
                     {locations.map((location, index) => (
                         <option key={index} value={location}>{location}</option>
                     ))}
                 </select>
                 <input type="date" className="input-form" />
                 <select>
-                    <option value="">Giờ</option>
+                    <option value="">Time</option>
                     {times.map((time, index) => (
                         <option key={index} value={time}>{time}</option>
                     ))}

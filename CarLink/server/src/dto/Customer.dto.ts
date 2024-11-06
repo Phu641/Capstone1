@@ -15,11 +15,11 @@ export class CreateCustomerInputs {
     password!: string;
 
     @IsNotEmpty()
-    @Length(3, 12)
+    @Length(2, 12)
     firstName!: string;
 
     @IsNotEmpty()
-    @Length(3, 12)
+    @Length(2, 12)
     lastName!: string;
 
     @IsNotEmpty()
@@ -35,10 +35,10 @@ export class CreateCustomerInputs {
 export class EditCustomerProfileInputs {
 
     
-    @Length(3, 16)
+    @Length(2, 16)
     firstName!: string;
 
-    @Length(3, 16)
+    @Length(2, 16)
     lastName!: string;
 
     @Length(3, 16)
