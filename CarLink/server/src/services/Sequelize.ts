@@ -8,6 +8,7 @@ dotenv.config({ path: path.resolve(__dirname, '.././.env') });
 
 const sequelize = new Sequelize({
   dialect: 'mysql',
+  timezone: "+07:00",
   host: process.env.DB_HOST,
   username: process.env.DB_USER,
   password: DB_PASSWORD as any,

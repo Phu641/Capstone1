@@ -64,6 +64,7 @@ const Header = () => {
         <div className={styles.userIcon} onClick={() => navigate("/login")}>
           <FaUserCircle className={styles.avatarIcon} />
         </div>
+        
 
         {isNavVisible && (
           <nav className={styles.navigation}>
