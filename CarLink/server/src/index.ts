@@ -10,6 +10,7 @@ const StartServer = async() => {
 
   const app = express();
   app.use(cors());
+  app.use("/images", express.static(path.join(__dirname, 'images')));
 
   await dbConnection();
 

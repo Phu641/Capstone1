@@ -17,7 +17,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/Home" element={<HomePage />} />
         <Route path="/Cars" element={<Carlistting />} />
-        <Route path="/cars/:slug" element={<CarDetails />} />
+        <Route path="/cars/:carID" element={<CarDetails />}/>   
         <Route path="/login" element={<LoginForm />} />
         <Route path="/signup" element={<SignupForm />} />
         <Route path="/forgot-password" element={<ForgotPasswordForm />} />
