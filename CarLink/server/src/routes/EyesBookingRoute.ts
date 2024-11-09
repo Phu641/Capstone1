@@ -10,6 +10,4 @@ router.get('/cars', GetCarAvailability as any);
 //DETAIL
 router.get('/car/:id', GetCarByID as any);
 
-
-
-export {router as EyesBookingRoute}
+export { router as EyesBookingRoute }
