@@ -59,7 +59,12 @@ const DashboardAdmin = () => {
             className={activePage === "manageUsers" ? "active" : ""}
             onClick={handleManageUsersClick}
           >
-            Manage Users
+            Quản lý người dùng
+          </li>
+          <li 
+            className={activePage === "listcarApproval" ? "active" : ""}
+          >
+            Danh sách xe
           </li>
           <li 
             className={activePage === "vehicleApproval" ? "active" : ""}
