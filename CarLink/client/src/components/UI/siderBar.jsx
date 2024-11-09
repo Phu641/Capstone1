@@ -12,7 +12,7 @@ const Sidebar = () => {
   
     return (
       <div className="sidebar">
-        <h4>Type</h4>
+        <h4>Loại</h4>
         <FormGroup check>
           <Label check>
             <Input type="checkbox" value="sport" onChange={(e) => setType(e.target.checked ? [...type, e.target.value] : type.filter(item => item !== e.target.value))} />
@@ -50,33 +50,33 @@ const Sidebar = () => {
           </Label>
         </FormGroup>
   
-        <h4>Capacity</h4>
+        <h4>Sức chứa</h4>
         <FormGroup check>
           <Label check>
             <Input type="checkbox" value="2person" onChange={(e) => setCapacity(e.target.checked ? 2 : 0)} />
-            2 Person
+            2 người
           </Label>
         </FormGroup>
         <FormGroup check>
           <Label check>
             <Input type="checkbox" value="4person" onChange={(e) => setCapacity(e.target.checked ? 4 : 0)} />
-            4 Person
+            4 người
           </Label>
         </FormGroup>
         <FormGroup check>
           <Label check>
             <Input type="checkbox" value="6person" onChange={(e) => setCapacity(e.target.checked ? 6 : 0)} />
-            6 Person
+            6 người
           </Label>
         </FormGroup>
         <FormGroup check>
           <Label check>
             <Input type="checkbox" value="8ormore" onChange={(e) => setCapacity(e.target.checked ? 8 : 0)} />
-            8 or More
+            8 hoặc hơn
           </Label>
         </FormGroup>
   
-        <h4>Price</h4>
+        <h4>Giá</h4>
         <input 
           type="range" 
           min="0" 

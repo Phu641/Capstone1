@@ -26,7 +26,6 @@ const images = multer({ storage: imageStorage }).array('images', 10);
 
 //MIDDLEWARE AUTHENTICATION & AUTHORIZATION
 router.use(Authenticate as any);
-//router.use(checkRole(['owner', 'admin']) as any);
 
 //ADD CAR
 router.post('/add-car', images as any, AddCar as any);
