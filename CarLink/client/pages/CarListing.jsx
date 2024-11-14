@@ -1,4 +1,4 @@
-  import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
   import { Container, Row, Col } from "reactstrap";
   import Sidebar from "../src/components/UI/siderBar";
   import CarItem from "../src/components/UI/CarItem";
@@ -76,4 +76,4 @@
       );
   };
 
-  export default CarListing;
+  export default CarListing; 
