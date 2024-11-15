@@ -1,7 +1,7 @@
 import express from "express";
 import { AddCar } from "../controllers";
 import multer from 'multer';
-import { Authenticate, checkRole } from "../middlewares";
+import { Authenticate } from "../middlewares";
 
 const router = express.Router();
 

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import styles from "./Header.module.css";
 import {
   FaBars,
@@ -12,9 +12,37 @@ import {
   FaShieldAlt,
   FaTools,
   FaCalculator,
-} from "react-icons/fa"; // Import icon từ react-icons
+} from "react-icons/fa";
 
 const Header = () => {
+  const [userInfo, setUserInfo] = useState(null);
+  const [isNavVisible, setIsNavVisible] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      fetch('http://localhost:3000/customer/profile', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+        .then(res => res.json())
+        .then(data => {
+          setUserInfo(data);
+          localStorage.setItem('userInfo', JSON.stringify(data));
+        })
+        .catch(err => {
+          console.error('Error fetching user info:', err);
+          localStorage.clear();
+          setUserInfo(null);
+        });
+    } else {
+      setUserInfo(null);
+    }
+  }, [location.pathname]);
+
   const navLinks = [
     { path: "/home", display: "Trang chủ" },
     { path: "/about", display: "Giới thiệu" },
@@ -23,15 +51,19 @@ const Header = () => {
     { path: "/contact", display: "Liên hệ" },
   ];
 
-  const [isNavVisible, setIsNavVisible] = useState(false);
-  const navigate = useNavigate();
-
   const toggleNav = () => {
     setIsNavVisible(!isNavVisible);
   };
 
-  const handleBecomePartner = () => {
+  const handleLogin = () => {
     navigate("/login");
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    setUserInfo(null);
+    setIsNavVisible(false);
+    navigate('/login');
   };
 
   return (
@@ -51,36 +83,51 @@ const Header = () => {
       </nav>
 
       <div className={styles.actions}>
-        <button
-          className={styles.becomeHost}
-          onClick={handleBecomePartner}
-        >
-          Trở thành đối tác
-        </button>
+        {!userInfo && (
+          <button className={styles.becomeHost} onClick={handleLogin}>
+            Trở thành đối tác
+          </button>
+        )}
 
         <div className={styles.menuIcon} onClick={toggleNav}>
           <FaBars className={styles.hamburgerIcon} />
         </div>
-        <div className={styles.userIcon} onClick={() => navigate("/login")}>
-          <FaUserCircle className={styles.avatarIcon} />
-        </div>
-        
+
+        {!userInfo ? (
+          <div className={styles.userSection} onClick={handleLogin}>
+            <FaUserCircle className={styles.avatarIcon} />
+          </div>
+        ) : (
+          <div className={styles.userSection}>
+            <span className={styles.userName}>{userInfo.firstName}</span>
+          </div>
+        )}
+
+        {userInfo && (
+          <button className={styles.logoutButton} onClick={handleLogout}>
+            Đăng xuất
+          </button>
+        )}
 
         {isNavVisible && (
           <nav className={styles.navigation}>
             <ul>
-              <li>
-                <a href="/login">Đăng nhập</a>
-              </li>
-              <li>
-                <a href="/signup">Đăng ký</a>
-              </li>
-              <li>
-                <a href="/login">
-                  <FaCarAlt />
-                  Trở thành đối tác
-                </a>
-              </li>
+              {!userInfo && (
+                <>
+                  <li>
+                    <a href="/login">Đăng nhập</a>
+                  </li>
+                  <li>
+                    <a href="/signup">Đăng ký</a>
+                  </li>
+                  <li>
+                    <a href="/login">
+                      <FaCarAlt />
+                      Trở thành đối tác
+                    </a>
+                  </li>
+                </>
+              )}
               <li>
                 <a href="/add-car">
                   <FaCarAlt />
