@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { Car, Customer, Images, Overview } from '../models'
+import { Car, Customer, Images, Overview, Role } from '../models'
 
 
 //FIND VANDOR
@@ -150,10 +150,16 @@ export const AcceptCar = async (req: Request, res: Response) => {
         const carID = req.params.id;
 
         const car = await Car.findByPk(carID);
+        const ownerID = await car?.customerID;
+
         if (!car) return res.status(404).json('Xe không tồn tại!');
 
         car.isAvailable = true; // Duyệt xe
         await car.save();
+
+        const owner = await Role.findOne({where: {customerID: ownerID}});
+        if(owner) owner.type = 'owner';
+        await owner?.save();
 
         return res.status(200).json('Xe đã được admin duyệt!' );
 
