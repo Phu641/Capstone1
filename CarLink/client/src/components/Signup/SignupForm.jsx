@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import styles from './SignupForm.module.css';
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faEnvelope, faLock, faArrowLeft, faIdCard, faPhone, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
-import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -262,7 +262,7 @@ const SignupForm = () => {
           />
         </div>
 
-        <button type="submit" className={styles.signupButton}>Đăng Ký</button>
+        <button type="submit" className={styles.signupButton}>Đăng ký</button>
 
         <p className={styles.terms}>
           Bằng cách đăng ký hoặc đăng nhập, bạn hiểu và đồng ý với{' '}

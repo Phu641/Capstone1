@@ -36,7 +36,19 @@ const LoginForm = () => {
       });
 
       if (loginResponse.data.signature) {
+        localStorage.clear();
+        setUsername('');
+        setPassword('');
+
         localStorage.setItem('token', loginResponse.data.signature);
+
+        const profileResponse = await axios.get('http://localhost:3000/customer/profile', {
+          headers: {
+            'Authorization': `Bearer ${loginResponse.data.signature}`
+          }
+        });
+
+        localStorage.setItem('userInfo', JSON.stringify(profileResponse.data));
 
         const roleResponse = await axios.get('http://localhost:3000/customer/check-role', {
           headers: {
@@ -44,10 +56,10 @@ const LoginForm = () => {
           }
         });
 
-        if (roleResponse.data.role === 'user') {
-          navigate('/');
-        } else if (roleResponse.data.role === 'admin' || roleResponse.data.role === 'owner') {
-          navigate('/');
+        if (roleResponse.data.role === 'user' ||
+          roleResponse.data.role === 'admin' ||
+          roleResponse.data.role === 'owner') {
+          navigate('/', { replace: true });
         }
       }
     } catch (err) {

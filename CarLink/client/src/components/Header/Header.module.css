@@ -138,6 +138,34 @@
   margin-right: 8px;
 }
 
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.userName {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+.logoutButton {
+  padding: 8px 8px;
+  background-color: #f8f9fa;
+  color: #7D7D7D;
+  border: 1px solid #7D7D7D;
+  border-radius: 8px;
+  font-size: 16px;
+  margin-left: 8px;
+  transition: background-color 0.3s;
+}
+
+.logoutButton:hover {
+  background-color: #7D7D7D;
+  color: white;
+}
+
 /* Màn hình máy tính bảng*/
 @media (max-width: 63.9375em) {
   .header {

@@ -1,6 +1,6 @@
 import express from 'express';
 import { CustomerLogIn, CustomerSignUp, CustomerVerify, EditCustomerProfile, GetCustomerProfile, onRequestOTP, GetCurrentRole } from '../controllers';
-import { Authenticate, checkRole } from '../middlewares';
+import { Authenticate } from '../middlewares';
 
 const router = express.Router();
 
@@ -24,9 +24,6 @@ router.get('/profile', GetCustomerProfile as any);
 
 //EDIT CUSTOMER PROFILE
 router.patch('/profile', EditCustomerProfile as any);
-
-//CHECK ROLE
-router.use('/profile', checkRole(['user', 'owner', 'admin']) as any);
 
 //GET CURRENT ROLE
 router.get('/check-role', GetCurrentRole as any); 
