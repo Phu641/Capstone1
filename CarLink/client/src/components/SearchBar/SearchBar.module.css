@@ -1,3 +1,5 @@
+
+/* Các phần đã có của SearchBar */
 .searchBar {
   display: flex;
   align-items: center;
@@ -5,8 +7,9 @@
   border-radius: 8px;
   padding: 8px;
   box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.08);
-  max-width: 935px;
+  max-width: 1100px;
   margin: auto;
+  position: relative; /* Để danh sách gợi ý nằm trong khối này */
 }
 
 .inputContainer {
@@ -20,15 +23,20 @@
 }
 
 .inputContainer:first-child {
-  width: 28%;
+  width: 50%;
+  position: relative; /* Để danh sách gợi ý nằm trong khối này */
+}
+
+.inputContainer:first-child >input{
+ width: 100%;
 }
 
 .inputContainer:nth-child(2) {
-  width: 33%;
+  width: 22%;
 }
 
 .inputContainer:nth-child(3) {
-  width: 33%;
+  width: 22%;
 }
 
 .icon {
@@ -60,3 +68,42 @@
   background-color: #1877f2;
   transform: translateY(-2px);
 }
+
+/* CSS cho danh sách gợi ý */
+.suggestions {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: white;
+  position: absolute;
+  width: calc(100% - 16px);
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.08);
+  z-index: 10;
+  top: 100%;
+  left: 0;
+}
+
+.suggestions li {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  transition: background-color 0.2s ease;
+}
+
+.suggestions li:hover {
+  background-color: #f0f0f0;
+}
+
+.suggestions .locationIcon {
+  width: 16px; /* Đặt kích thước cố định */
+  height: 16px;
+  color: #1877f2;
+  margin-right: 8px;
+  flex-shrink: 0; /* Ngăn icon bị thu nhỏ */
+}
+

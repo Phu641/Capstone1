@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { Car, Customer } from '../models'
+import { Car, Customer, Images, Overview } from '../models'
 
 
 //FIND VANDOR
@@ -72,17 +72,25 @@ export const DeleteUser = async(req: Request, res: Response, next: NextFunction)
 export const GetAllCars = async(req: Request, res: Response, next: NextFunction) => {
 
     try {
+        const result = await Car.findAll({
+            where: { isAvailable: false },
+            include: [
+                {
+                    model: Overview,
+                    attributes: ['model', 'type', 'year', 'transmission', 'fuelType', 'seats', 'pricePerDay', 'address', 'description']
+                },
+                {
+                    model: Images,
+                    attributes: ['imageUrl']
+                }
+            ]
+        });
 
-        const cars = await Car.findAll();
+        if (result.length > 0)   return res.status(200).json(result);
 
-        if(!cars) return res.status(400).json('Chưa có xe nào được thêm!');
-        
-        return res.status(200).json(cars);
-        
+        return res.status(400).json('Không tìm thấy xe nào');
     } catch (error) {
-
-        return res.status(500).json(error);
-
+        return res.status(500).json('Lỗi! ');
     }
 
 }
@@ -90,18 +98,25 @@ export const GetAllCars = async(req: Request, res: Response, next: NextFunction)
 //GET A CAR
 export const GetACar = async(req: Request, res: Response, next: NextFunction) => {
 
-    try {
+    const ID = req.params.id;
 
-        const carID = req.params.id;
-        const car = await Car.findOne({where: {carID: carID}});
+    const result = await Car.findOne({
+        where: { carID: ID, isAvailable: true },
+        include: [
+            {
+                model: Overview,
+                attributes: ['model', 'type', 'year', 'transmission', 'fuelType', 'seats', 'pricePerDay', 'address', 'description']
+            },
+            {
+                model: Images,
+                attributes: ['imageUrl']
+            }
+        ]
+    });
 
-        return res.status(200).json(car);
+    if(result) return res.status(200).json(result);
 
-    } catch (error) {
-
-        return res.status(500).json(error);
-
-    }
+    return res.status(400).json('Xe không tồn tại!');
 
 }
 
