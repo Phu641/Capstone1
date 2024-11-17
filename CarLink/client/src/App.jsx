@@ -9,6 +9,7 @@ import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
 import AddCar from "../pages/AddCar";
 import DashboardAdmin from "../pages/DashboardAdmin";
+import VehicleDetailsPage from "./components/VehicleDetailsPage/VehicleDetailsPage";
 function App() {
   return (
     <Router>
@@ -23,6 +24,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPasswordForm />} />
         <Route path="/add-car" element={<AddCar />} />
         <Route path="/dashboardAdmin" element={<DashboardAdmin />} />
+        <Route path="/vehicle/:id" element={<VehicleDetailsPage />} />
       </Routes>
       <Footer />
     </Router>
