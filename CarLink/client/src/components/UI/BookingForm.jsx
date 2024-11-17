@@ -18,8 +18,9 @@ const BookingForm = () => {
       <FormGroup className="booking__form d-inline-block me-4 mb-4">
         <input type="email" placeholder="Email" />
       </FormGroup>
+
       <FormGroup className="booking__form d-inline-block ms-1 mb-4">
-        <input type="number" placeholder="Số diện thoại" />
+        <input type="number" placeholder="Số điện thoại" className="number-input" />
       </FormGroup>
 
       <FormGroup className="booking__form d-inline-block me-4 mb-4">
@@ -52,13 +53,13 @@ const BookingForm = () => {
         <input type="date" placeholder="" />
       </FormGroup>
       <FormGroup className="booking__form d-inline-block ms-1 mb-4">
-        
+
         <div className="booking__form-JTiem">
-        <input
-          type="time"
-          placeholder="Giờ"
-          className="time__picker"
-        />
+          <input
+            type="time"
+            placeholder="Giờ"
+            className="time__picker"
+          />
         </div>
       </FormGroup>
 
