@@ -1,21 +1,25 @@
-.booking__form {
-  width: 47.5%;
+.booking-heading{
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-.booking__form input {
+.booking__form {
+  width: 47.5%;
+  position: relative; /* Đảm bảo thẻ cha có thể chứa thẻ lỗi tuyệt đối */
+  margin-bottom: 26px;
+}
+
+.booking-form-container {
+  padding: 20px;
+}
+
+.booking__form input,
+.booking__form select,
+.textarea {
   padding: 8px 15px;
   border: 1px solid #7c8a972a;
   color: #7c8a97;
   width: 100%;
-}
-
-.booking__form select,
-.textarea {
-  width: 100%;
-  padding: 10px 15px;
-  color: #7c8a97;
-  border: 1px solid #7c8a972a;
-  border-radius: 4px;
 }
 
 .booking__form-JTiem {
@@ -37,8 +41,8 @@
 .booking__form input:focus,
 .booking__form select:focus {
   outline: none;
+  border-color: #007bff;
 }
-
 
 .number-input {
   -moz-appearance: textfield;
@@ -50,6 +54,28 @@
 .number-input::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+.error {
+  color: red;
+  font-size: 0.9rem;
+  position: absolute; /* Đặt thẻ lỗi bên ngoài vùng hiển thị của thẻ cha */
+  top: 100%; /* Đặt thẻ lỗi dưới trường nhập liệu */
+  left: 0;
+  width: 100%; /* Đảm bảo lỗi chiếm toàn bộ chiều rộng của trường */
+  margin: 5px 0;
+  padding-left: 5px;
+}
+
+input, select, textarea {
+  border: 1px solid #ccc;
+  padding: 8px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #007bff;
 }
 
 @media only screen and (max-width: 768px) {

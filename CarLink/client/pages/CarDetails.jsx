@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom"; // Thay useHistory thành useNavigate
 import { Container, Row, Col } from "reactstrap";
-import BookingForm from "../src/components/UI/BookingForm";
-import PaymentMethod from "../src/components/UI/PaymentMethod";
 import SeachBar from "../src/components/SearchBar/SearchBar";
 
 const CarDetails = () => {
   const { carID } = useParams();
-  console.log("Car ID từ URL:", carID); // Lấy carID từ URL
+  const navigate = useNavigate(); // Sử dụng useNavigate thay cho useHistory
   const [singleCarItem, setSingleCarItem] = useState(null);
   const [currentImage, setCurrentImage] = useState("");
 
@@ -29,7 +27,6 @@ const CarDetails = () => {
         const data = await response.json();
         if (data) {
           setSingleCarItem(data);
-          // Đảm bảo đường dẫn đầy đủ cho ảnh
           setCurrentImage(`http://localhost:3000/images/${data.carImages?.[0]?.imageUrl || "./default-image.jpg"}`);
         } else {
           console.error("Dữ liệu xe bị thiếu hoặc không đầy đủ.");
@@ -44,12 +41,16 @@ const CarDetails = () => {
   }, [carID]);
 
   const handleImageClick = (img) => {
-    // Sửa đường dẫn để đảm bảo ảnh luôn có đầy đủ URL
     setCurrentImage(`http://localhost:3000/images/${img || "./default-image.jpg"}`);
   };
 
+  const handleRentButtonClick = () => {
+    // Điều hướng đến trang Booking Form khi nhấn nút
+    navigate("/booking-form"); // Sử dụng navigate thay cho history.push
+  };
+
   if (!singleCarItem) {
-    return <p>Loading...</p>; // Hiển thị khi dữ liệu đang tải
+    return <p>Loading...</p>;
   }
 
   return (
@@ -81,9 +82,7 @@ const CarDetails = () => {
             <div className="car__info">
               <h2 className="section__title">{singleCarItem.overview?.model}</h2>
               <div className="d-flex align-items-center gap-5 mb-4 mt-3">
-                <h6 className="rent__price fw-bold fs-4">
-                  ${singleCarItem.overview?.pricePerDay}.00 / ngày
-                </h6>
+                <h6 className="rent__price fw-bold fs-4">${singleCarItem.overview?.pricePerDay}.00 / ngày</h6>
                 <span className="d-flex align-items-center gap-2">
                   <span style={{ color: "#f9a826" }}>
                     <i className="ri-star-s-fill"></i>
@@ -100,43 +99,29 @@ const CarDetails = () => {
 
               <div className="d-flex align-items-center mt-3" style={{ columnGap: "4rem" }}>
                 <span className="d-flex align-items-center gap-1 section__description">
-                  <i className="ri-roadster-line" style={{ color: "#f9a826" }}></i>{" "}
-                  {singleCarItem.overview?.model}
+                  <i className="ri-roadster-line" style={{ color: "#f9a826" }}></i> {singleCarItem.overview?.model}
                 </span>
                 <span className="d-flex align-items-center gap-1 section__description">
-                  <i className="ri-settings-2-line" style={{ color: "#f9a826" }}></i>{" "}
-                  {singleCarItem.overview?.transmission}
+                  <i className="ri-settings-2-line" style={{ color: "#f9a826" }}></i> {singleCarItem.overview?.transmission}
                 </span>
                 <span className="d-flex align-items-center gap-1 section__description">
-                  <i className="ri-user-fill" style={{ color: "#f9a826" }}></i>{" "}
-                  {singleCarItem.overview?.seats}
+                  <i className="ri-user-fill" style={{ color: "#f9a826" }}></i> {singleCarItem.overview?.seats}
                 </span>
               </div>
 
               <div className="d-flex align-items-center mt-3" style={{ columnGap: "2.8rem" }}>
                 <span className="d-flex align-items-center gap-1 section__description">
-                  <i className="ri-map-pin-line" style={{ color: "#f9a826" }}></i>{" "}
-                  {singleCarItem.overview?.address}
+                  <i className="ri-map-pin-line" style={{ color: "#f9a826" }}></i> {singleCarItem.overview?.address}
                 </span>
                 <span className="d-flex align-items-center gap-1 section__description">
-                  <i className="ri-building-2-line" style={{ color: "#f9a826" }}></i>{" "}
-                  {singleCarItem.brand}
+                  <i className="ri-building-2-line" style={{ color: "#f9a826" }}></i> {singleCarItem.brand}
                 </span>
               </div>
-            </div>
-          </Col>
-
-          <Col lg="7" className="mt-1">
-            <div className="booking-info mt-5">
-              <h5 className="mb-4 fw-bold">Thông tin đặt xe</h5>
-              <BookingForm />
-            </div>
-          </Col>
-
-          <Col lg="5" className="mt-1">
-            <div className="payment__info mt-5">
-              <h5 className="mb-4 fw-bold">Thông tin thanh toán</h5>
-              <PaymentMethod />
+              
+              {/* Nút Đặt Xe */}
+              <button className="mt-4" onClick={handleRentButtonClick}>
+                Đặt ngay
+              </button>
             </div>
           </Col>
         </Row>

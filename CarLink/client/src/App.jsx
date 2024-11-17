@@ -9,6 +9,9 @@ import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
 import AddCar from "../pages/AddCar";
 import DashboardAdmin from "../pages/DashboardAdmin";
+import BookingForm from "./components/UI/BookingForm.jsx";
+import Payment from "./components/UI/PaymentMethod.jsx";
+
 function App() {
   return (
     <Router>
@@ -23,6 +26,8 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPasswordForm />} />
         <Route path="/add-car" element={<AddCar />} />
         <Route path="/dashboardAdmin" element={<DashboardAdmin />} />
+        <Route path="/booking-form" element={<BookingForm />} />  
+        <Route path="/payment" element={<Payment />} />
       </Routes>
       <Footer />
     </Router>
