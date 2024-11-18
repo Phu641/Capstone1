@@ -1,5 +1,5 @@
 import { Table, Column, Model, ForeignKey, DataType, BelongsTo, PrimaryKey, AutoIncrement, HasMany, HasOne } from 'sequelize-typescript';
-import { Customer, Favorite, Images, Overview } from '.';
+import { Coordinate, Customer, Favorite, Images, Overview } from '.';
 
 @Table({
   tableName: 'cars',
@@ -36,5 +36,8 @@ export class Car extends Model {
 
    @HasOne(() => Overview)
   overview!: Overview;
+
+  @HasOne(() => Coordinate)
+  coordinate!: Coordinate;
 
 }

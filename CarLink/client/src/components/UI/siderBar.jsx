@@ -2,13 +2,36 @@ import React, { useState } from "react";
 import { FormGroup, Label, Input } from "reactstrap";
 import "../../../styles/siderBar.css";
 
-const Sidebar = () => {
+const Sidebar = ({ onFilterChange }) => {
   const [type, setType] = useState("");
   const [capacity, setCapacity] = useState(0);
   const [priceRange, setPriceRange] = useState([0, 10000000]);
 
+  // Hàm định dạng tiền tệ
   const formatCurrency = (value) => {
-    return parseInt(value).toLocaleString("vi-VN");
+    if (isNaN(value)) return "";  // Nếu không phải số, trả về chuỗi rỗng
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(value);
+  };
+
+  const handleTypeChange = (e) => {
+    const selectedType = e.target.value;
+    setType(selectedType);
+    onFilterChange({ type: selectedType, capacity, priceRange });
+  };
+
+  const handleCapacityChange = (e) => {
+    const selectedCapacity = parseInt(e.target.value);
+    setCapacity(selectedCapacity);
+    onFilterChange({ type, capacity: selectedCapacity, priceRange });
+  };
+
+  const handlePriceRangeChange = (e) => {
+    const newPrice = [priceRange[0], parseInt(e.target.value)];
+    setPriceRange(newPrice);
+    onFilterChange({ type, capacity, priceRange: newPrice });
   };
 
   return (
@@ -21,7 +44,7 @@ const Sidebar = () => {
               type="radio"
               name="type"
               value={carType}
-              onChange={(e) => setType(e.target.value)}
+              onChange={handleTypeChange}
               checked={type === carType}
             />
             {carType.charAt(0).toUpperCase() + carType.slice(1)}
@@ -37,7 +60,7 @@ const Sidebar = () => {
               type="radio"
               name="capacity"
               value={cap}
-              onChange={() => setCapacity(cap)}
+              onChange={handleCapacityChange}
               checked={capacity === cap}
             />
             {cap === 8 ? "8 hoặc hơn" : `${cap} người`}
@@ -51,12 +74,10 @@ const Sidebar = () => {
         min="0"
         max="10000000"
         value={priceRange[1]}
-        onChange={(e) =>
-          setPriceRange([priceRange[0], parseInt(e.target.value)])
-        }
+        onChange={handlePriceRangeChange}
       />
       <p>
-        Giá: {formatCurrency(priceRange[0])} VND - {formatCurrency(priceRange[1])} VND
+        Giá: {formatCurrency(priceRange[0])} - {formatCurrency(priceRange[1])}
       </p>
     </div>
   );

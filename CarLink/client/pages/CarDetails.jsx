@@ -82,7 +82,11 @@ const CarDetails = () => {
             <div className="car__info">
               <h2 className="section__title">{singleCarItem.overview?.model}</h2>
               <div className="d-flex align-items-center gap-5 mb-4 mt-3">
-                <h6 className="rent__price fw-bold fs-4">${singleCarItem.overview?.pricePerDay}.00 / ngày</h6>
+                <h6 className="rent__price fw-bold fs-4">
+                  {singleCarItem.overview?.pricePerDay
+                    ? Number(singleCarItem.overview?.pricePerDay).toLocaleString("vi-VN")
+                    : "0"} VND / ngày
+                </h6>
                 <span className="d-flex align-items-center gap-2">
                   <span style={{ color: "#f9a826" }}>
                     <i className="ri-star-s-fill"></i>
@@ -117,7 +121,7 @@ const CarDetails = () => {
                   <i className="ri-building-2-line" style={{ color: "#f9a826" }}></i> {singleCarItem.brand}
                 </span>
               </div>
-              
+
               {/* Nút Đặt Xe */}
               <button className="mt-4" onClick={handleRentButtonClick}>
                 Đặt ngay

@@ -1,5 +1,6 @@
-import { Table, Column, Model, ForeignKey, DataType, BelongsTo, PrimaryKey, AutoIncrement } from 'sequelize-typescript';
+import { Table, Column, Model, ForeignKey, DataType, BelongsTo, PrimaryKey, AutoIncrement, HasOne } from 'sequelize-typescript';
 import { Car } from './Car';
+import { Coordinate } from './Coordinate';
 
 @Table({
   tableName: 'overviews',
@@ -44,4 +45,5 @@ export class Overview extends Model {
 
   @BelongsTo(() => Car)
   car!: Car;
+  
 }
