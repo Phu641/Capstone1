@@ -52,8 +52,9 @@ const CarItem = (props) => {
 
           <div className="location-container">
             <i className="ri-map-pin-line"></i>
-            <span>{address}</span>
+            <span>{address.split(",")[0]}</span>
           </div>
+
 
           <button className="w-50 car__item-btn car__btn-rent">
             <Link to={`/cars/${id}`}>Thuê</Link>
