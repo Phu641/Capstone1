@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { CreateCarInputs } from "../dto";
 import { FindOwner } from "./AdminController";
-import { Car, Images, Overview } from "../models";
+import { Car, Coordinate, Images, Overview } from "../models";
+import { getCoordinates } from "../utility";
 
 
 
@@ -67,6 +68,24 @@ export const AddCar = async(req: Request, res: Response, next: NextFunction) => 
 
             // Wait for all images to be saved
             await Promise.all(images);
+
+            try {
+                // Get coordinates for the address
+                const coordinates = await getCoordinates(address);
+                console.log(coordinates);
+
+                // Save coordinates to the Coordinate model
+                await Coordinate.create({
+                    carID: createdCar.carID,
+                    latitude: coordinates.latitude, // Use correct latitude
+                    longitude: coordinates.longitude // Use correct longitude
+                });
+            } catch (error) {
+                console.error("Không thể lấy tọa độ:", error);
+                return res.status(500).json({
+                    message: "Đã xảy ra lỗi khi lấy tọa độ. Vui lòng kiểm tra địa chỉ nhập vào."
+                });
+            }
 
            return res.status(200).json(resultCar);
 
