@@ -1,37 +1,83 @@
 .featureContainer {
-  padding: 20px;
   font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.featureTitle {
+  text-align: center;
+  font-size: 1.8em;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #003366;
 }
 
 .featureGrid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(5, 1fr); /* 5 columns for 5 categories */
+  gap: 20px; /* Space between the columns */
+  margin-bottom: 20px; /* Add space before the button */
 }
 
-.featureSection {
-  border: none;
-  padding: 10px;
+.featureCategory {
+  border: 1px solid #ddd;
+  padding: 15px;
   border-radius: 5px;
   background-color: #f9f9f9;
+  text-align: left;
 }
 
-.featureSection h3 {
-  font-size: 16px;
+.featureCategory h3 {
+  font-size: 1.2em;
+  font-weight: bold;
   margin-bottom: 10px;
+  color: #003366;
 }
 
-.featureSection label {
+.featureCategory ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.featureCategory li {
+  margin-bottom: 8px;
+}
+
+.featureCategory label {
   display: flex;
   align-items: center;
-  margin-bottom: 5px;
   font-size: 14px;
+  color: #333;
 }
 
-input[type="checkbox"] {
-  width: 18px;
-  /* Chỉnh kích thước của ô checkbox nhỏ lại */
-  height: 18px;
+.featureCategory input[type="checkbox"] {
   margin-right: 10px;
-  /* Khoảng cách giữa checkbox và label */
+  width: 16px;
+  height: 16px;
+}
+
+.submitButton {
+  display: block;
+  width: 250px; /* Wider button for better visibility */
+  margin: 0 auto; /* Center the button */
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #003366;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s ease;
+}
+
+.submitButton:hover {
+  background-color: #00509e;
 }
