@@ -59,7 +59,7 @@ const CarDetails = () => {
       <Container>
         <Row className="mb-5">
           <Col lg="12">
-          <h1 style={{ textAlign: "center" }}>Thông tin chi tiết xe</h1>
+            <h1 style={{ textAlign: "center" }}>Thông tin chi tiết xe</h1>
           </Col>
         </Row>
         <Row>
@@ -111,6 +111,9 @@ const CarDetails = () => {
                 </span>
                 <span className="d-flex align-items-center gap-1 section__description">
                   <i className="ri-user-fill" style={{ color: "#f9a826" }}></i> {singleCarItem.overview?.seats}
+                </span>
+                <span className="d-flex align-items-center gap-1 section__description">
+                  <i className="ri-gas-station-line" style={{ color: "#f9a826" }}></i> {singleCarItem.overview?.fuelType}
                 </span>
               </div>
 
