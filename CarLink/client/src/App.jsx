@@ -11,6 +11,7 @@ import AddCar from "../pages/AddCar";
 import DashboardAdmin from "../pages/DashboardAdmin";
 import BookingForm from "./components/UI/BookingForm.jsx";
 import Payment from "./components/UI/PaymentMethod.jsx";
+import CarListing from "../pages/CarListing";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/dashboardAdmin" element={<DashboardAdmin />} />
         <Route path="/booking-form" element={<BookingForm />} />  
         <Route path="/payment" element={<Payment />} />
+        <Route path="/car-listing" element={<CarListing />} />
       </Routes>
       <Footer />
     </Router>
