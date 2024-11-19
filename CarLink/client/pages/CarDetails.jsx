@@ -151,13 +151,48 @@ const CarDetails = () => {
                   <i className="ri-building-2-line" style={{ color: "#f9a826" }}></i> {singleCarItem.brand}
                 </span>
               </div>
-
-              <button className="mt-4" onClick={handleRentButtonClick}>
-                Đặt ngay
-              </button>
             </div>
           </Col>
         </Row>
+
+        <Row>
+  <Col lg="12">
+    <h3 className="mt-5">Giấy tờ thuê xe</h3>
+    <p>
+      Trước khi nhận xe, bạn cần cung cấp bằng lái xe và một trong những tài liệu sau: 
+      <b> Chứng minh nhân dân hoặc hộ chiếu</b>.
+    </p>
+    <div className="d-flex align-items-center mt-3">
+      <i className="ri-file-list-3-line" style={{ color: "#f9a826", fontSize: "2rem", marginRight: "10px" }}></i>
+      <span>Bằng lái xe</span>
+    </div>
+    <div className="d-flex align-items-center mt-3">
+      <i className="ri-file-list-3-line" style={{ color: "#f9a826", fontSize: "2rem", marginRight: "10px" }}></i>
+      <span>Căn Cước Công Dân</span>
+    </div>
+  </Col>
+</Row>
+
+<Row>
+  <Col lg="12">
+    <h3 className="mt-5">Điều khoản sử dụng</h3>
+    <ul>
+      <li>Sử dụng xe đúng mục đích.</li>
+      <li>Không sử dụng xe thuê vào mục đích phi pháp, trái pháp luật.</li>
+      <li>Không sử dụng xe thuê để cầm cố, thế chấp.</li>
+      <li>Không hút thuốc, nhả kẹo cao su, xả rác trong xe.</li>
+      <li>Không chở hàng quốc cấm dễ cháy nổ.</li>
+      <li>Không chở thực phẩm nặng mùi trong xe.</li>
+      <li>
+        Khi trả xe, nếu xe bẩn hoặc có mùi trong xe, khách hàng vui lòng vệ sinh xe sạch sẽ 
+        hoặc gửi phụ thu phí vệ sinh xe.
+      </li>
+    </ul>
+  </Col>
+</Row>
+<button className="mt-4" onClick={handleRentButtonClick}>
+                Đặt ngay
+              </button>
       </Container>
     </section>
   );
