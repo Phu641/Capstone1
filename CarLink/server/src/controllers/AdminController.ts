@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import { Car, Customer, Images, Overview, Role } from '../models';
 const nodemailer = require('nodemailer');
 import path from 'path';
+import { CheckRole } from '../utility';
+import { promises } from 'fs-extra';
 const dotenv = require('dotenv');
 dotenv.config({ path: path.resolve(__dirname, './.env') });
 
@@ -14,21 +16,38 @@ export const FindOwner = async(id: number | undefined, email?: string) => {
 /**-------------------------------------------User-------------------------------------------------- */
 
 //GET ALL USERS
-export const GetAllUsers = async(req: Request, res: Response, next: NextFunction) => {
-
+export const GetAllUsers = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        const customers = await Customer.findAll();
 
-        const users = await Customer.findAll();
+        if (!customers || customers.length === 0) {
+            return res.status(404).json('Chưa có người dùng nào');
+        }
 
-        if(!users) return res.status(400).json('Chưa có người dùng nào');
-        
-        return res.status(200).json(users);
-        
+        const customerIDs = customers.map((item) => item.customerID);
+
+        const nonAdminCustomers = await Promise.all(
+            customerIDs.map(async (customerID) => {
+                const role = await CheckRole(customerID);
+                return { customerID, role };
+            })
+        );
+
+        const filteredCustomers = nonAdminCustomers.filter((item) => item.role !== 'admin');
+
+        const listCustomers = await Promise.all(filteredCustomers.map((item) => {
+
+            return Customer.findByPk(item.customerID);
+
+        }));
+
+        return res.status(200).json(listCustomers);
     } catch (error) {
-        return res.status(500).json(error)
+        console.error(error);
+        return res.status(500).json('Đã xảy ra lỗi, vui lòng thử lại sau!');
     }
+};
 
-}
 
 //GET A USER
 export const GetAnUser = async(req: Request, res: Response, next: NextFunction) => {
