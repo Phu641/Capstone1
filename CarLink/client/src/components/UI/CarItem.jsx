@@ -16,8 +16,9 @@ const CarItem = (props) => {
   return (
     <Col lg="4" md="4" sm="6" className="mb-5" style={{ width: '100%' }}>
       <div className="car__item">
+        {/* Nút like */}
         <div className="like__icon" onClick={handleLike}>
-          <i className={isLiked ? "mdi mdi-like-outline liked" : "mdi mdi-like-outline"}></i>
+          <i className={isLiked ? "ri-heart-fill liked" : "ri-heart-line"}></i>
         </div>
 
         <div className="car__img">
@@ -54,7 +55,6 @@ const CarItem = (props) => {
             <i className="ri-map-pin-line"></i>
             <span>{address.split(",")[0]}</span>
           </div>
-
 
           <button className="w-50 car__item-btn car__btn-rent">
             <Link to={`/cars/${id}`}>Thuê</Link>

@@ -1,35 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../../../styles/booking-form.css";
 import { Form, FormGroup } from "reactstrap";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-
+import { useNavigate, useLocation } from "react-router-dom"; 
 const BookingForm = () => {
-  const navigate = useNavigate(); // Khởi tạo navigate
+  const navigate = useNavigate();
+  const location = useLocation(); 
+  const carPrice = location.state?.carPrice || 0; 
 
   const [formData, setFormData] = useState({
-    fullName: "",
+    surname: "",
     lastName: "",
     email: "",
     phoneNumber: "",
-    departureAddress: "",
-    arrivalAddress: "",
-    passengers: "1 person",
-    luggage: "1 luggage",
     date: "",
     time: "",
     note: "",
+    discountCode: "",
   });
 
   const [errors, setErrors] = useState({
-    fullName: "",
+    surname: "",
     lastName: "",
     email: "",
     phoneNumber: "",
-    departureAddress: "",
-    arrivalAddress: "",
     date: "",
     time: "",
   });
+
+  const [totalPrice, setTotalPrice] = useState(carPrice);
+
+  useEffect(() => {
+    // Cập nhật lại giá khi carPrice thay đổi
+    setTotalPrice(carPrice);
+  }, [carPrice]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -43,6 +46,10 @@ const BookingForm = () => {
       ...prevErrors,
       [name]: "",
     }));
+
+    if (name === "discountCode") {
+      handleDiscount(value); // Kiểm tra mã giảm giá khi thay đổi
+    }
   };
 
   const handleBlur = (event) => {
@@ -54,9 +61,9 @@ const BookingForm = () => {
     const newErrors = { ...errors };
     let isValid = true;
 
-    if (!fieldName || fieldName === "fullName") {
-      if (!formData.fullName.trim()) {
-        newErrors.fullName = "Họ và tên không được để trống.";
+    if (!fieldName || fieldName === "surname") {
+      if (!formData.surname.trim()) {
+        newErrors.surname = "Họ và tên lót không được để trống.";
         isValid = false;
       }
     }
@@ -83,20 +90,6 @@ const BookingForm = () => {
       }
     }
 
-    if (!fieldName || fieldName === "departureAddress") {
-      if (!formData.departureAddress.trim()) {
-        newErrors.departureAddress = "Địa chỉ đi từ không được để trống.";
-        isValid = false;
-      }
-    }
-
-    if (!fieldName || fieldName === "arrivalAddress") {
-      if (!formData.arrivalAddress.trim()) {
-        newErrors.arrivalAddress = "Địa chỉ đến không được để trống.";
-        isValid = false;
-      }
-    }
-
     if (!fieldName || fieldName === "date") {
       if (!formData.date.trim()) {
         newErrors.date = "Ngày không được để trống.";
@@ -115,15 +108,22 @@ const BookingForm = () => {
     return isValid;
   };
 
+  const handleDiscount = (code) => {
+    if (code === "DISCOUNT10") {
+      setTotalPrice(carPrice * 0.9); // Giảm 10% giá
+    } else {
+      setTotalPrice(carPrice); // Nếu mã giảm giá không hợp lệ, giữ nguyên giá
+    }
+  };
+
   const submitHandler = (event) => {
     event.preventDefault();
 
-    const isValid = validateForm(); // Validate toàn bộ form khi submit
+    const isValid = validateForm();
 
     if (isValid) {
-      // Chỉ chuyển hướng khi form hợp lệ
       console.log("Form submitted", formData);
-      navigate("/payment"); // Điều hướng đến trang Payment
+      navigate("/payment"); 
     } else {
       console.log("Form has errors, please fix them before submitting.");
     }
@@ -133,136 +133,113 @@ const BookingForm = () => {
     <div className="booking-form-container">
       <h1 className="booking-heading">Thông Tin Đặt Xe</h1>
       <Form onSubmit={submitHandler}>
-        <FormGroup className="booking__form d-inline-block me-4 mb-4">
-          <input
-            type="text"
-            name="fullName"
-            value={formData.fullName}
-            placeholder="Họ và tên lót"
-            onChange={handleChange}
-            onBlur={handleBlur}
-          />
-          {errors.fullName && <p className="error">{errors.fullName}</p>}
-        </FormGroup>
-        <FormGroup className="booking__form d-inline-block ms-1 mb-4">
-          <input
-            type="text"
-            name="lastName"
-            value={formData.lastName}
-            placeholder="Tên"
-            onChange={handleChange}
-            onBlur={handleBlur}
-          />
-          {errors.lastName && <p className="error">{errors.lastName}</p>}
-        </FormGroup>
-
-        <FormGroup className="booking__form d-inline-block me-4 mb-4">
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            placeholder="Email"
-            onChange={handleChange}
-            onBlur={handleBlur}
-          />
-          {errors.email && <p className="error">{errors.email}</p>}
-        </FormGroup>
-
-        <FormGroup className="booking__form d-inline-block ms-1 mb-4">
-          <input
-            type="number"
-            name="phoneNumber"
-            value={formData.phoneNumber}
-            placeholder="Số điện thoại"
-            className="number-input"
-            onChange={handleChange}
-            onBlur={handleBlur}
-          />
-          {errors.phoneNumber && <p className="error">{errors.phoneNumber}</p>}
-        </FormGroup>
-
-        <FormGroup className="booking__form d-inline-block me-4 mb-4">
-          <input
-            type="text"
-            name="departureAddress"
-            value={formData.departureAddress}
-            placeholder="Địa chỉ đi từ"
-            onChange={handleChange}
-            onBlur={handleBlur}
-          />
-          {errors.departureAddress && <p className="error">{errors.departureAddress}</p>}
-        </FormGroup>
-        <FormGroup className="booking__form d-inline-block ms-1 mb-4">
-          <input
-            type="text"
-            name="arrivalAddress"
-            value={formData.arrivalAddress}
-            placeholder="Địa chỉ đến"
-            onChange={handleChange}
-            onBlur={handleBlur}
-          />
-          {errors.arrivalAddress && <p className="error">{errors.arrivalAddress}</p>}
-        </FormGroup>
-
-        <FormGroup className="booking__form d-inline-block me-4 mb-4">
-          <select
-            name="passengers"
-            value={formData.passengers}
-            onChange={handleChange}
-          >
-            <option value="1 person">1 Người</option>
-            <option value="2 person">2 Người</option>
-            <option value="3 person">3 Người</option>
-            <option value="4 person">4 Người</option>
-            <option value="5+ person">5+ Người</option>
-          </select>
-        </FormGroup>
-        <FormGroup className="booking__form d-inline-block ms-1 mb-4">
-          <select
-            name="luggage"
-            value={formData.luggage}
-            onChange={handleChange}
-          >
-            <option value="1 luggage">1 hành lí</option>
-            <option value="2 luggage">2 hành lí</option>
-            <option value="3 luggage">3 hành lí</option>
-            <option value="4 luggage">4 hành lí</option>
-            <option value="5+ luggage">5+ hành lí</option>
-          </select>
-        </FormGroup>
-
-        <FormGroup className="booking__form d-inline-block me-4 mb-4">
-          <input
-            type="date"
-            name="date"
-            value={formData.date}
-            onChange={handleChange}
-            onBlur={handleBlur}
-          />
-          {errors.date && <p className="error">{errors.date}</p>}
-        </FormGroup>
-        <FormGroup className="booking__form d-inline-block ms-1 mb-4">
-          <input
-            type="time"
-            name="time"
-            value={formData.time}
-            onChange={handleChange}
-            onBlur={handleBlur}
-          />
-          {errors.time && <p className="error">{errors.time}</p>}
-        </FormGroup>
-
-        <FormGroup>
-          <textarea
-            rows={5}
-            name="note"
-            value={formData.note}
-            onChange={handleChange}
-            className="textarea"
-            placeholder="Chú thích"
-          ></textarea>
-        </FormGroup>
-
+        <div className="booking-section">
+          <h2 className="section-heading mb-4">Thông Tin Của Bạn</h2>
+          <FormGroup className="booking__form d-inline-block me-4 mb-4">
+            <input
+              type="text"
+              name="surname"
+              value={formData.surname}
+              placeholder="Họ và tên lót"
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            {errors.surname && <p className="error">{errors.surname}</p>}
+          </FormGroup>
+          <FormGroup className="booking__form d-inline-block ms-1 mb-4">
+            <input
+              type="text"
+              name="lastName"
+              value={formData.lastName}
+              placeholder="Tên"
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            {errors.lastName && <p className="error">{errors.lastName}</p>}
+          </FormGroup>
+          <FormGroup className="booking__form d-inline-block me-4 mb-4">
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              placeholder="Email"
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            {errors.email && <p className="error">{errors.email}</p>}
+          </FormGroup>
+          <FormGroup className="booking__form d-inline-block ms-1 mb-4">
+            <input
+              type="number"
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              placeholder="Số điện thoại"
+              className="number-input"
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            {errors.phoneNumber && <p className="error">{errors.phoneNumber}</p>}
+          </FormGroup>
+          <FormGroup className="booking__form d-inline-block me-4 mb-4">
+            <input
+              type="date"
+              name="date"
+              value={formData.date}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            {errors.date && <p className="error">{errors.date}</p>}
+          </FormGroup>
+          <FormGroup className="booking__form d-inline-block ms-1 mb-4">
+            <input
+              type="time"
+              name="time"
+              value={formData.time}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            {errors.time && <p className="error">{errors.time}</p>}
+          </FormGroup>
+          <FormGroup>
+            <textarea
+              rows={5}
+              name="note"
+              value={formData.note}
+              onChange={handleChange}
+              className="textarea"
+              placeholder="Chú thích"
+            ></textarea>
+          </FormGroup>
+        </div>
+        <div className="booking-section">
+          <h2 className="section-heading mb-4">Chi Tiết Giá</h2>
+          <FormGroup className="booking__form d-inline-block mb-4">
+            <label>Giá thuê xe</label>
+            <input
+              type="text"
+              value={carPrice ? `${carPrice} VND` : "Chưa có giá"}
+              disabled
+            />
+          </FormGroup>
+          <FormGroup className="booking__form d-inline-block mb-4">
+            <label>Mã giảm giá</label>
+            <input
+              type="text"
+              name="discountCode"
+              value={formData.discountCode}
+              onChange={handleChange}
+              placeholder="Nhập mã giảm giá"
+            />
+          </FormGroup>
+          <FormGroup className="booking__form d-inline-block mb-4">
+            <label>Tổng tiền</label>
+            <input
+              type="text"
+              value={`${totalPrice} VND`}
+              disabled
+            />
+          </FormGroup>
+        </div>
         <button type="submit" className="booking-form-submit">
           Đặt xe
         </button>

@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom"; // Thay useHistory thành useNavigate
 import { Container, Row, Col } from "reactstrap";
-import SeachBar from "../src/components/SearchBar/SearchBar";
 import { text } from "@fortawesome/fontawesome-svg-core";
 
 const CarDetails = () => {
   const { carID } = useParams();
-  const navigate = useNavigate(); // Sử dụng useNavigate thay cho useHistory
+  const navigate = useNavigate();
   const [singleCarItem, setSingleCarItem] = useState(null);
   const [currentImage, setCurrentImage] = useState("");
 
@@ -46,8 +45,8 @@ const CarDetails = () => {
   };
 
   const handleRentButtonClick = () => {
-    // Điều hướng đến trang Booking Form khi nhấn nút
-    navigate("/booking-form"); // Sử dụng navigate thay cho history.push
+    // Điều hướng đến trang Booking Form và truyền giá thuê xe
+    navigate("/booking-form", { state: { carPrice: singleCarItem?.overview?.pricePerDay || 0 } });
   };
 
   if (!singleCarItem) {
@@ -126,7 +125,6 @@ const CarDetails = () => {
                 </span>
               </div>
 
-              {/* Nút Đặt Xe */}
               <button className="mt-4" onClick={handleRentButtonClick}>
                 Đặt ngay
               </button>
