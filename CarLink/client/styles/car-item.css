@@ -7,6 +7,10 @@
   text-overflow: ellipsis;    
   line-clamp: 2;
 }
+/* 
+video{
+  min-height: 200px;
+} */
 
 
 .like__icon {
@@ -26,7 +30,6 @@
   .like__icon i {
     /* color: #000;  */
     color: #ff6b6b; 
-  
   }
   
   .icons-container {
