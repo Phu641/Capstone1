@@ -1,0 +1,99 @@
+.vehicle-approval-page {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.vehicle-approval-page h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+  text-align: center;
+}
+
+.vehicle-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.vehicle-card {
+  width: 100%;
+  max-width: 300px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+  text-align: center;
+}
+
+.vehicle-card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.vehicle-card h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #007bff;
+}
+
+.vehicle-card p {
+  font-size: 14px;
+  margin: 5px 0;
+  color: #555;
+}
+
+.vehicle-actions {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.vehicle-actions button {
+  padding: 8px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Nút Đồng ý */
+.vehicle-actions button:first-child {
+  background-color: #28a745;
+  color: white;
+}
+
+.vehicle-actions button:first-child:hover {
+  background-color: #218838;
+}
+
+/* Nút Chi tiết */
+.vehicle-actions button:nth-child(2) {
+  background-color: #007bff;
+  color: white;
+}
+
+.vehicle-actions button:nth-child(2):hover {
+  background-color: #0056b3;
+}
+
+/* Nút từ chối */
+.vehicle-actions button:last-child {
+  background-color: #dc3545;
+  color: white;
+}
+
+.vehicle-actions button:last-child:hover {
+  background-color: #c82333;
+}
+
+.vehicle-actions button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}

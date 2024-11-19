@@ -1,0 +1,162 @@
+/* CSS cho nút trở về nằm ở góc trái phía trên màn hình */
+.back-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.back-button:hover {
+  background-color: #0056b3;
+}
+
+/* Kiểu dáng cho Trang Chi Tiết Xe */
+.vehicle-details-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+  margin: 20px auto;
+}
+
+.vehicle-details-info {
+  width: 100%;
+  padding-bottom: 20px;
+}
+
+.vehicle-details-page h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.vehicle-details-info p {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.5;
+  margin: 10px 0;
+}
+
+/* Kiểu dáng cho hình ảnh/video chính */
+.main-media {
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-media img,
+.main-media video {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Kiểu dáng cho thư viện hình thu nhỏ */
+.media-gallery-thumbnail {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 10px 0;
+}
+
+.thumbnail-item {
+  flex: 0 0 auto;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.thumbnail-item:hover {
+  transform: scale(1.05);
+}
+
+.vehicle-thumbnail {
+  width: 100px;
+  height: 75px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Kiểu dáng cho modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 90%;
+  max-height: 90%;
+  overflow: auto;
+  position: relative;
+}
+
+.modal-image,
+.modal-video {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* Kiểu dáng cho thông báo đang tải và lỗi */
+.vehicle-details-page p.loading,
+.vehicle-details-page p.error {
+  font-size: 18px;
+  color: #ff3333;
+  font-weight: bold;
+}
+
+/* Đáp ứng chung cho trang */
+@media (max-width: 600px) {
+  .vehicle-details-page {
+    padding: 15px;
+  }
+
+  .vehicle-details-page h2 {
+    font-size: 20px;
+  }
+
+  .vehicle-details-info p {
+    font-size: 14px;
+  }
+
+  .vehicle-thumbnail {
+    width: 75px;
+    height: 50px;
+  }
+
+  .main-media {
+    max-height: 300px;
+  }
+}
+.back-button {
+  z-index: 1001; /* Đảm bảo nút hiển thị trên tất cả các thành phần khác */
+}
