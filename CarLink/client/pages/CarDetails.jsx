@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom"; // Thay useHistory thành useNavigate
 import { Container, Row, Col } from "reactstrap";
-import { text } from "@fortawesome/fontawesome-svg-core";
 
 const CarDetails = () => {
   const { carID } = useParams();
   const navigate = useNavigate();
   const [singleCarItem, setSingleCarItem] = useState(null);
-  const [currentImage, setCurrentImage] = useState("");
+  const [currentMedia, setCurrentMedia] = useState(""); // Changed from currentImage to currentMedia
 
   useEffect(() => {
     const fetchCarDetails = async () => {
@@ -27,7 +26,8 @@ const CarDetails = () => {
         const data = await response.json();
         if (data) {
           setSingleCarItem(data);
-          setCurrentImage(`http://localhost:3000/images/${data.carImages?.[0]?.imageUrl || "./default-image.jpg"}`);
+          const firstMedia = data.carImages?.[0]?.imageUrl || "./default-image.jpg";
+          setCurrentMedia(`http://localhost:3000/images/${firstMedia}`);
         } else {
           console.error("Dữ liệu xe bị thiếu hoặc không đầy đủ.");
         }
@@ -40,8 +40,9 @@ const CarDetails = () => {
     window.scrollTo(0, 0);
   }, [carID]);
 
-  const handleImageClick = (img) => {
-    setCurrentImage(`http://localhost:3000/images/${img || "./default-image.jpg"}`);
+  const handleMediaClick = (media) => {
+    const newMedia = `http://localhost:3000/images/${media || "./default-image.jpg"}`;
+    setCurrentMedia(newMedia);
   };
 
   const handleRentButtonClick = () => {
@@ -53,6 +54,9 @@ const CarDetails = () => {
     return <p>Loading...</p>;
   }
 
+  // Determine if the media is a video by its extension (you can adjust this to handle more video formats)
+  const isVideo = currentMedia && (currentMedia.endsWith(".mp4") || currentMedia.endsWith(".avi"));
+
   return (
     <section>
       <Container>
@@ -63,18 +67,41 @@ const CarDetails = () => {
         </Row>
         <Row>
           <Col lg="6">
-            <img src={currentImage} alt={singleCarItem.overview?.model || "Car"} className="w-100" />
+            {isVideo ? (
+              <video
+                src={currentMedia}
+                alt="Car Video"
+                className="w-100"
+                controls
+                autoPlay
+              />
+            ) : (
+              <img src={currentMedia} alt={singleCarItem.overview?.model || "Car"} className="w-100" />
+            )}
             <div className="image-thumbnails d-flex mt-2">
-              {singleCarItem.carImages?.map((img, index) => (
-                <img
-                  key={index}
-                  src={`http://localhost:3000/images/${img.imageUrl}`}
-                  alt={`Thumbnail ${index}`}
-                  className="thumbnail"
-                  onClick={() => handleImageClick(img.imageUrl)}
-                  style={{ cursor: "pointer", width: "100px", marginRight: "10px" }}
-                />
-              ))}
+              {singleCarItem.carImages?.map((img, index) => {
+                const mediaUrl = `http://localhost:3000/images/${img.imageUrl}`;
+                const isVideoThumbnail = mediaUrl.endsWith(".mp4") || mediaUrl.endsWith(".avi");
+                return (
+                  <div key={index} onClick={() => handleMediaClick(img.imageUrl)} style={{ cursor: "pointer" }}>
+                    {isVideoThumbnail ? (
+                      <video
+                        src={mediaUrl}
+                        className="thumbnail"
+                        style={{ width: "100px", marginRight: "10px" }}
+                        controls
+                      />
+                    ) : (
+                      <img
+                        src={mediaUrl}
+                        alt={`Thumbnail ${index}`}
+                        className="thumbnail"
+                        style={{ width: "100px", marginRight: "10px" }}
+                      />
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </Col>
 

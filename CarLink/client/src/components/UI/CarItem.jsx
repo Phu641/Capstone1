@@ -11,7 +11,9 @@ const CarItem = (props) => {
     setIsLiked(!isLiked);
   };
 
+  // Kiểm tra xem hình ảnh có phải là video hay không (dựa vào phần mở rộng tệp)
   const carImage = images && images.length > 0 ? `http://localhost:3000/images/${images[0]}` : "./default-image.jpg";
+  const isVideo = carImage && (carImage.endsWith('.mp4') || carImage.endsWith('.webm') || carImage.endsWith('.ogg'));
 
   return (
     <Col lg="4" md="4" sm="6" className="mb-5" style={{ width: '100%' }}>
@@ -22,7 +24,18 @@ const CarItem = (props) => {
         </div>
 
         <div className="car__img">
-          <img src={carImage} alt={carName || model} className="w-100" />
+          {isVideo ? (
+            <video 
+              src={carImage} 
+              alt={carName || model} 
+              className="w-100" 
+              controls 
+              autoPlay 
+              muted
+            />
+          ) : (
+            <img src={carImage} alt={carName || model} className="w-100" />
+          )}
         </div>
 
         <div className="car__item-content mt-4">
@@ -63,6 +76,7 @@ const CarItem = (props) => {
           <button className="w-50 car__item-btn car__btn-details">
             <Link to={`/cars/${id}`}>Chi tiết</Link>
           </button>
+          
         </div>
       </div>
     </Col>
