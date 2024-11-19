@@ -126,19 +126,18 @@
 // };
 
 // export default DashboardAdmin;
-
-
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/DashboardAdmin.css";
 import RevenueChart from "../src/components/Chart/RevenueChart";
-import UserList from "../src/components/UserList/UserList";
-import VehicleApprovalPage from "../src/components/VehicleApproval/VehicleApprovalPage";
+import UserList from "./UserList";
+import VehicleApprovalPage from "./VehicleApprovalPage";
 
 const DashboardAdmin = () => {
-  const [showUserList, setShowUserList] = useState(false);
+  const navigate = useNavigate();
   const [showDashboard, setShowDashboard] = useState(true);
   const [showVehicleApproval, setShowVehicleApproval] = useState(false);
-  const [activePage, setActivePage] = useState("dashboard");
+  const [activePage, setActivePage] = useState("DashboardAdmin");
 
   // State để lưu trữ dữ liệu từ API
   const [stats, setStats] = useState({
@@ -164,7 +163,7 @@ const DashboardAdmin = () => {
   }, []);
 
   const handleManageUsersClick = () => {
-    setShowUserList(true);
+    navigate("/user-list");
     setShowDashboard(false);
     setShowVehicleApproval(false);
     setActivePage("manageUsers");
@@ -172,15 +171,14 @@ const DashboardAdmin = () => {
 
   const handleDashboardClick = () => {
     setShowDashboard(true);
-    setShowUserList(false);
     setShowVehicleApproval(false);
     setActivePage("dashboard");
   };
 
   const handleVehicleApprovalClick = () => {
+    navigate("/vehicle-approval");
     setShowVehicleApproval(true);
     setShowDashboard(false);
-    setShowUserList(false);
     setActivePage("vehicleApproval");
   };
 
@@ -206,19 +204,13 @@ const DashboardAdmin = () => {
           >
             Kiểm duyệt xe
           </li>
-          <li
-            className={activePage === "bookingApproval" ? "active" : ""}
-          >
+          <li className={activePage === "bookingApproval" ? "active" : ""}>
             Kiểm duyệt Booking
           </li>
-          <li
-            className={activePage === "customerFeedback" ? "active" : ""}
-          >
+          <li className={activePage === "customerFeedback" ? "active" : ""}>
             Phản hồi của khách hàng
           </li>
-          <li
-            className={activePage === "settings" ? "active" : ""}
-          >
+          <li className={activePage === "settings" ? "active" : ""}>
             Cài đặt
           </li>
         </ul>
@@ -253,8 +245,6 @@ const DashboardAdmin = () => {
             </div>
           </>
         )}
-
-        {showUserList && <UserList />}
 
         {showVehicleApproval && <VehicleApprovalPage />}
       </div>
