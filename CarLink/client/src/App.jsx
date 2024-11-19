@@ -12,6 +12,7 @@ import DashboardAdmin from "../pages/DashboardAdmin";
 import VehicleDetailsPage from "./components/VehicleDetailsPage/VehicleDetailsPage";
 import BookingForm from "./components/UI/BookingForm.jsx";
 import Payment from "./components/UI/PaymentMethod.jsx";
+import CarListing from "../pages/CarListing";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route path="/vehicle/:id" element={<VehicleDetailsPage />} />
         <Route path="/booking-form" element={<BookingForm />} />  
         <Route path="/payment" element={<Payment />} />
+        <Route path="/car-listing" element={<CarListing />} />
       </Routes>
       <Footer />
     </Router>

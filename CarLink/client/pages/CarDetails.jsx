@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom"; // Thay useHistory thành useNavigate
 import { Container, Row, Col } from "reactstrap";
 import SeachBar from "../src/components/SearchBar/SearchBar";
+import { text } from "@fortawesome/fontawesome-svg-core";
 
 const CarDetails = () => {
   const { carID } = useParams();
@@ -58,7 +59,7 @@ const CarDetails = () => {
       <Container>
         <Row className="mb-5">
           <Col lg="12">
-            <SeachBar />
+            <h1 style={{ textAlign: "center" }}>Thông tin chi tiết xe</h1>
           </Col>
         </Row>
         <Row>
@@ -110,6 +111,9 @@ const CarDetails = () => {
                 </span>
                 <span className="d-flex align-items-center gap-1 section__description">
                   <i className="ri-user-fill" style={{ color: "#f9a826" }}></i> {singleCarItem.overview?.seats}
+                </span>
+                <span className="d-flex align-items-center gap-1 section__description">
+                  <i className="ri-gas-station-line" style={{ color: "#f9a826" }}></i> {singleCarItem.overview?.fuelType}
                 </span>
               </div>
 

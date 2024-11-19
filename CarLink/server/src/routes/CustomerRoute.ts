@@ -1,5 +1,5 @@
 import express from 'express';
-import { CustomerLogIn, CustomerSignUp, CustomerVerify, EditCustomerProfile, GetCustomerProfile, onRequestOTP, GetCurrentRole } from '../controllers';
+import { CustomerLogIn, CustomerSignUp, CustomerVerify, EditCustomerProfile, GetCustomerProfile, onRequestOTP, GetCurrentRole, addToFavorite, getAllCarsFavorite } from '../controllers';
 import { Authenticate } from '../middlewares';
 
 const router = express.Router();
@@ -27,5 +27,13 @@ router.patch('/profile', EditCustomerProfile as any);
 
 //GET CURRENT ROLE
 router.get('/check-role', GetCurrentRole as any); 
+
+//ADD (REMOVE) TO FAVORITE
+router.post('/add-favorite/:id', addToFavorite as any);
+
+//ADD (REMOVE) TO FAVORITE
+router.get('/cars-favorite', getAllCarsFavorite as any);
+
+
 
 export { router as CustomerRoute}
