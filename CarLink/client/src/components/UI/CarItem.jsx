@@ -11,8 +11,10 @@ const CarItem = (props) => {
 
   useEffect(() => {
     const fetchFavoriteCars = async () => {
+      const token = localStorage.getItem("token"); // Kiểm tra token
+      if (!token) return; // Nếu không có token, thoát hàm
+  
       try {
-        const token = localStorage.getItem("token"); // Lấy token từ localStorage
         const response = await axios.get("http://localhost:3000/customer/cars-favorite", {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -26,21 +28,26 @@ const CarItem = (props) => {
         toast.error("Không thể tải danh sách yêu thích!");
       }
     };
-
+  
     fetchFavoriteCars();
   }, [id]);
-
+  
   const handleLike = async () => {
+    const token = localStorage.getItem("token"); // Lấy token
+    if (!token) {
+      toast.error("Vui lòng đăng nhập để sử dụng chức năng này!");
+      return;
+    }
+  
     try {
       setIsLiked((prevState) => !prevState);
-
-      const token = localStorage.getItem("token");
+  
       const response = await axios.post(
         `http://localhost:3000/customer/add-favorite/${id}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
+  
       if (response.status === 200) {
         const likedCars = JSON.parse(localStorage.getItem("likedCars")) || [];
         if (isLiked) {
@@ -60,6 +67,7 @@ const CarItem = (props) => {
       console.error(error);
     }
   };
+  
 
   const carImage = images && images.length > 0 ? `http://localhost:3000/images/${images[0]}` : "./default-image.jpg";
   const isVideo = carImage && (carImage.endsWith(".mp4") || carImage.endsWith(".webm") || carImage.endsWith(".ogg"));

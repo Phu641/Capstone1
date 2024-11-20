@@ -16,7 +16,7 @@ const BookingForm = () => {
     date: "",
     time: "",
     note: "",
-    deliveryOption: "selfPickUp", // Giá trị mặc định là tự nhận xe
+    deliveryOption: "selfPickUp",
     deliveryAddress: "",
   });
 
@@ -36,6 +36,11 @@ const BookingForm = () => {
     setTotalPrice(carPrice);
   }, [carPrice]);
 
+  const currentDate = new Date().toISOString().split('T')[0]; // Lấy ngày hiện tại theo định dạng YYYY-MM-DD
+  const currentTime = new Date(); // Lấy giờ hiện tại
+  currentTime.setMinutes(currentTime.getMinutes() - currentTime.getMinutes() % 5); // Làm tròn giờ hiện tại xuống phút gần nhất chia hết cho 5
+  const formattedTime = currentTime.toISOString().split('T')[1].slice(0, 5); // Lấy giờ và phút hiện tại đã làm tròn
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({
@@ -43,10 +48,28 @@ const BookingForm = () => {
       [name]: value,
     }));
 
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      [name]: "",
-    }));
+    // Kiểm tra nếu là trường 'time' và ngày được chọn là ngày hiện tại
+    if (name === "time" && formData.date === currentDate) {
+      const [enteredHour, enteredMinute] = value.split(":").map(Number);
+      const [currentHour, currentMinute] = formattedTime.split(":").map(Number);
+
+      if (enteredHour < currentHour || (enteredHour === currentHour && enteredMinute < currentMinute)) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          time: "Giờ không thể bé hơn hoặc bằng giờ hiện tại.",
+        }));
+      } else {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          time: "",
+        }));
+      }
+    } else {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: "",
+      }));
+    }
   };
 
   const handleBlur = (event) => {
@@ -181,6 +204,7 @@ const BookingForm = () => {
               value={formData.date}
               onChange={handleChange}
               onBlur={handleBlur}
+              min={currentDate} // Giới hạn ngày không được nhỏ hơn ngày hiện tại
             />
             {errors.date && <p className="error">{errors.date}</p>}
           </FormGroup>
@@ -191,6 +215,7 @@ const BookingForm = () => {
               value={formData.time}
               onChange={handleChange}
               onBlur={handleBlur}
+              min={formData.date === currentDate ? formattedTime : "00:00"} // Giới hạn giờ không được nhỏ hơn giờ hiện tại nếu là ngày hiện tại
             />
             {errors.time && <p className="error">{errors.time}</p>}
           </FormGroup>
@@ -243,7 +268,7 @@ const BookingForm = () => {
             </FormGroup>
           )}
         </div>
-        <div className="booking-section">
+        <div className="total-price">
           <h2 className="section-heading mb-4">Chi Tiết Giá</h2>
           <FormGroup className="booking__form d-inline-block mb-4">
             <label>Giá thuê xe</label>
@@ -257,21 +282,14 @@ const BookingForm = () => {
             <label>Loyal Point</label>
             <input
               type="text"
-              value= 'Loyal Point'
+              value='Loyal Point'
               disabled
             />
           </FormGroup>
-          <FormGroup className="booking__form d-inline-block mb-4">
-            <label>Tổng tiền</label>
-            <input
-              type="text"
-              value={`${totalPrice} VND`}
-              disabled
-            />
-          </FormGroup>
+          <h4>Tổng giá tiền: {totalPrice} VND</h4>
         </div>
-        <button type="submit" className="booking-form-submit">
-          Đặt xe
+        <button type="submit" className="mt-4">
+          Tiến hành thanh toán
         </button>
       </Form>
     </div>

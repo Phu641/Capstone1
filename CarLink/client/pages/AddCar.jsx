@@ -25,7 +25,7 @@ const useCarForm = (initialValues) => {
     )
       return "Giá cho thuê phải là một số dương.";
     if (!formData.address) return "Địa chỉ là bắt buộc.";
-    if (formData.photos.length === 0) return "Bạn phải thêm ít nhất một ảnh.";
+    if (formData.photos.length === 0) return "Bạn phải thêm ít nhất một ảnh và 1 video.";
     return null;
   };
 
