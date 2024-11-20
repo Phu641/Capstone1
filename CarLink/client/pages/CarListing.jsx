@@ -20,25 +20,25 @@ const CarListing = () => {
 
     const fetchCars = async () => {
       try {
-        let url = "http://localhost:3000/searching/cars";  
+        let url = "http://localhost:3000/searching/cars";
         if (place) {
           url = "http://localhost:3000/searching/cars-by-location";
         }
 
         const response = await fetch(url, {
-          method: place ? "POST" : "GET",  
+          method: place ? "POST" : "GET",
           headers: { "Content-Type": "application/json" },
           body: place ? JSON.stringify({ address: place }) : undefined,
         });
 
         if (!response.ok) {
-          setFilteredCars([]);  
+          setFilteredCars([]);
           return;
         }
 
         const data = await response.json();
-        setCars(data);  
-        setFilteredCars(data);  
+        setCars(data);
+        setFilteredCars(data);
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu xe:", error);
       }
@@ -66,7 +66,7 @@ const CarListing = () => {
       );
     }
 
-    setFilteredCars(filtered);  
+    setFilteredCars(filtered);
   };
 
   const handleSortChange = (event) => {
@@ -79,7 +79,7 @@ const CarListing = () => {
         : b.overview.pricePerDay - a.overview.pricePerDay
     );
 
-    setFilteredCars(sorted);  
+    setFilteredCars(sorted);
   };
 
   return (
@@ -110,26 +110,35 @@ const CarListing = () => {
             <Row>
               {filteredCars.length > 0 ? (
                 filteredCars.map((car) => (
-                  <Col lg="4" md="6" sm="6" key={car.carID}>
-                    <CarItem
-                      item={{
-                        id: car.carID,
-                        carName: car.overview.model,
-                        price: car.overview.pricePerDay,
-                        description: car.overview.description,
-                        images: car.carImages.map((img) => img.imageUrl),
-                        seats: car.overview.seats,
-                        transmission: car.overview.transmission,
-                        fuelType: car.overview.fuelType,
-                        address: car.overview.address,
-                      }}
-                    />
-                  </Col>
+                  // Kiểm tra nếu carID tồn tại
+                  car.carID ? (
+                    <Col lg="4" md="6" sm="6" key={car.carID}>
+                      <CarItem
+                        item={{
+                          id: car.carID,
+                          carName: car.overview.model,
+                          price: car.overview.pricePerDay,
+                          description: car.overview.description,
+                          images: car.carImages.map((img) => img.imageUrl),
+                          seats: car.overview.seats,
+                          transmission: car.overview.transmission,
+                          fuelType: car.overview.fuelType,
+                          address: car.overview.address,
+                        }}
+                      />
+                    </Col>
+                  ) : (
+                    // Xử lý trường hợp không có carID
+                    <p key={Math.random()} style={{ textAlign: "center", width: "100%" }}>
+                      Không tìm thấy thông tin xe.
+                    </p>
+                  )
                 ))
               ) : (
                 <p style={{ textAlign: "center", width: "100%" }}>Không tìm thấy xe phù hợp.</p>
               )}
             </Row>
+
           </Col>
         </Row>
       </Container>

@@ -14,12 +14,13 @@ import VehicleApprovalPage from "../pages/VehicleApprovalPage";
 import UserList from "../pages/UserList";
 import BookingForm from "./components/UI/BookingForm.jsx";
 import Payment from "./components/UI/PaymentMethod.jsx";
-import CarListing from "../pages/CarListing";
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   return (
     <Router>
       <Header />
+      <ToastContainer />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/Home" element={<HomePage />} />
@@ -35,7 +36,6 @@ function App() {
         <Route path="/user-list" element={<UserList />} />
         <Route path="/booking-form" element={<BookingForm />} />  
         <Route path="/payment" element={<Payment />} />
-        <Route path="/car-listing" element={<CarListing />} />
       </Routes>
       <Footer />
     </Router>
