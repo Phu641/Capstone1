@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "../../../styles/booking-form.css";
 import { Form, FormGroup } from "reactstrap";
-import { useNavigate, useLocation } from "react-router-dom"; 
+import { useNavigate, useLocation } from "react-router-dom";
+
 const BookingForm = () => {
   const navigate = useNavigate();
-  const location = useLocation(); 
-  const carPrice = location.state?.carPrice || 0; 
+  const location = useLocation();
+  const carPrice = location.state?.carPrice || 0;
 
   const [formData, setFormData] = useState({
     surname: "",
@@ -15,7 +16,8 @@ const BookingForm = () => {
     date: "",
     time: "",
     note: "",
-    discountCode: "",
+    deliveryOption: "selfPickUp", // Giá trị mặc định là tự nhận xe
+    deliveryAddress: "",
   });
 
   const [errors, setErrors] = useState({
@@ -25,12 +27,12 @@ const BookingForm = () => {
     phoneNumber: "",
     date: "",
     time: "",
+    deliveryAddress: "",
   });
 
   const [totalPrice, setTotalPrice] = useState(carPrice);
 
   useEffect(() => {
-    // Cập nhật lại giá khi carPrice thay đổi
     setTotalPrice(carPrice);
   }, [carPrice]);
 
@@ -41,15 +43,10 @@ const BookingForm = () => {
       [name]: value,
     }));
 
-    // Xóa lỗi khi người dùng thay đổi giá trị
     setErrors((prevErrors) => ({
       ...prevErrors,
       [name]: "",
     }));
-
-    if (name === "discountCode") {
-      handleDiscount(value); // Kiểm tra mã giảm giá khi thay đổi
-    }
   };
 
   const handleBlur = (event) => {
@@ -104,16 +101,13 @@ const BookingForm = () => {
       }
     }
 
+    if (formData.deliveryOption === "delivery" && (!formData.deliveryAddress.trim())) {
+      newErrors.deliveryAddress = "Địa chỉ giao xe không được để trống.";
+      isValid = false;
+    }
+
     setErrors(newErrors);
     return isValid;
-  };
-
-  const handleDiscount = (code) => {
-    if (code === "DISCOUNT10") {
-      setTotalPrice(carPrice * 0.9); // Giảm 10% giá
-    } else {
-      setTotalPrice(carPrice); // Nếu mã giảm giá không hợp lệ, giữ nguyên giá
-    }
   };
 
   const submitHandler = (event) => {
@@ -123,7 +117,7 @@ const BookingForm = () => {
 
     if (isValid) {
       console.log("Form submitted", formData);
-      navigate("/payment"); 
+      navigate("/payment");
     } else {
       console.log("Form has errors, please fix them before submitting.");
     }
@@ -212,23 +206,59 @@ const BookingForm = () => {
           </FormGroup>
         </div>
         <div className="booking-section">
+          <h2 className="section-heading mb-4">Chi Tiết Giao Xe</h2>
+          <FormGroup className="mb-4">
+            <label>
+              <input
+                type="radio"
+                name="deliveryOption"
+                value="selfPickUp"
+                checked={formData.deliveryOption === "selfPickUp"}
+                onChange={handleChange}
+              />
+              Tự nhận xe
+            </label>
+            <label className="ms-4">
+              <input
+                type="radio"
+                name="deliveryOption"
+                value="delivery"
+                checked={formData.deliveryOption === "delivery"}
+                onChange={handleChange}
+              />
+              Giao xe tận nơi
+            </label>
+          </FormGroup>
+          {formData.deliveryOption === "delivery" && (
+            <FormGroup className="booking__form mb-4">
+              <input
+                type="text"
+                name="deliveryAddress"
+                value={formData.deliveryAddress}
+                placeholder="Địa chỉ giao xe"
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+              {errors.deliveryAddress && <p className="error">{errors.deliveryAddress}</p>}
+            </FormGroup>
+          )}
+        </div>
+        <div className="booking-section">
           <h2 className="section-heading mb-4">Chi Tiết Giá</h2>
           <FormGroup className="booking__form d-inline-block mb-4">
             <label>Giá thuê xe</label>
             <input
               type="text"
-              value={carPrice ? `${carPrice} VND` : "Chưa có giá"}
+              value={`${carPrice} VND`}
               disabled
             />
           </FormGroup>
           <FormGroup className="booking__form d-inline-block mb-4">
-            <label>Mã giảm giá</label>
+            <label>Loyal Point</label>
             <input
               type="text"
-              name="discountCode"
-              value={formData.discountCode}
-              onChange={handleChange}
-              placeholder="Nhập mã giảm giá"
+              value= 'Loyal Point'
+              disabled
             />
           </FormGroup>
           <FormGroup className="booking__form d-inline-block mb-4">
