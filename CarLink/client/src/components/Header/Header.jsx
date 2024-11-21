@@ -12,6 +12,7 @@ import {
   FaShieldAlt,
   FaTools,
   FaCalculator,
+  FaHeart
 } from "react-icons/fa";
 
 const Header = () => {
@@ -135,6 +136,12 @@ const Header = () => {
                 </a>
               </li>
               <hr />
+              <li>
+                <a href="/favorites">
+                  <FaHeart />
+                  Danh sách xe yêu thích của bạn
+                </a>
+              </li>
               <li>
                 <a href="/how-it-works">
                   <FaQuestionCircle />

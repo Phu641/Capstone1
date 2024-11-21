@@ -14,6 +14,7 @@ import VehicleApprovalPage from "../pages/VehicleApprovalPage";
 import UserList from "../pages/UserList";
 import BookingForm from "./components/UI/BookingForm.jsx";
 import Payment from "./components/UI/PaymentMethod.jsx";
+import Favorites from "./components/Favorite/Favorite.jsx";
 import { ToastContainer } from 'react-toastify';
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
         <Route path="/user-list" element={<UserList />} />
         <Route path="/booking-form" element={<BookingForm />} />  
         <Route path="/payment" element={<Payment />} />
+        <Route path="/favorites" element={<Favorites />} /> 
       </Routes>
       <Footer />
     </Router>
