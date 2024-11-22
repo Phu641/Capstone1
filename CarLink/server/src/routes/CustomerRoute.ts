@@ -1,5 +1,5 @@
 import express from 'express';
-import { CustomerLogIn, CustomerSignUp, CustomerVerify, EditCustomerProfile, GetCustomerProfile, onRequestOTP, GetCurrentRole, addToFavorite, getAllCarsFavorite } from '../controllers';
+import { CustomerLogIn, CustomerSignUp, CustomerVerify, EditCustomerProfile, GetCustomerProfile, onRequestOTP, GetCurrentRole, addToFavorite, getAllCarsFavorite, BookCar } from '../controllers';
 import { Authenticate } from '../middlewares';
 
 const router = express.Router();
@@ -33,6 +33,9 @@ router.post('/add-favorite/:id', addToFavorite as any);
 
 //ADD (REMOVE) TO FAVORITE
 router.get('/cars-favorite', getAllCarsFavorite as any);
+
+//BOOK CAR
+router.post('/book-car', BookCar as any);
 
 
 

@@ -3,7 +3,7 @@ import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 import { CreateCustomerInputs, UserLoginInputs, EditCustomerProfileInputs } from '../dto';
 import { GeneratePassword, GenerateSalt, GenerateSignature, ValidatePassword, GenerateOtp, GetCarByID} from '../utility';
-import { Car, Customer, Favorite, Images, Overview, Role } from '../models';
+import { Booking, Car, Customer, Favorite, Images, Overview, Role } from '../models';
 import path from 'path';
 const dotenv = require('dotenv');
 dotenv.config({ path: path.resolve(__dirname, '.././.env') });
@@ -375,5 +375,45 @@ export const getAllCarsFavorite = async (req: Request, res: Response, next: Next
 
 
 /**------------------------------BOOKING SECTION------------------------------------------ */
+
+//BOOK CAR 
+export const BookCar = async (req: Request, res: Response, next: NextFunction) => {
+
+    const user = req.user;
+    const {carID, bookingDate, untilDate, pricePerDay, days} = req.body;
+
+    try {
+
+        const car = await Car.findByPk(carID);
+
+        if(car) {
+
+            if(!car.booked) {
+
+                const totalAmount = pricePerDay * days;
+
+                const booking = await Booking.create({
+
+                    customerID: user?.customerID,
+                    carID,
+                    bookingDate,
+                    untilDate,
+                    totalAmount,
+                    bookingStatus: 'pending'
+
+                });
+
+                return res.status(200).json(booking);
+
+            }
+
+        }
+        
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json('Đã xảy ra lỗi, vui lòng thử lại sau!');
+    }
+};
 
 /**------------------------------PAYMENT SECTION------------------------------------------ */

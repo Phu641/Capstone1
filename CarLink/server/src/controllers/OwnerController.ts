@@ -39,6 +39,7 @@ export const AddCar = async(req: Request, res: Response, next: NextFunction) => 
                 customerID: owner.customerID,
                 delivery,
                 selfPickUp,
+                booked: false,
                 isAvailable: false
             })
 

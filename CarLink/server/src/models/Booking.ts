@@ -1,5 +1,5 @@
 import { Table, Column, Model, ForeignKey, DataType, BelongsTo, PrimaryKey, AutoIncrement, HasOne } from 'sequelize-typescript';
-import { Car, Transaction, Report } from '.';
+import { Car, Transaction, Report, Customer } from '.';
 
 @Table({
   tableName: 'bookings',
@@ -14,6 +14,10 @@ export class Booking extends Model {
   @ForeignKey(() => Car)
   @Column(DataType.INTEGER)
   carID!: number;
+
+  @ForeignKey(() => Customer)
+  @Column(DataType.INTEGER)
+  customerID!: number;
 
   @Column(DataType.DATE)
   bookingDate!: Date;
