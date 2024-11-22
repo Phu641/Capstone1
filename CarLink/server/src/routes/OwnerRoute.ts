@@ -1,5 +1,5 @@
 import express from "express";
-import { AddCar } from "../controllers";
+import { AddCar, UpdateCar } from "../controllers";
 import multer from 'multer';
 import { Authenticate } from "../middlewares";
 
@@ -29,6 +29,9 @@ router.use(Authenticate as any);
 
 //ADD CAR
 router.post('/add-car', images as any, AddCar as any);
+
+//UPDATE CAR
+router.put('/update-car', images as any, UpdateCar as any);
 
 
 export { router as OwnerRoute }
