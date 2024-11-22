@@ -7,6 +7,8 @@ const CarDetails = () => {
   const navigate = useNavigate();
   const [singleCarItem, setSingleCarItem] = useState(null);
   const [currentMedia, setCurrentMedia] = useState(""); // Changed from currentImage to currentMedia
+  const [isAcceptedTerms, setIsAcceptedTerms] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(""); 
 
   useEffect(() => {
     const fetchCarDetails = async () => {
@@ -46,7 +48,11 @@ const CarDetails = () => {
   };
 
   const handleRentButtonClick = () => {
-    // Điều hướng đến trang Booking Form và truyền giá thuê xe
+    if (!isAcceptedTerms) {
+      setErrorMessage("Bạn phải chấp nhận điều khoản sử dụng trước khi đặt xe.");
+      return;
+    }
+    setErrorMessage(""); // Clear error message if validation passes
     navigate("/booking-form", { state: { carPrice: singleCarItem?.overview?.pricePerDay || 0 } });
   };
 
@@ -156,43 +162,63 @@ const CarDetails = () => {
         </Row>
 
         <Row>
-  <Col lg="12">
-    <h3 className="mt-5">Giấy tờ thuê xe</h3>
-    <p>
-      Trước khi nhận xe, bạn cần cung cấp bằng lái xe và một trong những tài liệu sau: 
-      <b> Chứng minh nhân dân hoặc hộ chiếu</b>.
-    </p>
-    <div className="d-flex align-items-center mt-3">
-      <i className="ri-file-list-3-line" style={{ color: "#f9a826", fontSize: "2rem", marginRight: "10px" }}></i>
-      <span>Bằng lái xe</span>
-    </div>
-    <div className="d-flex align-items-center mt-3">
-      <i className="ri-file-list-3-line" style={{ color: "#f9a826", fontSize: "2rem", marginRight: "10px" }}></i>
-      <span>Căn Cước Công Dân</span>
-    </div>
-  </Col>
-</Row>
+          <Col lg="12">
+            <h3 className="mt-5">Giấy tờ thuê xe</h3>
+            <p>
+              Trước khi nhận xe, bạn cần cung cấp bằng lái xe và một trong những tài liệu sau:
+              <b> Chứng minh nhân dân hoặc hộ chiếu</b>.
+            </p>
+            <div className="d-flex align-items-center mt-3">
+              <i className="ri-file-list-3-line" style={{ color: "#f9a826", fontSize: "2rem", marginRight: "10px" }}></i>
+              <span>Bằng lái xe</span>
+            </div>
+            <div className="d-flex align-items-center mt-3">
+              <i className="ri-file-list-3-line" style={{ color: "#f9a826", fontSize: "2rem", marginRight: "10px" }}></i>
+              <span>Căn Cước Công Dân</span>
+            </div>
+          </Col>
+        </Row>
 
-<Row>
-  <Col lg="12">
-    <h3 className="mt-5">Điều khoản sử dụng</h3>
-    <ul>
-      <li>Sử dụng xe đúng mục đích.</li>
-      <li>Không sử dụng xe thuê vào mục đích phi pháp, trái pháp luật.</li>
-      <li>Không sử dụng xe thuê để cầm cố, thế chấp.</li>
-      <li>Không hút thuốc, nhả kẹo cao su, xả rác trong xe.</li>
-      <li>Không chở hàng quốc cấm dễ cháy nổ.</li>
-      <li>Không chở thực phẩm nặng mùi trong xe.</li>
-      <li>
-        Khi trả xe, nếu xe bẩn hoặc có mùi trong xe, khách hàng vui lòng vệ sinh xe sạch sẽ 
-        hoặc gửi phụ thu phí vệ sinh xe.
-      </li>
-    </ul>
-  </Col>
-</Row>
-<button className="mt-4" onClick={handleRentButtonClick}>
-                Đặt ngay
-              </button>
+        <Row>
+          <Col lg="12">
+            <h3 className="mt-5">Điều khoản sử dụng</h3>
+            <ul>
+              <li>Sử dụng xe đúng mục đích.</li>
+              <li>Không sử dụng xe thuê vào mục đích phi pháp, trái pháp luật.</li>
+              <li>Không sử dụng xe thuê để cầm cố, thế chấp.</li>
+              <li>Không hút thuốc, nhả kẹo cao su, xả rác trong xe.</li>
+              <li>Không chở hàng quốc cấm dễ cháy nổ.</li>
+              <li>Không chở thực phẩm nặng mùi trong xe.</li>
+              <li>
+                Khi trả xe, nếu xe bẩn hoặc có mùi trong xe, khách hàng vui lòng vệ sinh xe sạch sẽ
+                hoặc gửi phụ thu phí vệ sinh xe.
+              </li>
+            </ul>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col lg="12" style={{display:"flex", alignItems: "center"}} className="mt-4">
+            <label htmlFor="acceptTerms">Tôi đã đọc và đồng ý với điều khoản sử dụng</label>
+            <input
+              type="checkbox"
+              id="acceptTerms"
+              checked={isAcceptedTerms}
+              onChange={() => setIsAcceptedTerms(!isAcceptedTerms)}
+              style={{maxWidth: "20px", marginBottom: "4px" }}
+            />
+          </Col>
+        </Row>
+        {errorMessage && (
+          <Row>
+            <Col lg="12" className="mt-2">
+              <p style={{ color: "red" }}>{errorMessage}</p>
+            </Col>
+          </Row>
+        )}
+        <button className="mt-4" onClick={handleRentButtonClick}>
+          Đặt ngay
+        </button>
       </Container>
     </section>
   );
