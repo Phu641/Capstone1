@@ -8,6 +8,7 @@ const VehicleApprovalPage = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const [activePage, setActivePage] = useState("vehicleApproval");
+  const [rejectionReason, setRejectionReason] = useState({});
 
   useEffect(() => {
     const fetchVehicles = async () => {
@@ -21,7 +22,7 @@ const VehicleApprovalPage = () => {
           },
         });
 
-        if (!response.ok) {
+        if (!response.ok && response.status !== 400) {
           throw new Error(
             response.status === 403
               ? "Bạn không có quyền truy cập vào tài nguyên này."
@@ -29,8 +30,12 @@ const VehicleApprovalPage = () => {
           );
         }
 
-        const data = await response.json();
-        setVehicles(data);
+        if (response.status === 400) {
+          setVehicles([]);
+        } else {
+          const data = await response.json();
+          setVehicles(data);
+        }
       } catch (error) {
         console.error("Lỗi khi gọi API:", error);
         setError(error.message);
@@ -90,6 +95,7 @@ const VehicleApprovalPage = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        body: JSON.stringify({ reason: rejectionReason[id] || "Không có lý do cụ thể" }),
       });
 
       if (!response.ok) {
@@ -103,6 +109,7 @@ const VehicleApprovalPage = () => {
       alert("Từ chối xe thành công!");
     } catch (error) {
       console.error("Lỗi khi từ chối xe:", error);
+      alert("Lỗi khi từ chối xe: " + error.message);
     }
   };
 
@@ -122,6 +129,10 @@ const VehicleApprovalPage = () => {
 
   const handleVehicleApprovalClick = () => {
     setActivePage("vehicle-approval");
+  };
+
+  const handleRejectionReasonChange = (id, value) => {
+    setRejectionReason((prevReasons) => ({ ...prevReasons, [id]: value }));
   };
 
   if (loading) return <p>Đang tải dữ liệu...</p>;
@@ -175,6 +186,11 @@ const VehicleApprovalPage = () => {
                 <p>Số ghế: {vehicle.overview?.seats || "Không có"}</p>
                 <p>Địa chỉ: {vehicle.overview?.address || "Không có"}</p>
                 <p>Trạng thái: {vehicle.isAvailable ? "Đã duyệt" : "Chưa duyệt"}</p>
+                <textarea
+                  placeholder="Nhập lý do từ chối"
+                  value={rejectionReason[vehicle.carID] || ""}
+                  onChange={(e) => handleRejectionReasonChange(vehicle.carID, e.target.value)}
+                />
                 <div className="vehicle-actions">
                   <button
                     onClick={() => handleApprove(vehicle.carID)}
