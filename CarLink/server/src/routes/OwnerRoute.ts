@@ -1,7 +1,7 @@
 import express from "express";
-import { AddCar, UpdateCar } from "../controllers";
+import { AddCar, SubmitReport, UpdateCar } from "../controllers";
 import multer from 'multer';
-import { Authenticate } from "../middlewares";
+import { Authenticate, uploadVideo } from "../middlewares";
 
 const router = express.Router();
 
@@ -33,5 +33,7 @@ router.post('/add-car', images as any, AddCar as any);
 //UPDATE CAR
 router.put('/update-car', images as any, UpdateCar as any);
 
+//UPDATE CAR
+router.put('/submit-report', uploadVideo, SubmitReport as any);
 
 export { router as OwnerRoute }

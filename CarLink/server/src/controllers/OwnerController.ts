@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { CreateCarInputs } from "../dto";
 import { FindOwner } from "./AdminController";
-import { Car, Coordinate, Images, Overview } from "../models";
+import { Car, Coordinate, Images, Overview, Booking, Report } from "../models";
 import { getCoordinates } from "../utility";
 
 
@@ -192,4 +192,103 @@ export const UpdateCar = async (req: Request, res: Response, next: NextFunction)
     }
 
     return res.status(401).json({ message: "Người dùng không được xác thực." });
+};
+
+
+//CONFRIM 
+// export const SubmitReport = async (req: Request, res: Response, next: NextFunction) => {
+
+//     const user = req.user; // Lấy thông tin user từ middleware xác thực
+//     const { bookingID, idCard, damageVideo, description } = req.body;
+
+//     try {
+//         // Tìm booking theo bookingID
+//         const booking = await Booking.findByPk(bookingID);
+
+//         if (!booking) {
+//             return res.status(404).json({ message: "Không tìm thấy thông tin thuê xe!" });
+//         }
+
+//         // Kiểm tra xem user có phải là chủ xe không
+//         const car = await Car.findByPk(booking.carID);
+//         if (!car || car.customerID !== user?.customerID) {
+//             return res.status(403).json({ message: "Bạn không có quyền xác nhận cho xe này!" });
+//         }
+
+//         // Cập nhật trạng thái booking thành 'completed'
+//         booking.bookingStatus = "completed";
+//         await booking.save();
+
+//         const file = req.file;
+
+//         // Tạo một report mới
+//         const report = await Report.create({
+//             bookingID,
+//             idCard, // Lấy thông tin căn cước của người thuê từ bảng Booking
+//             returnDate: new Date(), // Ngày trả xe hiện tại
+//             damageVideo,
+//             description,
+//         });
+
+         
+
+//         return res.status(200).json({
+//             message: "Xác nhận hoàn thành thuê xe thành công!",
+//             report,
+//         });
+//     } catch (error) {
+//         console.error("Lỗi khi submit report:", error);
+//         return res.status(500).json({
+//             message: "Đã xảy ra lỗi khi xác nhận thuê xe, vui lòng thử lại!",
+//         });
+//     }
+// };
+
+export const SubmitReport = async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user; // Lấy thông tin user từ middleware xác thực
+    const { bookingID, idCard, description } = req.body;
+
+    try {
+        // Tìm booking theo bookingID
+        const booking = await Booking.findByPk(bookingID);
+
+        if (!booking) {
+            return res.status(404).json({ message: "Không tìm thấy thông tin thuê xe!" });
+        }
+
+        // Kiểm tra xem user có phải là chủ xe không
+        const car = await Car.findByPk(booking.carID);
+        if (!car || car.customerID !== user?.customerID) {
+            return res.status(403).json({ message: "Bạn không có quyền xác nhận cho xe này!" });
+        }
+
+        // Cập nhật trạng thái booking thành 'completed'
+        booking.bookingStatus = "completed";
+        await booking.save();
+
+        // Kiểm tra file video được upload
+        const file = req.file; // Sử dụng req.file thay vì req.files vì chỉ upload 1 file
+        if (!file) {
+            return res.status(400).json({ message: "Vui lòng upload video hư hỏng!" });
+        }
+
+        // Tạo một report mới
+        const report = await Report.create({
+            bookingID,
+            idCard, // Lấy thông tin căn cước của người thuê từ bảng Booking
+            returnDate: new Date(), // Ngày trả xe hiện tại
+            damageVideo: file.filename, // Lưu tên file video
+            description,
+        });
+
+        return res.status(200).json({
+            message: "Xác nhận hoàn thành thuê xe thành công!",
+            report,
+        });
+    } catch (error) {
+        console.error("Lỗi khi submit report:", error);
+        return res.status(500).json({
+            message: "Đã xảy ra lỗi khi xác nhận thuê xe, vui lòng thử lại!",
+        });
+    }
 };
