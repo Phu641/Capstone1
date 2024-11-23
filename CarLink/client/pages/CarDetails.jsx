@@ -45,8 +45,7 @@ const CarDetails = () => {
   };
 
   const handleRentButtonClick = () => {
-    // Điều hướng đến trang Booking Form khi nhấn nút
-    navigate("/booking-form"); // Sử dụng navigate thay cho history.push
+    navigate("/booking-form");
   };
 
   if (!singleCarItem) {
@@ -122,7 +121,6 @@ const CarDetails = () => {
                 </span>
               </div>
 
-              {/* Nút Đặt Xe */}
               <button className="mt-4" onClick={handleRentButtonClick}>
                 Đặt ngay
               </button>

@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import HomePage from "../pages/HomePage";
 import Carlistting from "../pages/CarListing";
 import CarDetails from "../pages/CarDetails";
@@ -11,6 +13,7 @@ import AddCar from "../pages/AddCar";
 import DashboardAdmin from "../pages/DashboardAdmin";
 import BookingForm from "./components/UI/BookingForm.jsx";
 import Payment from "./components/UI/PaymentMethod.jsx";
+import Report from "../pages/Report";
 
 function App() {
   return (
@@ -20,16 +23,18 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/Home" element={<HomePage />} />
         <Route path="/Cars" element={<Carlistting />} />
-        <Route path="/cars/:carID" element={<CarDetails />}/>   
+        <Route path="/cars/:carID" element={<CarDetails />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/signup" element={<SignupForm />} />
         <Route path="/forgot-password" element={<ForgotPasswordForm />} />
         <Route path="/add-car" element={<AddCar />} />
         <Route path="/dashboardAdmin" element={<DashboardAdmin />} />
-        <Route path="/booking-form" element={<BookingForm />} />  
+        <Route path="/booking-form" element={<BookingForm />} />
         <Route path="/payment" element={<Payment />} />
+        <Route path="/report/:bookingID" element={<Report />} />
       </Routes>
       <Footer />
+      <ToastContainer />
     </Router>
   );
 }

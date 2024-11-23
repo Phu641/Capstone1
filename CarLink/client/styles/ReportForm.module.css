@@ -1,0 +1,26 @@
+.reportContainer {
+    min-height: 100vh;
+    padding-top: 20px;
+    background-color: #d5deeb;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.reportWrapper {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px;
+    padding: 24px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.reportTitle {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 24px;
+    font-weight: 600;
+}

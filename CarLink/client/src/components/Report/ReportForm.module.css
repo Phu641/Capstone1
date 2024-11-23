@@ -1,0 +1,63 @@
+.reportForm {
+    max-width: 800px;
+    margin: 12px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.reportHeading {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.formGroup {
+    margin-bottom: 20px;
+}
+
+.formGroup label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.formGroup input,
+.formGroup textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.formGroup textarea {
+    height: 120px;
+    resize: vertical;
+}
+
+.submitBtn {
+    background-color: #1877f2;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.submitBtn:hover {
+    background-color: #166fe5;
+    transform: translateY(-2px);
+}
+
+.errorMessage {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}

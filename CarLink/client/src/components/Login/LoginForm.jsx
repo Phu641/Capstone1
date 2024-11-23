@@ -8,71 +8,107 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const LoginForm = () => {
-  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    showPassword: false
+  });
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+
+  const toastConfig = {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined
+  };
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [id]: value
+    }));
+  };
+
+  const validateForm = () => {
+    const { email, password } = formData;
+
+    if (!email || !password) {
+      toast.warning('Vui lòng nhập đầy đủ thông tin', toastConfig);
+      return false;
+    }
+
+    if (!validateEmail(email)) {
+      toast.error('Email không hợp lệ', toastConfig);
+      return false;
+    }
+
+    if (password.length < 6) {
+      toast.error('Mật khẩu phải có ít nhất 6 ký tự', toastConfig);
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleAuthentication = async (token) => {
+    try {
+      const [profileResponse, roleResponse] = await Promise.all([
+        axios.get('http://localhost:3000/customer/profile', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        }),
+        axios.get('http://localhost:3000/customer/check-role', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+      ]);
+
+      localStorage.setItem('userInfo', JSON.stringify(profileResponse.data));
+
+      const validRoles = ['user', 'admin', 'owner'];
+      if (validRoles.includes(roleResponse.data.role)) {
+        navigate('/', { replace: true });
+      }
+    } catch (error) {
+      throw new Error('Authentication failed');
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!username || !password) {
-      toast.warning('Vui lòng nhập đầy đủ thông tin', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined
-      });
-      return;
-    }
+    
+    if (!validateForm()) return;
 
     try {
+      const { email, password } = formData;
       const loginResponse = await axios.post('http://localhost:3000/customer/login', {
-        email: username,
+        email,
         password
       });
 
       if (loginResponse.data.signature) {
         localStorage.clear();
-        setUsername('');
-        setPassword('');
+        setFormData(prev => ({
+          ...prev,
+          email: '',
+          password: ''
+        }));
 
-        localStorage.setItem('token', loginResponse.data.signature);
-
-        const profileResponse = await axios.get('http://localhost:3000/customer/profile', {
-          headers: {
-            'Authorization': `Bearer ${loginResponse.data.signature}`
-          }
-        });
-
-        localStorage.setItem('userInfo', JSON.stringify(profileResponse.data));
-
-        const roleResponse = await axios.get('http://localhost:3000/customer/check-role', {
-          headers: {
-            'Authorization': `Bearer ${loginResponse.data.signature}`
-          }
-        });
-
-        if (roleResponse.data.role === 'user' ||
-          roleResponse.data.role === 'admin' ||
-          roleResponse.data.role === 'owner') {
-          navigate('/', { replace: true });
-        }
+        const token = loginResponse.data.signature;
+        localStorage.setItem('token', token);
+        await handleAuthentication(token);
       }
     } catch (err) {
       console.error('Login error:', err);
-      toast.error('Tên đăng nhập hoặc mật khẩu không đúng', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined
-      });
+      const errorMessage = err.response?.data?.message || 'Tên đăng nhập hoặc mật khẩu không đúng';
+      toast.error(errorMessage, toastConfig);
     }
   };
 
@@ -86,14 +122,14 @@ const LoginForm = () => {
         <h2>Đăng nhập</h2>
 
         <div className={styles.formGroup}>
-          <label htmlFor="username">
-            <FontAwesomeIcon icon={faUser} /> Tên đăng nhập
+          <label htmlFor="email">
+            <FontAwesomeIcon icon={faUser} /> Email
           </label>
           <input
             type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            id="email"
+            value={formData.email}
+            onChange={handleInputChange}
             placeholder="Nhập email"
           />
         </div>
@@ -104,10 +140,10 @@ const LoginForm = () => {
           </label>
           <div className={styles.passwordInput}>
             <input
-              type={showPassword ? "text" : "password"}
+              type={formData.showPassword ? "text" : "password"}
               id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={formData.password}
+              onChange={handleInputChange}
               placeholder="••••••••"
             />
           </div>

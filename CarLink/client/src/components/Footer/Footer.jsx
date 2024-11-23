@@ -1,130 +1,102 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import PropTypes from 'prop-types';
 import styles from "./Footer.module.css";
 import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
 
+const carTypes = [
+  { path: "/classic-car-rental", label: "Xe cổ điển" },
+  { path: "/convertible-car-rental", label: "Xe mui trần" },
+  { path: "/electric-vehicle-rental", label: "Xe điện" },
+  { path: "/luxury-car-rental", label: "Xe sang trọng" },
+  { path: "/minivan-rental", label: "Xe minivan" },
+  { path: "/sports-car-rental", label: "Xe thể thao" },
+  { path: "/suv-rental", label: "Xe SUV" },
+  { path: "/truck-rental", label: "Xe tải" },
+  { path: "/van-rental", label: "Xe Van" },
+];
+
+const carBrands = [
+  { path: "/honda-rental", label: "Honda" },
+  { path: "/toyota-rental", label: "Toyota" },
+  { path: "/hyundai-rental", label: "Hyundai" },
+  { path: "/mitsubishi-rental", label: "Mitsubishi" },
+  { path: "/ford-rental", label: "Ford" },
+  { path: "/ferrari-rental", label: "Ferrari" },
+  { path: "/lamborghini-rental", label: "Lamborghini" },
+  { path: "/rolls-royce-rental", label: "Rolls-Royce" },
+  { path: "/aston-martin-rental", label: "Aston Martin" },
+  { path: "/nissan-rental", label: "Nissan" },
+];
+
+const exploreLinks = [
+  { path: "/book-a-car", label: "Thuê xe" },
+  { path: "/trust", label: "Sự tin cậy và an toàn" },
+  { path: "/get-help", label: "Hỗ trợ" },
+];
+
+const socialIcons = [
+  { Icon: FaFacebookF, className: "facebookIcon" },
+  { Icon: FaTwitter, className: "twitterIcon" },
+  { Icon: FaInstagram, className: "instagramIcon" },
+  { Icon: FaYoutube, className: "youtubeIcon" },
+];
+
+const FooterSection = ({ title, links }) => (
+  <div className={styles.footerSection}>
+    <h3>{title}</h3>
+    <ul className={styles.footerList}>
+      {links.map(({ path, label }) => (
+        <li key={path}>
+          <Link to={path}>{label}</Link>
+        </li>
+      ))}
+    </ul>
+  </div>
+);
 
 const Footer = () => {
   return (
     <footer className={styles.footer}>
       <div className={styles.footerContainer}>
         <div className={styles.footerTop}>
-          <div className={styles.footerSection}>
-            <h3>Các loại xe</h3>
-            <ul className={styles.footerList}>
-              <li>
-                <Link to="/classic-car-rental">Xe cổ điển</Link>
-              </li>
-              <li>
-                <Link to="/convertible-car-rental">Xe mui trần</Link>
-              </li>
-              <li>
-                <Link to="/electric-vehicle-rental">Xe điện</Link>
-              </li>
-              <li>
-                <Link to="/luxury-car-rental">Xe sang trọng</Link>
-              </li>
-              <li>
-                <Link to="/minivan-rental">Xe minivan</Link>
-              </li>
-              <li>
-                <Link to="/sports-car-rental">Xe thể thao</Link>
-              </li>
-              <li>
-                <Link to="/suv-rental">Xe SUV</Link>
-              </li>
-              <li>
-                <Link to="/truck-rental">Xe tải</Link>
-              </li>
-              <li>
-                <Link to="/van-rental">Xe Van</Link>
-              </li>
-            </ul>
-          </div>
-          <div className={styles.footerSection}>
-            <h3>Thương hiệu</h3>
-            <ul className={styles.footerList}>
-              <li>
-                <Link to="/audi-rental">Honda</Link>
-              </li>
-              <li>
-                <Link to="/bmw-rental">Toyota</Link>
-              </li>
-              <li>
-                <Link to="/dodge-rental">Huyndai</Link>
-              </li>
-              <li>
-                <Link to="/ferrari-rental">Mitsubishi</Link>
-              </li>
-              <li>
-                <Link to="/jeep-rental">Ford</Link>
-              </li>
-              <li>
-                <Link to="/toyota-rental">Ferrari</Link>
-              </li>
-              <li>
-                <Link to="/lamborghini-rental">Lamborghini</Link>
-              </li>
-              <li>
-                <Link to="/rolls-royce-rental">Rolls-Royce</Link>
-              </li>
-              <li>
-                <Link to="/tesla-rental">Aston Martin</Link>
-              </li>
-              <li>
-                <Link to="/nissan-rental">Nissan</Link>
-              </li>
-            </ul>
-          </div>
+          <FooterSection title="Các loại xe" links={carTypes} />
+          <FooterSection title="Thương hiệu" links={carBrands} />
         </div>
+        
         <div className={styles.footerMain}>
-          <div className={styles.footerColumn}>
-            <h3>Khám phá</h3>
-            <ul>
-              <li>
-                <Link to="/book-a-car">Thuê xe</Link>
-              </li>
-              <li>
-                <Link to="/trust">Sự tin cậy và an toàn</Link>
-              </li>
-              <li>
-                <Link to="/get-help">Hỗ trợ</Link>
-              </li>
-            </ul>
-          </div>
+          <FooterSection title="Khám phá" links={exploreLinks} />
           <div className={`${styles.footerColumn} ${styles.social}`}>
             <div className={styles.socialIcons}>
-              <div className={styles.facebookIcon}>
-                <FaFacebookF />
-              </div>
-              <div className={styles.twitterIcon}>
-                <FaTwitter />
-              </div>
-              <div className={styles.instagramIcon}>
-                <FaInstagram />
-              </div>
-              <div className={styles.youtubeIcon}>
-                <FaYoutube />
-              </div>
+              {socialIcons.map(({ Icon, className }) => (
+                <div key={className} className={styles[className]}>
+                  <Icon />
+                </div>
+              ))}
             </div>
           </div>
         </div>
+
         <div className={styles.footerBottom}>
           <ul>
-            <li>
-              <Link to="/terms">Điều khoản</Link>
-            </li>
-            <li>
-              <Link to="/privacy">Quyền riêng tư</Link>
-            </li>
-            <li>
-              <Link to="/cookie-preferences">Tùy chọn Cookie</Link>
-            </li>
+            <li><Link to="/terms">Điều khoản</Link></li>
+            <li><Link to="/privacy">Quyền riêng tư</Link></li>
+            <li><Link to="/cookie-preferences">Tùy chọn Cookie</Link></li>
           </ul>
         </div>
       </div>
     </footer>
   );
+};
+
+FooterSection.propTypes = {
+  title: PropTypes.string.isRequired,
+  links: PropTypes.arrayOf(
+    PropTypes.shape({
+      path: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+    })
+  ).isRequired,
 };
 
 export default Footer;

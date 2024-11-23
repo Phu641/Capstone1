@@ -14,14 +14,13 @@ const CarListing = () => {
     priceRange: [0, 10000000],
   });
 
-  // Lấy dữ liệu xe
   useEffect(() => {
     const fetchCars = async () => {
       try {
         const response = await fetch("http://localhost:3000/searching/cars");
         const data = await response.json();
         setCars(data);
-        setFilteredCars(data); // Khởi tạo filteredCars
+        setFilteredCars(data);
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu xe:", error);
       }
@@ -30,7 +29,6 @@ const CarListing = () => {
     fetchCars();
   }, []);
 
-  // Hàm xử lý sắp xếp
   const handleSortChange = (event) => {
     const order = event.target.value;
     setSortOrder(order);
@@ -45,13 +43,11 @@ const CarListing = () => {
     setFilteredCars(sortedCars);
   };
 
-  // Hàm xử lý thay đổi bộ lọc
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
     applyFilters(newFilters);
   };
 
-  // Áp dụng bộ lọc
   const applyFilters = (filters) => {
     let filtered = [...cars];
 
@@ -70,7 +66,6 @@ const CarListing = () => {
       (car) => car.overview.pricePerDay >= filters.priceRange[0] && car.overview.pricePerDay <= filters.priceRange[1]
     );
 
-    // Cập nhật danh sách xe đã lọc
     setFilteredCars(filtered);
   };
 
@@ -84,12 +79,10 @@ const CarListing = () => {
         </Row>
 
         <Row>
-          {/* Sidebar */}
           <Col lg="3" md="4" className="sidebar-col">
             <Sidebar onFilterChange={handleFilterChange} />
           </Col>
 
-          {/* Car Items */}
           <Col lg="9" md="8">
             <div className="d-flex align-items-center gap-3 mb-5">
               <span className="d-flex align-items-center gap-2">
@@ -103,23 +96,27 @@ const CarListing = () => {
             </div>
 
             <Row>
-              {filteredCars.map((car) => (
-                <Col lg="4" md="6" sm="6" key={car.carID}>
-                  <CarItem
-                    item={{
-                      id: car.carID,
-                      carName: car.overview.model,
-                      price: car.overview.pricePerDay,
-                      description: car.overview.description,
-                      images: car.carImages.map(image => image.imageUrl),
-                      seats: car.overview.seats,
-                      transmission: car.overview.transmission,
-                      fuelType: car.overview.fuelType,
-                      address: car.overview.address,
-                    }}
-                  />
-                </Col>
-              ))}
+              {Array.isArray(filteredCars) ? (
+                filteredCars.map((car) => (
+                  <Col lg="4" md="6" sm="6" key={car.carID}>
+                    <CarItem
+                      item={{
+                        id: car.carID,
+                        carName: car.overview.model,
+                        price: car.overview.pricePerDay,
+                        description: car.overview.description,
+                        images: car.carImages.map(image => image.imageUrl),
+                        seats: car.overview.seats,
+                        transmission: car.overview.transmission,
+                        fuelType: car.overview.fuelType,
+                        address: car.overview.address,
+                      }}
+                    />
+                  </Col>
+                ))
+              ) : (
+                <p>Không có xe nào</p>
+              )}
             </Row>
           </Col>
         </Row>

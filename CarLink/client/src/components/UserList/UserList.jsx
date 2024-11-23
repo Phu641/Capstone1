@@ -12,26 +12,23 @@ const UserList = () => {
         console.log("Token từ localStorage:", token); // Log token để kiểm tra
 
         if (!token) {
-          alert("Bạn cần đăng nhập để truy cập thông tin người dùng");
-          console.error("Không có token xác thực");
-          window.location.href = "/login"; // Điều hướng đến trang đăng nhập
+          localStorage.clear();
+          window.location.href = "/login";
           return;
         }
 
         const response = await fetch("http://localhost:3000/admin/all-users", {
           headers: {
-            'Authorization': `Bearer ${token}`, // Sử dụng token từ localStorage
+            'Authorization': `Bearer ${token}`,
           },
         });
 
         if (response.ok) {
           const data = await response.json();
-          console.log("Dữ liệu người dùng:", data); // Kiểm tra dữ liệu
-          setUsers(data); // Cập nhật dữ liệu từ API vào state
+          setUsers(data);
         } else {
-          console.error("Lỗi khi lấy dữ liệu, mã trạng thái:", response.status);
           if (response.status === 401) {
-            alert("Phiên đăng nhập của bạn đã hết hạn. Vui lòng đăng nhập lại.");
+            localStorage.clear();
             window.location.href = "/login";
           }
         }
