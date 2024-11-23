@@ -11,14 +11,19 @@ import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
 import AddCar from "../pages/AddCar";
 import DashboardAdmin from "../pages/DashboardAdmin";
+import VehicleDetailsPage from "../pages/VehicleDetailsPage";
+import VehicleApprovalPage from "../pages/VehicleApprovalPage";
+import UserList from "../pages/UserList";
 import BookingForm from "./components/UI/BookingForm.jsx";
 import Payment from "./components/UI/PaymentMethod.jsx";
-import Report from "../pages/Report";
+import Favorites from "./components/Favorite/Favorite.jsx";
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   return (
     <Router>
       <Header />
+      <ToastContainer />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/Home" element={<HomePage />} />
@@ -29,9 +34,12 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPasswordForm />} />
         <Route path="/add-car" element={<AddCar />} />
         <Route path="/dashboardAdmin" element={<DashboardAdmin />} />
-        <Route path="/booking-form" element={<BookingForm />} />
+        <Route path="/vehicle/:id" element={<VehicleDetailsPage />} />
+        <Route path="/vehicle-approval" element={<VehicleApprovalPage />} />
+        <Route path="/user-list" element={<UserList />} />
+        <Route path="/booking-form" element={<BookingForm />} />  
         <Route path="/payment" element={<Payment />} />
-        <Route path="/report/:bookingID" element={<Report />} />
+        <Route path="/favorites" element={<Favorites />} /> 
       </Routes>
       <Footer />
       <ToastContainer />

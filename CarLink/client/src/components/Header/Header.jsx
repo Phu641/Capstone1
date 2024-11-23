@@ -12,6 +12,7 @@ import {
   FaShieldAlt,
   FaTools,
   FaCalculator,
+  FaHeart
 } from "react-icons/fa";
 
 const NAV_LINKS = [

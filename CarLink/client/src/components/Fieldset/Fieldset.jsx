@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import PropTypes from "prop-types"; // Import PropTypes
-import "./Fieldset.module.css";
+import PropTypes from "prop-types";
+import styles from "./Fieldset.module.css";
 
 const Fieldset = ({ onImagesChange }) => {
   const [images, setImages] = useState([null, null, null, null, null]);
@@ -17,42 +17,45 @@ const Fieldset = ({ onImagesChange }) => {
     }
   };
 
+  useEffect(() => {
+    const validImages = images.filter((img) => img !== null);
+    onImagesChange(validImages);
+  }, [images, onImagesChange]);
+
   return (
-    <fieldset className="upload-fieldset">
-      <legend>Đăng tải hình ảnh về xe của bạn</legend>
-      <div className="photo-upload-container">
+    <fieldset className={styles.uploadFieldset}>
+      <legend className={styles.legend}>Đăng tải hình ảnh về xe của bạn</legend>
+      <div className={styles.photoUploadContainer}>
         {images.map((image, index) => (
-          <div className="upload-box" key={index}>
+          <div className={styles.uploadBox} key={index}>
             {image ? (
               <img
                 src={URL.createObjectURL(image)}
                 alt={`upload-${index}`}
-                className="uploaded-image"
+                className={styles.uploadedImage}
               />
             ) : (
-              <label className="upload-label" htmlFor={`upload-${index}`}>
+              <label className={styles.uploadLabel} htmlFor={`upload-${index}`}>
                 Thêm ảnh
                 <input
                   type="file"
                   id={`upload-${index}`}
-                  className="file-input"
+                  className={styles.fileInput}
                   onChange={(e) => handleImageUpload(e, index)}
                   accept="image/*"
-                  name="images"
                 />
               </label>
             )}
           </div>
         ))}
       </div>
-      <p className="warning">*Bạn phải thêm ít nhất một ảnh</p>
+      <p className={styles.warning}>*Bạn phải thêm ít nhất một ảnh và 1 video</p>
     </fieldset>
   );
 };
 
-// PropTypes validation
 Fieldset.propTypes = {
-  onImagesChange: PropTypes.func.isRequired, // Ensures onImagesChange is a required function
+  onImagesChange: PropTypes.func.isRequired,
 };
 
 export default Fieldset;

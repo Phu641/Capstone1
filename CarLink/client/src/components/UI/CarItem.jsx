@@ -1,27 +1,97 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Col } from "reactstrap";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import axios from "axios";
 import "../../../styles/car-item.css";
 
 const CarItem = (props) => {
   const { id, images, model, carName, transmission, price, seats, address } = props.item;
   const [isLiked, setIsLiked] = useState(false);
 
-  const handleLike = () => {
-    setIsLiked(!isLiked);
+  useEffect(() => {
+    const fetchFavoriteCars = async () => {
+      const token = localStorage.getItem("token"); // Kiểm tra token
+      if (!token) return; // Nếu không có token, thoát hàm
+  
+      try {
+        const response = await axios.get("http://localhost:3000/customer/cars-favorite", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (response.status === 200) {
+          const favoriteCars = response.data.map((car) => car.carID);
+          localStorage.setItem("likedCars", JSON.stringify(favoriteCars)); // Cập nhật localStorage
+          setIsLiked(favoriteCars.includes(id)); // Kiểm tra trạng thái yêu thích
+        }
+      } catch (error) {
+        console.error("Lỗi khi lấy danh sách xe yêu thích:", error);
+        toast.error("Không thể tải danh sách yêu thích!");
+      }
+    };
+  
+    fetchFavoriteCars();
+  }, [id]);
+  
+  const handleLike = async () => {
+    const token = localStorage.getItem("token"); // Lấy token
+    if (!token) {
+      toast.error("Vui lòng đăng nhập để sử dụng chức năng này!");
+      return;
+    }
+  
+    try {
+      setIsLiked((prevState) => !prevState);
+  
+      const response = await axios.post(
+        `http://localhost:3000/customer/add-favorite/${id}`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+  
+      if (response.status === 200) {
+        const likedCars = JSON.parse(localStorage.getItem("likedCars")) || [];
+        if (isLiked) {
+          const updatedCars = likedCars.filter((carId) => carId !== id);
+          localStorage.setItem("likedCars", JSON.stringify(updatedCars));
+          toast.error("Đã xóa xe khỏi danh sách yêu thích!");
+        } else {
+          likedCars.push(id);
+          localStorage.setItem("likedCars", JSON.stringify(likedCars));
+          toast.success("Đã thêm xe vào danh sách yêu thích!");
+        }
+      } else {
+        toast.error("Có lỗi xảy ra, vui lòng thử lại!");
+      }
+    } catch (error) {
+      toast.error("Có lỗi xảy ra khi thêm/xóa vào danh sách yêu thích!");
+      console.error(error);
+    }
   };
+  
 
   const carImage = images && images.length > 0 ? `http://localhost:3000/images/${images[0]}` : "./default-image.jpg";
+  const isVideo = carImage && (carImage.endsWith(".mp4") || carImage.endsWith(".webm") || carImage.endsWith(".ogg"));
 
   return (
-    <Col lg="4" md="4" sm="6" className="mb-5" style={{ width: '100%' }}>
+    <Col lg="4" md="4" sm="6" className="mb-5" style={{ width: "100%" }}>
       <div className="car__item">
         <div className="like__icon" onClick={handleLike}>
-          <i className={isLiked ? "mdi mdi-like-outline liked" : "mdi mdi-like-outline"}></i>
+          <i className={isLiked ? "ri-heart-fill liked" : "ri-heart-line"}></i>
         </div>
 
         <div className="car__img">
-          <img src={carImage} alt={carName || model} className="w-100" />
+          {isVideo ? (
+            <video
+              src={carImage}
+              alt={carName || model}
+              className="w-100"
+              controls
+              autoPlay
+              muted
+            />
+          ) : (
+            <img src={carImage} alt={carName || model} className="w-100" />
+          )}
         </div>
 
         <div className="car__item-content mt-4">
@@ -54,7 +124,6 @@ const CarItem = (props) => {
             <i className="ri-map-pin-line"></i>
             <span>{address.split(",")[0]}</span>
           </div>
-
 
           <button className="w-50 car__item-btn car__btn-rent">
             <Link to={`/cars/${id}`}>Thuê</Link>

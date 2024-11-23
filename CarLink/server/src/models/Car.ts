@@ -16,6 +16,9 @@ export class Car extends Model {
   customerID!: number;
 
   @Column(DataType.BOOLEAN)
+  booked!: boolean;
+
+  @Column(DataType.BOOLEAN)
   isAvailable!: boolean;
 
   @Column(DataType.BOOLEAN)

@@ -1,0 +1,45 @@
+.mainContent {
+  display: flex;
+  flex-direction: column;
+  width: 100vw; /* Chiếm toàn bộ chiều rộng của màn hình */
+  height: 100vh; /* Chiếm toàn bộ chiều cao của màn hình */
+  padding: 20px;
+  overflow: auto; /* Thêm thanh cuộn nếu nội dung vượt quá kích thước màn hình */
+  box-sizing: border-box;
+}
+
+.userList {
+  flex-grow: 1; /* Chiếm tối đa chiều cao có thể */
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Chiếm toàn bộ chiều rộng */
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.userList input {
+  padding: 10px;
+  width: 100%;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
+
+.userListTable {
+  width: 100%; /* Chiếm toàn bộ chiều rộng của phần danh sách người dùng */
+  border-collapse: collapse;
+}
+
+.userListTheadTr th,
+.userListTbodyTr td {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  text-align: left;
+}
+
+.userListTbodyTr:hover {
+  background-color: #87CEFA; /* Thêm hiệu ứng hover cho các hàng */
+}

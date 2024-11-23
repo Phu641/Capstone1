@@ -1,5 +1,5 @@
 import express from 'express';
-import { AcceptCar, DeleteCar, DeleteUser, GetACar, GetAllCars, GetAllUsers, GetAnUser } from '../controllers/AdminController';
+import { AcceptBooking, AcceptCar, DeleteCar, DeleteUser, GetACar, GetAllBookings, GetAllCars, GetAllPendingBookings, GetAllUsers, GetAnUser, GetCarSAvailability } from '../controllers/AdminController';
 import { AdminMiddleware, Authenticate } from '../middlewares';
 
 const router = express.Router();
@@ -18,8 +18,11 @@ router.get('/user/:id', GetAnUser as any);
 //DELETE USER
 router.delete('/user/:id', DeleteUser as any);
 
-//GET ALL CARS
+//GET ALL CARS  WAS NOT AVAILABLE
 router.get('/all-cars', GetAllCars as any);
+
+//GET ALL CARS  WAS AVAILABLE
+router.get('/all-cars-availability', GetCarSAvailability as any);
 
 //GET A CAR
 router.get('/car/:id', GetACar as any);
@@ -29,5 +32,14 @@ router.delete('/car/:id', DeleteCar as any);
 
 //ACCEPT CAR
 router.patch('/car/:id', AcceptCar as any);
+
+//GET ALL BOOKING
+router.get('/all-bookings', GetAllBookings as any);
+
+//GET ALL PENDING BOOKING
+router.get('/all-pending-bookings', GetAllPendingBookings as any);
+
+//ACCEPT BOOKING
+router.patch('/booking/:id', AcceptBooking as any);
 
 export { router as AdminRoute}

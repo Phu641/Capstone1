@@ -39,23 +39,6 @@ select {
 }
 /* Features grid styling */
 /* Full-width heading styling */
-.features-heading {
-  grid-column: span 5; /* Make the heading span across all columns */
-  margin-top: 20px;
-  font-size: 24px;
-  font-weight: bold;
-  text-align: left; /* Align text to the left (adjust if necessary) */
-}
-
-/* Features grid styling */
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr); /* Five equal-width columns */
-  gap: 20px; /* Space between each fieldset */
-  margin-top: 10px; /* Reduce margin after heading */
-  width: 100%; /* Ensure grid takes the full available width */
-  box-sizing: border-box;
-}
 
 fieldset {
   border: none; /* Remove the default fieldset border */
@@ -107,4 +90,7 @@ button {
 
 button:hover {
   background-color: rgb(27, 46, 143);
+}
+input[type="radio"] {
+  margin-right: 8px;
 }

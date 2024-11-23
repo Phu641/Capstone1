@@ -2,8 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 import { CreateCustomerInputs, UserLoginInputs, EditCustomerProfileInputs } from '../dto';
-import { GeneratePassword, GenerateSalt, GenerateSignature, ValidatePassword, GenerateOtp } from '../utility';
-import { Customer, Role } from '../models';
+import { GeneratePassword, GenerateSalt, GenerateSignature, ValidatePassword, GenerateOtp, GetCarByID} from '../utility';
+import { Booking, Car, Customer, Favorite, Images, Overview, Role } from '../models';
 import path from 'path';
 const dotenv = require('dotenv');
 dotenv.config({ path: path.resolve(__dirname, '.././.env') });
@@ -292,6 +292,128 @@ export const GetCurrentRole = async (req: Request, res: Response) => {
 
 /**------------------------------FAVORITE SECTION------------------------------------------ */
 
+//ADD AND REMOVE FROM FAVORITE
+export const addToFavorite = async (req: Request, res: Response, next: NextFunction) => {
+
+    const user = req.user;
+    const carID = req.params.id;
+
+    try {
+
+        const existingFavorite = await Favorite.findOne({
+            where: {
+                customerID: user?.customerID,
+                carID,
+            } 
+        });
+
+        if (existingFavorite) {
+
+            await existingFavorite.destroy();
+            return res.status(200).json('Xe đã được xóa khỏi danh mục yêu thích!');
+
+        } else {
+
+            const result = await Car.findOne({
+                where: { carID: carID },
+                include: [
+                    {
+                        model: Overview,
+                        attributes: ['model', 'type', 'year', 'transmission', 'fuelType', 'seats', 'pricePerDay', 'address', 'description']
+                    },
+                    {
+                        model: Images,
+                        attributes: ['imageUrl']
+                    }
+                ]
+            });
+
+            await Favorite.create({
+                customerID: user?.customerID,
+                carID,
+            });
+
+            return res.status(200).json(result);
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json('Đã xảy ra lỗi, vui lòng thử lại sau!');
+    }
+};
+
+//GET ALL CAR IN FAVORITE
+export const getAllCarsFavorite = async (req: Request, res: Response, next: NextFunction) => {
+
+    const user = req.user;
+
+    try {
+
+        const existingFavorite = await Favorite.findAll({
+            where: {
+                customerID: user?.customerID,
+            } 
+        });
+
+        if (existingFavorite) {
+
+            const result = await Promise.all(
+                existingFavorite.map((item) => GetCarByID(item.carID))
+            );
+
+            return res.status(200).json(result);
+
+        } else {
+
+            return res.status(500).json('Chưa có xe nào trong mục yêu thích!');
+
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json('Đã xảy ra lỗi, vui lòng thử lại sau!');
+    }
+};
+
+
 /**------------------------------BOOKING SECTION------------------------------------------ */
+
+//BOOK CAR 
+export const BookCar = async (req: Request, res: Response, next: NextFunction) => {
+
+    const user = req.user;
+    const {carID, bookingDate, untilDate, pricePerDay, days} = req.body;
+
+    try {
+
+        const car = await Car.findByPk(carID);
+
+        if(car) {
+
+            if(!car.booked) {
+
+                const totalAmount = pricePerDay * days;
+
+                const booking = await Booking.create({
+
+                    customerID: user?.customerID,
+                    carID,
+                    bookingDate,
+                    untilDate,
+                    totalAmount,
+                    bookingStatus: 'pending'
+
+                });
+
+                return res.status(200).json(booking);
+
+            }
+
+        }
+        
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json('Đã xảy ra lỗi, vui lòng thử lại sau!');
+    }
+};
 
 /**------------------------------PAYMENT SECTION------------------------------------------ */
