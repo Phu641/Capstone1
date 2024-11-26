@@ -9,8 +9,10 @@ import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
 import AddCar from "../pages/AddCar";
 import DashboardAdmin from "../pages/DashboardAdmin";
+import DashboardOwner from "../pages/DashboardOwner";
 import VehicleDetailsPage from "../pages/VehicleDetailsPage";
 import VehicleApprovalPage from "../pages/VehicleApprovalPage";
+import BookingApprovalPage from "../pages/BookingApprovalPage";
 import UserList from "../pages/UserList";
 import BookingForm from "./components/UI/BookingForm.jsx";
 import Payment from "./components/UI/PaymentMethod.jsx";
@@ -31,9 +33,11 @@ function App() {
         <Route path="/signup" element={<SignupForm />} />
         <Route path="/forgot-password" element={<ForgotPasswordForm />} />
         <Route path="/add-car" element={<AddCar />} />
+        <Route path="/DashboardOwner" element={<DashboardOwner />} />
         <Route path="/dashboardAdmin" element={<DashboardAdmin />} />
         <Route path="/vehicle/:id" element={<VehicleDetailsPage />} />
         <Route path="/vehicle-approval" element={<VehicleApprovalPage />} />
+        <Route path="/booking-approval" element={<BookingApprovalPage />} />
         <Route path="/user-list" element={<UserList />} />
         <Route path="/booking-form" element={<BookingForm />} />  
         <Route path="/payment" element={<Payment />} />
