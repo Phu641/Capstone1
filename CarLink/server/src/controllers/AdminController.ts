@@ -598,5 +598,8 @@ export const AcceptBooking = async(req: Request, res: Response, next: NextFuncti
 
 }
 
+//ACCEPT BOOKING
+
+
 
 /**------------------------------------------------------Payment--------------------------------------------------------- */

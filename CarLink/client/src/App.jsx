@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import HomePage from "../pages/HomePage";
 import Carlistting from "../pages/CarListing";
@@ -21,6 +20,7 @@ import Payment from "./components/UI/PaymentMethod.jsx";
 import Favorites from "./components/Favorite/Favorite.jsx";
 //owner
 import ManageVehicles from "../pages/ManageVehicles"; // Import trang quản lý xe
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (

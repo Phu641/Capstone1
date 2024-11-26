@@ -1,5 +1,5 @@
 import express from "express";
-import { AddCar, SubmitReport, UpdateCar } from "../controllers";
+import { AddCar, GetCarsByOwner, SubmitReport, UpdateCar } from "../controllers";
 import multer from 'multer';
 import { Authenticate, uploadVideo } from "../middlewares";
 
@@ -30,10 +30,13 @@ router.use(Authenticate as any);
 //ADD CAR
 router.post('/add-car', images as any, AddCar as any);
 
+//GET ALL THEIR OWN CARS
+router.get('/all-cars', GetCarsByOwner as any);
+
 //UPDATE CAR
 router.put('/update-car', images as any, UpdateCar as any);
 
-//UPDATE CAR
+//SUBMIT REPORT
 router.put('/submit-report', uploadVideo, SubmitReport as any);
 
 export { router as OwnerRoute }
