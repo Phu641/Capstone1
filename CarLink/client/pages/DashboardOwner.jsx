@@ -11,11 +11,14 @@ const DashboardOwner = () => {
     balanceOwner: 0,
   });
 
+  const [cars, setCars] = useState([]); // Thêm state cars để lưu dữ liệu xe
+
   const handleDashboardClick = () => {
     setActivePage("dashboard");
   };
 
   const handleManageVehiclesClick = () => {
+    // Giữ lại, nhưng không hiển thị nội dung nào khi nhấn vào "Quản lý xe"
     setActivePage("manageVehicles");
   };
 
@@ -23,26 +26,42 @@ const DashboardOwner = () => {
     setActivePage("rentalRequests");
   };
 
-  // tính số xe đang cho thuê
+  // Lấy token từ localStorage hoặc nơi bạn lưu trữ token
+  const token = localStorage.getItem("token");
+
+  // Lấy dữ liệu xe từ API và tính tổng số xe đang cho thuê
   const fetchCarData = async () => {
     try {
-      const response = await fetch("http://localhost:3000/searching/cars");
+      const response = await fetch("http://localhost:3000/owner/all-cars", {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`, // Gửi token trong header
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Không thể lấy dữ liệu từ server');
+      }
+
       const carData = await response.json();
 
-      // Tính số lượng xe đang cho thuê (isAvailable = true)
-      const totalCars = carData.filter(car => car.isAvailable).length;
+      if (Array.isArray(carData)) {
+        const totalCars = carData.filter(car => car.isAvailable).length;
+        setStats(prevStats => ({
+          ...prevStats,
+          totalCarOwner: totalCars,
+        }));
 
-      // lưu vào state
-      setStats(prevStats => ({
-        ...prevStats,
-        totalCarOwner: totalCars,
-      }));
+        setCars(carData);
+      } else {
+        console.error("Dữ liệu trả về không phải là mảng:", carData);
+      }
+
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu Car:", error);
     }
   };
 
-  // Lấy dữ liệu khi component được render lần đầu
   useEffect(() => {
     fetchCarData();
   }, []);
@@ -91,6 +110,20 @@ const DashboardOwner = () => {
               <h3>Số dư trong ví</h3>
               <p>{stats.balanceOwner} VND</p>
             </div>
+          </div>
+        )}
+
+        {activePage === "manageVehicles" && (
+          <div className="manage-vehicles">
+            {/* Không hiển thị nội dung gì ở đây */}
+            <h3>Quản lý xe (Chức năng này hiện tại không có nội dung)</h3>
+          </div>
+        )}
+
+        {activePage === "rentalRequests" && (
+          <div className="rental-requests">
+            <h3>Danh sách yêu cầu thuê xe</h3>
+            {/* Hiển thị danh sách yêu cầu thuê xe tại đây */}
           </div>
         )}
       </div>
