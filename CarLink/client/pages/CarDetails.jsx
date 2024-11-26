@@ -2,13 +2,34 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom"; // Thay useHistory thành useNavigate
 import { Container, Row, Col } from "reactstrap";
 
+
 const CarDetails = () => {
   const { carID } = useParams();
   const navigate = useNavigate();
   const [singleCarItem, setSingleCarItem] = useState(null);
-  const [currentMedia, setCurrentMedia] = useState(""); // Changed from currentImage to currentMedia
+  const [currentMedia, setCurrentMedia] = useState("");
   const [isAcceptedTerms, setIsAcceptedTerms] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(""); 
+  const [errorMessage, setErrorMessage] = useState("");
+  const [deliveryOption, setDeliveryOption] = useState("selfPickUp");
+  const [address, setAddress] = useState("");
+  const [totalDays, setTotalDays] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [userInfo, setUserInfo] = useState({
+    email: "",
+    phoneNumber: "",
+    note: "",
+    bookingDate: "",
+    untilDate: ""
+  });
+
+  const [errors, setErrors] = useState({
+    email: "",
+    phoneNumber: "",
+    address: "",
+    bookingDate: "",
+    untilDate: ""
+  });
+
 
   useEffect(() => {
     const fetchCarDetails = async () => {
@@ -39,27 +60,165 @@ const CarDetails = () => {
     };
 
     fetchCarDetails();
-    window.scrollTo(0, 0);
   }, [carID]);
+
+  useEffect(() => {
+    calculatePrice(); // Recalculate whenever the relevant state changes
+  }, [singleCarItem, userInfo.bookingDate, userInfo.untilDate]);
 
   const handleMediaClick = (media) => {
     const newMedia = `http://localhost:3000/images/${media || "./default-image.jpg"}`;
     setCurrentMedia(newMedia);
   };
 
+  const calculatePrice = () => {
+    if (singleCarItem && userInfo.bookingDate && userInfo.untilDate) {
+      const startDate = new Date(userInfo.bookingDate);
+      const endDate = new Date(userInfo.untilDate);
+
+      if (startDate <= endDate) {
+        const days = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+        setTotalDays(days);
+
+        // Kiểm tra xem giá mỗi ngày có hợp lệ không
+        const pricePerDay = singleCarItem.overview?.pricePerDay || 0;
+        setTotalPrice(days * pricePerDay);
+      } else {
+        setTotalDays(0);
+        setTotalPrice(0);
+      }
+    }
+  };
+
+  const validateField = (field) => {
+    const newErrors = { ...errors };
+    let isValid = true;
+
+    if (field === "email") {
+      if (!userInfo.email.trim()) {
+        newErrors.email = "Email không được để trống.";
+        isValid = false;
+      } else if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(userInfo.email)) {
+        newErrors.email = "Email không hợp lệ.";
+        isValid = false;
+      }
+    }
+
+    if (field === "phoneNumber") {
+      if (!userInfo.phoneNumber.trim()) {
+        newErrors.phoneNumber = "Số điện thoại không được để trống.";
+        isValid = false;
+      } else if (!/^[0-9]{10,15}$/.test(userInfo.phoneNumber)) {
+        newErrors.phoneNumber = "Số điện thoại không hợp lệ";
+        isValid = false;
+      }
+    }
+
+    if (field === "address" && deliveryOption === "delivery") {
+      if (!address.trim()) {
+        newErrors.address = "Địa chỉ không được để trống.";
+        isValid = false;
+      }
+    }
+
+    if (field === "bookingDate") {
+      if (!userInfo.bookingDate.trim()) {
+        newErrors.bookingDate = "Ngày đặt không được để trống.";
+        isValid = false;
+      }
+    }
+
+    if (field === "untilDate") {
+      if (!userInfo.untilDate.trim()) {
+        newErrors.untilDate = "Ngày kết thúc không được để trống.";
+        isValid = false;
+      }
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handleInputChange = (field, value) => {
+    setUserInfo((prev) => ({ ...prev, [field]: value }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [field]: "", // Xóa lỗi khi người dùng nhập
+    }));
+  };
+
+  const handleAddressChange = (value) => {
+    setAddress(value);
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      address: "", // Xóa lỗi khi người dùng nhập
+    }));
+  };
+
+  const validateAllFields = () => {
+    const newErrors = {};
+    let isValid = true;
+
+    // Kiểm tra email
+    if (!userInfo.email.trim()) {
+      newErrors.email = "Email không được để trống.";
+      isValid = false;
+    } else if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(userInfo.email)) {
+      newErrors.email = "Email không hợp lệ.";
+      isValid = false;
+    }
+
+    // Kiểm tra số điện thoại
+    if (!userInfo.phoneNumber.trim()) {
+      newErrors.phoneNumber = "Số điện thoại không được để trống.";
+      isValid = false;
+    } else if (!/^[0-9]{10,15}$/.test(userInfo.phoneNumber)) {
+      newErrors.phoneNumber = "Số điện thoại không hợp lệ.";
+      isValid = false;
+    }
+
+    // Kiểm tra địa chỉ (nếu chọn giao hàng)
+    if (deliveryOption === "delivery" && !address.trim()) {
+      newErrors.address = "Địa chỉ không được để trống.";
+      isValid = false;
+    }
+
+    // Kiểm tra ngày đặt
+    if (!userInfo.bookingDate.trim()) {
+      newErrors.bookingDate = "Ngày đặt không được để trống.";
+      isValid = false;
+    }
+
+    // Kiểm tra ngày kết thúc
+    if (!userInfo.untilDate.trim()) {
+      newErrors.untilDate = "Ngày kết thúc không được để trống.";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+
   const handleRentButtonClick = () => {
     if (!isAcceptedTerms) {
       setErrorMessage("Bạn phải chấp nhận điều khoản sử dụng trước khi đặt xe.");
       return;
     }
-    setErrorMessage(""); // Clear error message if validation passes
+
+    // Validate tất cả các trường
+    if (!validateAllFields()) {
+      setErrorMessage("Vui lòng điền đầy đủ thông tin của bạn.");
+      return;
+    }
+
+    setErrorMessage(""); // Xóa thông báo lỗi nếu hợp lệ
     navigate("/booking-form", { state: { carPrice: singleCarItem?.overview?.pricePerDay || 0 } });
   };
 
   if (!singleCarItem) {
     return <p>Loading...</p>;
   }
-
   // Determine if the media is a video by its extension (you can adjust this to handle more video formats)
   const isVideo = currentMedia && (currentMedia.endsWith(".mp4") || currentMedia.endsWith(".avi"));
 
@@ -160,6 +319,124 @@ const CarDetails = () => {
             </div>
           </Col>
         </Row>
+        <Row>
+          <h3 className="mt-5">Thông tin của bạn</h3>
+          <Col lg="12">
+            <div className="d-flex gap-3">
+              <Col lg="6">
+                <div className="mt-3">
+                  <label htmlFor="userEmail">
+                    Email: <span style={{ color: "red" }}>*</span>
+                  </label>
+                  <input
+                    type="email"
+                    id="userEmail"
+                    placeholder="Nhập email"
+                    value={userInfo.email}
+                    onInput={() => setErrors((prevErrors) => ({ ...prevErrors, email: "" }))}
+                    onBlur={() => validateField("email")}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
+                    className="form-control"
+                  />
+                  {errors.email && <p style={{ color: "red", marginBottom: "0" }}>{errors.email}</p>}
+                </div>
+              </Col>
+              <Col lg="6">
+                <div className="mt-3">
+                  <label htmlFor="userPhoneNumber">
+                    Số điện thoại: <span style={{ color: "red" }}>*</span>
+                  </label>
+                  <input
+                    type="tel"
+                    id="userPhoneNumber"
+                    placeholder="Nhập số điện thoại"
+                    value={userInfo.phoneNumber}
+                    onBlur={() => validateField("phoneNumber")}
+                    onChange={(e) => handleInputChange("phoneNumber", e.target.value)}
+                    className="form-control"
+                  />
+                  {errors.phoneNumber && <p style={{ color: "red", marginBottom: "0" }}>{errors.phoneNumber}</p>}
+                </div>
+              </Col>
+            </div>
+          </Col>
+          <Col lg="12">
+            <div className="d-flex gap-3">
+              <Col lg="6">
+                <div className="mt-3">
+                  <label htmlFor="bookingDate">Ngày đặt <span style={{ color: "red", marginBottom: "0" }}>*</span> :</label>
+                  <input
+                    type="date"
+                    id="bookingDate"
+                    className="form-control"
+                    value={userInfo.bookingDate}
+                    min={new Date().toISOString().split("T")[0]}
+                    onChange={(e) => handleInputChange("bookingDate", e.target.value)}
+                  />
+                  {errors.bookingDate && <p style={{ color: "red" }}>{errors.bookingDate}</p>}
+                </div>
+              </Col>
+
+              <Col lg="6">
+                <div className="mt-3">
+                  <label htmlFor="untilDate">Ngày kết thúc <span style={{ color: "red", marginBottom: "0" }}>*</span> :</label>
+                  <input
+                    type="date"
+                    id="untilDate"
+                    className="form-control"
+                    value={userInfo.untilDate}
+                    min={userInfo.bookingDate || new Date().toISOString().split("T")[0]}
+                    onChange={(e) => handleInputChange("untilDate", e.target.value)}
+                  />
+                  {errors.untilDate && <p style={{ color: "red", marginBottom: "0" }}>{errors.untilDate}</p>}
+                </div>
+              </Col>
+            </div>
+          </Col>
+
+          <div className="mt-3">
+            <label htmlFor="note">Ghi chú</label>
+            <textarea
+              id="note"
+              className="form-control"
+              value={userInfo.note}
+              onChange={(e) => handleInputChange("note", e.target.value)}
+              placeholder="Nhập ghi chú của bạn"
+            />
+          </div>
+          <div className="mt-3">
+            <h3 className="mb-3">Chọn phương thức nhận xe</h3>
+            <select
+              id="deliveryOption"
+              value={deliveryOption}
+              onChange={(e) => setDeliveryOption(e.target.value)}
+              className="form-control"
+            >
+              <option value="selfPickUp">Tự nhận xe</option>
+              <option value="delivery">Giao tận nơi</option>
+            </select>
+            {deliveryOption === "delivery" && (
+              <div className="mt-3">
+                <label htmlFor="address">
+                  Địa chỉ nhận xe: <span style={{ color: "red", marginBottom: "0" }}>*</span>
+                </label>
+                <input
+                  type="text"
+                  id="address"
+                  placeholder="Nhập địa chỉ nhận xe"
+                  value={address}
+                  onInput={() => setErrors((prevErrors) => ({ ...prevErrors, address: "" }))}
+                  onBlur={() => validateField("address")}
+                  onChange={(e) => handleAddressChange(e.target.value)}
+                  className="form-control"
+                />
+                {errors.address && <p style={{ color: "red" }}>{errors.address}</p>}
+              </div>
+            )}
+          </div>
+
+
+        </Row>
 
         <Row>
           <Col lg="12">
@@ -197,15 +474,25 @@ const CarDetails = () => {
           </Col>
         </Row>
 
+        <Col lg="12">
+          {/* Chi tiết giá thuê */}
+          <div className="mt-4">
+            <h5>Chi tiết giá thuê:</h5>
+            <p>Số ngày thuê: <strong>{totalDays}</strong></p>
+            <p>Tổng chi phí: <strong>{totalPrice.toLocaleString("vi-VN")} VND</strong></p>
+          </div>
+
+        </Col>
+
         <Row>
-          <Col lg="12" style={{display:"flex", alignItems: "center"}} className="mt-4">
+          <Col lg="12" style={{ display: "flex", alignItems: "center" }} className="mt-4">
             <label htmlFor="acceptTerms">Tôi đã đọc và đồng ý với điều khoản sử dụng</label>
             <input
               type="checkbox"
               id="acceptTerms"
               checked={isAcceptedTerms}
               onChange={() => setIsAcceptedTerms(!isAcceptedTerms)}
-              style={{maxWidth: "20px", marginBottom: "4px" }}
+              style={{ maxWidth: "20px", marginBottom: "4px" }}
             />
           </Col>
         </Row>
