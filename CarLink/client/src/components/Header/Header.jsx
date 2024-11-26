@@ -25,6 +25,7 @@ const NAV_LINKS = [
 
 const MENU_ITEMS = [
   { path: "/add-car", icon: FaCarAlt, text: "Đăng xe cho thuê" },
+  { path: "/favorites", icon: FaHeart, text: "Danh sách xe yêu thích của bạn" },
   { path: "/how-it-works", icon: FaQuestionCircle, text: "CarLink hoạt động như thế nào?" },
   { path: "/gift-cards", icon: FaGift, text: "Voucher" },
   { path: "/contact-support", icon: FaPhone, text: "Liên hệ hỗ trợ" },
