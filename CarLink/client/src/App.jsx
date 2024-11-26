@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import HomePage from "../pages/HomePage";
 import Carlistting from "../pages/CarListing";
 import CarDetails from "../pages/CarDetails";
@@ -28,7 +30,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/Home" element={<HomePage />} />
         <Route path="/Cars" element={<Carlistting />} />
-        <Route path="/cars/:carID" element={<CarDetails />}/>   
+        <Route path="/cars/:carID" element={<CarDetails />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/signup" element={<SignupForm />} />
         <Route path="/forgot-password" element={<ForgotPasswordForm />} />
@@ -44,6 +46,7 @@ function App() {
         <Route path="/favorites" element={<Favorites />} /> 
       </Routes>
       <Footer />
+      <ToastContainer />
     </Router>
   );
 }

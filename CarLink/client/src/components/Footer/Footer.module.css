@@ -99,16 +99,6 @@
 
 .footerColumn ul li:hover {
     transform: translateX(5px);
-}
-
-.footerColumn ul li a {
-    color: black;
-    text-decoration: none;
-    transition: color 0.2s ease;
-    font-size: 16px;
-}
-
-.footerColumn ul li a:hover {
     color: #007bff;
 }
 

@@ -274,7 +274,7 @@ const BookingForm = () => {
             <label>Giá thuê xe</label>
             <input
               type="text"
-              value={`${carPrice} VND`}
+              value={`${Number(carPrice).toLocaleString("vi-VN")} VND`}
               disabled
             />
           </FormGroup>
@@ -286,7 +286,7 @@ const BookingForm = () => {
               disabled
             />
           </FormGroup>
-          <h4>Tổng giá tiền: {totalPrice} VND</h4>
+          <h4>Tổng giá tiền: {Number(totalPrice).toLocaleString("vi-VN")} VND</h4>
         </div>
         <button type="submit" className="mt-4">
           Tiến hành thanh toán
