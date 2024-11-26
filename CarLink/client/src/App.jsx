@@ -19,7 +19,8 @@ import UserList from "../pages/UserList";
 import BookingForm from "./components/UI/BookingForm.jsx";
 import Payment from "./components/UI/PaymentMethod.jsx";
 import Favorites from "./components/Favorite/Favorite.jsx";
-import { ToastContainer } from 'react-toastify';
+//owner
+import ManageVehicles from "../pages/ManageVehicles"; // Import trang quản lý xe
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPasswordForm />} />
         <Route path="/add-car" element={<AddCar />} />
         <Route path="/DashboardOwner" element={<DashboardOwner />} />
+        <Route path="/manage-vehicles" element={<ManageVehicles />} /> {/* Thêm route cho ManageVehicles */}
         <Route path="/dashboardAdmin" element={<DashboardAdmin />} />
         <Route path="/vehicle/:id" element={<VehicleDetailsPage />} />
         <Route path="/vehicle-approval" element={<VehicleApprovalPage />} />
