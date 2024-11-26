@@ -63,7 +63,7 @@ const CarDetails = () => {
   }, [carID]);
 
   useEffect(() => {
-    calculatePrice(); // Recalculate whenever the relevant state changes
+    calculatePrice();
   }, [singleCarItem, userInfo.bookingDate, userInfo.untilDate]);
 
   const handleMediaClick = (media) => {
@@ -219,7 +219,7 @@ const CarDetails = () => {
   if (!singleCarItem) {
     return <p>Loading...</p>;
   }
-  // Determine if the media is a video by its extension (you can adjust this to handle more video formats)
+ 
   const isVideo = currentMedia && (currentMedia.endsWith(".mp4") || currentMedia.endsWith(".avi"));
 
   return (
@@ -385,7 +385,7 @@ const CarDetails = () => {
                     id="untilDate"
                     className="form-control"
                     value={userInfo.untilDate}
-                    min={userInfo.bookingDate || new Date().toISOString().split("T")[0]}
+                    min={userInfo.bookingDate ? new Date(new Date(userInfo.bookingDate).setDate(new Date(userInfo.bookingDate).getDate() + 1)).toISOString().split("T")[0] : ""}
                     onChange={(e) => handleInputChange("untilDate", e.target.value)}
                   />
                   {errors.untilDate && <p style={{ color: "red", marginBottom: "0" }}>{errors.untilDate}</p>}
