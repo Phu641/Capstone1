@@ -17,7 +17,6 @@ import UserList from "../pages/UserList";
 import BookingForm from "./components/UI/BookingForm.jsx";
 import Payment from "./components/UI/PaymentMethod.jsx";
 import Favorites from "./components/Favorite/Favorite.jsx";
-import { ToastContainer } from 'react-toastify';
 
 function App() {
   return (
