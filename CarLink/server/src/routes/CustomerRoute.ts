@@ -1,5 +1,5 @@
 import express from 'express';
-import { CustomerLogIn, CustomerSignUp, CustomerVerify, EditCustomerProfile, GetCustomerProfile, onRequestOTP, GetCurrentRole, addToFavorite, getAllCarsFavorite, BookCar } from '../controllers';
+import { CustomerLogIn, CustomerSignUp, CustomerVerify, EditCustomerProfile, GetCustomerProfile, onRequestOTP, GetCurrentRole, addToFavorite, getAllCarsFavorite, BookCar, MakePayment } from '../controllers';
 import { Authenticate } from '../middlewares';
 
 const router = express.Router();
@@ -36,6 +36,9 @@ router.get('/cars-favorite', getAllCarsFavorite as any);
 
 //BOOK CAR
 router.post('/book-car', BookCar as any);
+
+//CREATE PAYMENT
+router.post('/create-payment-link', MakePayment as any);
 
 
 

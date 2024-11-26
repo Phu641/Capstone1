@@ -8,6 +8,7 @@ import path from 'path';
 const dotenv = require('dotenv');
 dotenv.config({ path: path.resolve(__dirname, '.././.env') });
 const nodemailer = require("nodemailer");
+import PayOS from "@payos/node";
 
 
 /**------------------------------PROFILE SECTION------------------------------------------ */
@@ -417,3 +418,24 @@ export const BookCar = async (req: Request, res: Response, next: NextFunction) =
 };
 
 /**------------------------------PAYMENT SECTION------------------------------------------ */
+
+//MAKE PAYMENT
+export const MakePayment = async(req: Request, res: Response, next: NextFunction)  => {
+
+    const payos = new PayOS("YOUR_PAYOS_CLIENT_ID", "YOUR_PAYOS_API_KEY", "YOUR_PAYOS_CHECKSUM_KEY");
+
+    const order = {
+
+        amount: 1000,
+        description: 'Thanh toán cọc',
+        orderCode: 10,
+        returnUrl: 'http://localhost:3000/customer/sucess.html',
+        cancelUrl: 'http://localhost:3000/customer/cancel.html'
+
+    };
+
+    const paymentLink = await payos.createPaymentLink(order as any);
+    res.redirect(303, paymentLink.checkoutUrl);
+
+}
+
