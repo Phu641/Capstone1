@@ -7,6 +7,7 @@ const ManageVehiclesPage = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
+  // Hàm lấy danh sách xe
   const fetchCarData = async () => {
     try {
       const response = await fetch("http://localhost:3000/owner/all-cars", {
@@ -34,10 +35,33 @@ const ManageVehiclesPage = () => {
 
   useEffect(() => {
     fetchCarData();
-  }, []);
+  }, [token]);
 
-  const handleUpdate = (carID) => {
-    navigate(`/update-vehicle/${carID}`); // Điều hướng đến trang chỉnh sửa xe
+  // Hàm thay đổi trạng thái của toggle switch và gọi API PUT
+  const handleToggleChange = async (carID, bookedStatus) => {
+    const apiUrl = bookedStatus
+      ? "http://localhost:3000/owner/start-service" // Chuyển xe sang trạng thái sẵn sàng
+      : "http://localhost:3000/owner/stop-service"; // Chuyển xe sang trạng thái không sẵn sàng
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: "PUT",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ carID }), // Gửi carID lên server
+      });
+
+      if (!response.ok) {
+        throw new Error('Không thể cập nhật trạng thái dịch vụ');
+      }
+
+      // Sau khi gọi API thành công, gọi lại API để lấy dữ liệu xe mới
+      fetchCarData(); // Cập nhật lại danh sách xe
+    } catch (error) {
+      console.error("Lỗi khi gọi API:", error);
+    }
   };
 
   return (
@@ -46,7 +70,7 @@ const ManageVehiclesPage = () => {
         <thead>
           <tr>
             <th colSpan="7">
-              <h3>Danh sách xe có sẵn của bạn</h3>
+              <h2>Danh sách xe có sẵn của bạn</h2>
             </th>
           </tr>
           <tr>
@@ -56,7 +80,8 @@ const ManageVehiclesPage = () => {
             <th>Địa chỉ</th>
             <th>Mô tả chi tiết xe</th>
             <th>Phương tiện</th>
-            <th>Thao tác</th>
+            <th>Câp nhật</th>
+            <th>Trạng thái</th> 
           </tr>
         </thead>
         <tbody>
@@ -91,16 +116,27 @@ const ManageVehiclesPage = () => {
                 <td>
                   <button
                     className="update-button"
-                    onClick={() => handleUpdate(car.carID)}
+                    onClick={() => navigate(`/update-vehicle/${car.carID}`)} // Điều hướng đến trang chỉnh sửa xe
                   >
                     Cập nhật thông tin
                   </button>
+                </td>
+                {/* Cột chứa toggle switch */}
+                <td>
+                  <label className="switch">
+                    <input
+                      type="checkbox"
+                      checked={!car.booked} // Chuyển trạng thái booked từ true/false sang trạng thái switch
+                      onChange={() => handleToggleChange(car.carID, car.booked)} // Gọi sự kiện thay đổi
+                    />
+                    <span className="slider"></span>
+                  </label>
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="7">Chưa có xe nào có sẵn.</td>
+              <td colSpan="8">Chưa có xe nào có sẵn.</td>
             </tr>
           )}
         </tbody>
