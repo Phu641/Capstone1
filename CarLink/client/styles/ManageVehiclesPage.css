@@ -1,0 +1,107 @@
+/* Container bao quanh phần giao diện quản lý xe */
+.manage-vehicles-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+/* Tiêu đề chính */
+.manage-vehicles-container h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Bảng danh sách xe */
+.manage-vehicles-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Định dạng cho các cột tiêu đề và dữ liệu trong bảng */
+.manage-vehicles-table th, .manage-vehicles-table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+/* Màu nền cho các tiêu đề bảng */
+.manage-vehicles-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+/* Đổi màu nền các dòng chẵn trong bảng */
+.manage-vehicles-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Màu nền khi hover qua một dòng trong bảng */
+.manage-vehicles-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Căn chỉnh các ô dữ liệu trong bảng */
+.manage-vehicles-table td {
+    vertical-align: top;
+}
+
+/* Style cho nút "Cập nhật thông tin" */
+.update-button {
+    background-color: #4CAF50; /* Màu nền xanh */
+    color: white; /* Màu chữ trắng */
+    border: none; /* Bỏ đường viền */
+    padding: 4px 8px; /* Giảm padding để thu nhỏ nút */
+    text-align: center;
+    text-decoration: none;
+    font-size: 12px; /* Kích thước chữ nhỏ hơn */
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu mượt mà */
+}
+
+/* Màu khi hover qua nút "Cập nhật thông tin" */
+.update-button:hover {
+    background-color: #45a049; /* Màu xanh đậm khi hover */
+}
+
+/* Màu khi nhấn nút "Cập nhật thông tin" */
+.update-button:active {
+    background-color: #3e8e41; /* Màu xanh tối khi nhấn */
+}
+
+/* Loại bỏ viền khi nút được chọn */
+.update-button:focus {
+    outline: none;
+}
+
+/* Căn chỉnh nút "Cập nhật thông tin" trong ô của bảng */
+.manage-vehicles-table td .update-button {
+    display: inline-block;
+    margin-top: 8px;
+}
+
+/* Thông báo khi không có xe nào có sẵn */
+.manage-vehicles-table td[colspan="7"] {
+    text-align: center;
+    padding: 20px;
+    font-size: 16px;
+    color: #555;
+    background-color: #fff;
+}
+
+/* Định dạng hình ảnh xe trong bảng */
+.manage-vehicles-table img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-right: 10px;
+} 
