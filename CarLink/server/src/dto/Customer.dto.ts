@@ -34,6 +34,17 @@ export class CreateCustomerInputs {
 
 export class EditCustomerProfileInputs {
 
+    @IsNotEmpty()
+    @IsEmail()
+    email!: string;
+
+    @IsNotEmpty()
+    @Length(6, 20)
+    password!: string;
+
+    @IsNotEmpty()
+    @Length(7, 12)
+    phone!: string;
     
     @Length(2, 16)
     firstName!: string;

@@ -248,7 +248,7 @@ export const EditCustomerProfile = async (req: Request, res: Response, next: Nex
 
     if (profileErrors.length > 0) return res.status(400).json(profileErrors);
 
-    const { firstName, lastName, address } = profileInputs;
+    const { email, password, phone, firstName, lastName, address } = profileInputs;
 
     if (customer) {
 
@@ -256,6 +256,9 @@ export const EditCustomerProfile = async (req: Request, res: Response, next: Nex
 
         if (profile) {
 
+            profile.email = email,
+            profile.password = password,
+            profile.phone = phone,
             profile.firstName = firstName;
             profile.lastName = lastName;
             profile.address = address;

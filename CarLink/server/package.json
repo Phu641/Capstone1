@@ -12,11 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-<<<<<<< HEAD
     "@payos/node": "^1.0.10",
-=======
     "axios": "^1.7.8",
->>>>>>> 74e94837c408f263585a26674d4a644b53067d4d
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.3",
     "class-transformer": "^0.5.1",
