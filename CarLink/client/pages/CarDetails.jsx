@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom"; // Thay useHistory thành useNavigate
 import { Container, Row, Col } from "reactstrap";
-
+import { toast } from "react-toastify";
 
 const CarDetails = () => {
   const { carID } = useParams();
@@ -200,22 +200,56 @@ const CarDetails = () => {
   };
 
 
-  const handleRentButtonClick = () => {
-    if (!isAcceptedTerms) {
-      setErrorMessage("Bạn phải chấp nhận điều khoản sử dụng trước khi đặt xe.");
+  
+  const handleRentButtonClick = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("Vui lòng đăng nhập để sử dụng chức năng này!");
       return;
     }
-
-    // Validate tất cả các trường
-    if (!validateAllFields()) {
-      setErrorMessage("Vui lòng điền đầy đủ thông tin của bạn.");
-      return;
-    }
-
-    setErrorMessage(""); // Xóa thông báo lỗi nếu hợp lệ
-    navigate("/booking-form", { state: { carPrice: singleCarItem?.overview?.pricePerDay || 0 } });
+  
+      if (!isAcceptedTerms) {
+        setErrorMessage("Bạn cần chấp nhận điều khoản sử dụng trước khi đặt xe.");
+        return;
+      }
+    
+      // Kiểm tra tất cả các trường form
+      if (!validateAllFields()) {
+        setErrorMessage("Vui lòng điền đầy đủ thông tin trước khi đặt xe.");
+        return;
+      }
+    
+      const bookingData = {
+        carID: parseInt(carID, 10),
+        bookingDate: userInfo.bookingDate,
+        untilDate: userInfo.untilDate,
+        address: deliveryOption === "delivery" ? address : "",
+        pricePerDay: singleCarItem?.overview?.pricePerDay || 0,
+        days: totalDays,
+      };
+    
+      try {
+        const response = await fetch("http://localhost:3000/customer/book-car", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`  // Thêm token vào header Authorization
+          },
+          body: JSON.stringify(bookingData),
+        });
+    
+        if (response.ok) {
+          toast.success("Đặt xe thành công!");
+          navigate("/booking-success"); // Điều hướng sau khi đặt xe thành công
+        } else {
+          const data = await response.json();
+          toast.error(data.message || "Đặt xe không thành công, vui lòng thử lại.");
+        }
+      } catch (error) {
+        toast.error("Lỗi kết nối đến máy chủ, vui lòng thử lại sau.");
+      }
   };
-
+  
   if (!singleCarItem) {
     return <p>Loading...</p>;
   }
