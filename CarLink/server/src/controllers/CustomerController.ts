@@ -219,24 +219,33 @@ export const CustomerVerify = async (req: Request, res: Response, next: NextFunc
 
 //GET PROFILE
 export const GetCustomerProfile = async (req: Request, res: Response, next: NextFunction) => {
+    try {
 
-    const customer = req.user;
+        const user = req.user;
 
-    if (customer) {
+        if (!user) {
+            return res.status(401).json({ message: 'Bạn chưa đăng nhập!' }); // 401 Unauthorized nếu user không tồn tại
+        }
 
-        const profile = await Customer.findOne(customer.customerID);
+        const profile = await Customer.findByPk(user.customerID);
 
-        if (profile) return res.status(200).json(profile);
+        if (!profile) {
+            return res.status(404).json({ message: 'Không tìm thấy thông tin khách hàng!' }); // 404 Not Found nếu không tìm thấy profile
+        }
 
+        return res.status(200).json(profile); // Trả về thông tin profile nếu tìm thấy
+    } catch (error) {
+        console.error('Lỗi khi truy xuất profile:', error);
+        return res.status(500).json({ message: 'Lỗi máy chủ, không thể truy xuất profile!' }); // 500 Internal Server Error nếu có lỗi bất ngờ
     }
-
-    return res.status(400).json('Lỗi không thể xem profile!');
-}
+};
 
 //EDIT CUSTOMER PROFILE
 export const EditCustomerProfile = async (req: Request, res: Response, next: NextFunction) => {
 
-    const customer = req.user;
+    const user = req.user;
+
+    console.log(user);
 
     const profileInputs = plainToClass(EditCustomerProfileInputs, req.body);
 
@@ -250,14 +259,18 @@ export const EditCustomerProfile = async (req: Request, res: Response, next: Nex
 
     const { email, password, phone, firstName, lastName, address } = profileInputs;
 
-    if (customer) {
+    const salt = await GenerateSalt();
+    const userPassword = await GeneratePassword(password, salt);
 
-        const profile = await Customer.findOne(customer.customerID);
+    if (user) {
+
+        const profile = await Customer.findByPk(user.customerID);
 
         if (profile) {
 
             profile.email = email,
-            profile.password = password,
+            profile.password = userPassword,
+            profile.salt = salt,
             profile.phone = phone,
             profile.firstName = firstName;
             profile.lastName = lastName;
