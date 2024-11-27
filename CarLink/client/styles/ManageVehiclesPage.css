@@ -6,55 +6,55 @@
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     margin-top: 20px;
-}
-
-/* Tiêu đề chính */
-.manage-vehicles-container h3 {
+  }
+  
+  /* Tiêu đề chính */
+  .manage-vehicles-container h3 {
     font-size: 24px;
     margin-bottom: 20px;
     text-align: center;
-}
-
-/* Bảng danh sách xe */
-.manage-vehicles-table {
+  }
+  
+  /* Bảng danh sách xe */
+  .manage-vehicles-table {
     width: 100%;
     border-collapse: collapse;
     background-color: #ffffff;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Định dạng cho các cột tiêu đề và dữ liệu trong bảng */
-.manage-vehicles-table th, .manage-vehicles-table td {
+  }
+  
+  /* Định dạng cho các cột tiêu đề và dữ liệu trong bảng */
+  .manage-vehicles-table th, .manage-vehicles-table td {
     padding: 12px;
     text-align: left;
     border: 1px solid #ddd;
-}
-
-/* Màu nền cho các tiêu đề bảng */
-.manage-vehicles-table th {
+  }
+  
+  /* Màu nền cho các tiêu đề bảng */
+  .manage-vehicles-table th {
     background-color: #f4f4f4;
     font-weight: bold;
-}
-
-/* Đổi màu nền các dòng chẵn trong bảng */
-.manage-vehicles-table tr:nth-child(even) {
+  }
+  
+  /* Đổi màu nền các dòng chẵn trong bảng */
+  .manage-vehicles-table tr:nth-child(even) {
     background-color: #f9f9f9;
-}
-
-/* Màu nền khi hover qua một dòng trong bảng */
-.manage-vehicles-table tr:hover {
+  }
+  
+  /* Màu nền khi hover qua một dòng trong bảng */
+  .manage-vehicles-table tr:hover {
     background-color: #f1f1f1;
-}
-
-/* Căn chỉnh các ô dữ liệu trong bảng */
-.manage-vehicles-table td {
+  }
+  
+  /* Căn chỉnh các ô dữ liệu trong bảng */
+  .manage-vehicles-table td {
     vertical-align: top;
-}
-
-/* Style cho nút "Cập nhật thông tin" */
-.update-button {
+  }
+  
+  /* Style cho nút "Cập nhật thông tin" */
+  .update-button {
     background-color: #4CAF50; /* Màu nền xanh */
     color: white; /* Màu chữ trắng */
     border: none; /* Bỏ đường viền */
@@ -65,43 +65,105 @@
     cursor: pointer;
     border-radius: 4px;
     transition: background-color 0.3s ease; /* Hiệu ứng chuyển màu mượt mà */
-}
-
-/* Màu khi hover qua nút "Cập nhật thông tin" */
-.update-button:hover {
+  }
+  
+  /* Màu khi hover qua nút "Cập nhật thông tin" */
+  .update-button:hover {
     background-color: #45a049; /* Màu xanh đậm khi hover */
-}
-
-/* Màu khi nhấn nút "Cập nhật thông tin" */
-.update-button:active {
+  }
+  
+  /* Màu khi nhấn nút "Cập nhật thông tin" */
+  .update-button:active {
     background-color: #3e8e41; /* Màu xanh tối khi nhấn */
-}
-
-/* Loại bỏ viền khi nút được chọn */
-.update-button:focus {
+  }
+  
+  /* Loại bỏ viền khi nút được chọn */
+  .update-button:focus {
     outline: none;
-}
-
-/* Căn chỉnh nút "Cập nhật thông tin" trong ô của bảng */
-.manage-vehicles-table td .update-button {
+  }
+  
+  /* Căn chỉnh nút "Cập nhật thông tin" trong ô của bảng */
+  .manage-vehicles-table td .update-button {
     display: inline-block;
     margin-top: 8px;
-}
-
-/* Thông báo khi không có xe nào có sẵn */
-.manage-vehicles-table td[colspan="7"] {
+  }
+  
+  /* Thông báo khi không có xe nào có sẵn */
+  .manage-vehicles-table td[colspan="8"] {
     text-align: center;
     padding: 20px;
     font-size: 16px;
     color: #555;
     background-color: #fff;
-}
-
-/* Định dạng hình ảnh xe trong bảng */
-.manage-vehicles-table img {
+  }
+  
+  /* Định dạng hình ảnh xe trong bảng */
+  .manage-vehicles-table img {
     width: 100px;
     height: 100px;
     object-fit: cover;
     border-radius: 4px;
     margin-right: 10px;
-} 
+  }
+  
+  /* Tách biệt toggle switch vào một ô riêng biệt trong bảng */
+  .manage-vehicles-table td:last-child {
+    width: 100px; /* Cung cấp một chiều rộng cho cột chứa toggle */
+    text-align: center; /* Căn giữa toggle switch trong ô */
+  }
+  
+  /* Style cho container của toggle switch */
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 34px;
+    height: 20px;
+  }
+  
+  /* Ẩn checkbox, chỉ giữ lại slider */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* Style cho slider (vỏ ngoài của toggle switch) */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+  }
+  
+  /* Style cho phần nút toggle (chuyển động khi toggle) */
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+  }
+  
+  /* Khi checkbox được chọn, thay đổi màu nền và vị trí của nút toggle */
+  input:checked + .slider {
+    background-color: #4CAF50;
+  }
+  
+  input:checked + .slider:before {
+    transform: translateX(14px);
+  }
+  
+  /* Khi hover qua toggle switch */
+  .slider:hover {
+    background-color: #a0a0a0;
+  }
+  
