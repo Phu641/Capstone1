@@ -1,5 +1,5 @@
 import express from "express";
-import { AddCar, GetCarsByOwner, SubmitReport, UpdateCar } from "../controllers";
+import { AddCar, GetCarsByOwner, StartService, StopService, SubmitReport, UpdateCar } from "../controllers";
 import multer from 'multer';
 import { Authenticate, uploadVideo } from "../middlewares";
 
@@ -35,6 +35,12 @@ router.get('/all-cars', GetCarsByOwner as any);
 
 //UPDATE CAR
 router.put('/update-car', images as any, UpdateCar as any);
+
+//STOP SERVICE
+router.put('/stop-service', StopService as any);
+
+//START SERVICE
+router.put('/start-service', StartService as any);
 
 //SUBMIT REPORT
 router.put('/submit-report', uploadVideo, SubmitReport as any);

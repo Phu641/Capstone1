@@ -575,6 +575,10 @@ export const AcceptBooking = async(req: Request, res: Response, next: NextFuncti
 
         await booking?.save();
 
+        if(car) car.booked = true;
+
+        await car?.save();
+
         try {
 
             //send mail to 2 owner
@@ -598,7 +602,7 @@ export const AcceptBooking = async(req: Request, res: Response, next: NextFuncti
 
 }
 
-//DELETE BOOKING
+//ACCEPT REPORT
 
 
 

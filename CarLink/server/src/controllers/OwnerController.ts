@@ -14,7 +14,7 @@ export const AddCar = async(req: Request, res: Response, next: NextFunction) => 
 
     if(user) {
 
-        const { 
+        const {
             delivery,
             selfPickUp,
             model, 
@@ -230,7 +230,122 @@ export const UpdateCar = async (req: Request, res: Response, next: NextFunction)
     return res.status(401).json({ message: "Người dùng không được xác thực." });
 };
 
-//CONFRIM 
+
+//STOP SERVICE
+export const StopService = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+
+        const user = req.user;
+
+        if (!user) {
+            return res.status(401).json({ message: "Bạn chưa đăng nhập." });
+        }
+
+        const { carID } = req.body;
+
+        if (!carID)  return res.status(400).json({ message: "Thiếu thông tin carID." });
+
+        const car = await Car.findByPk(carID);
+
+        if (!car)  return res.status(404).json({ message: "Không tìm thấy xe với ID này." });
+
+        car.booked = true;
+
+        await car.save();
+
+        return res.status(200).json({ message: "Đã dừng dịch vụ đối với xe này." });
+
+    } catch (error) {
+
+        console.error("Lỗi khi dừng dịch vụ:", error);
+        return res.status(500).json({ message: "Có lỗi xảy ra khi dừng dịch vụ." });
+
+    }
+};
+
+//START SERVICE
+export const StartService = async (req: Request, res: Response, next: NextFunction) => {
+
+    try {
+
+        const user = req.user;
+
+        if (!user) {
+            return res.status(401).json({ message: "Bạn chưa đăng nhập." });
+        }
+
+        const { carID } = req.body;
+
+        if (!carID)  return res.status(400).json({ message: "Thiếu thông tin carID." });
+
+        const car = await Car.findByPk(carID);
+
+        if (!car)  return res.status(404).json({ message: "Không tìm thấy xe với ID này." });
+
+        car.booked = false;
+
+        await car.save();
+
+        return res.status(200).json({ message: "Đã bật dịch vụ đối với xe này." });
+
+    } catch (error) {
+
+        console.error("Lỗi khi dừng dịch vụ:", error);
+        return res.status(500).json({ message: "Có lỗi xảy ra khi dừng dịch vụ." });
+
+    }
+
+}
+
+// //CONFRIM 
+// export const SubmitReport = async (req: Request, res: Response, next: NextFunction) => {
+//     const user = req.user; // Lấy thông tin user từ middleware xác thực
+//     const { bookingID, idCard, description } = req.body;
+
+//     try {
+//         // Tìm booking theo bookingID
+//         const booking = await Booking.findByPk(bookingID);
+
+//         if (!booking) {
+//             return res.status(404).json({ message: "Không tìm thấy thông tin thuê xe!" });
+//         }
+
+//         // Kiểm tra xem user có phải là chủ xe không
+//         const car = await Car.findByPk(booking.carID);
+//         if (!car || car.customerID !== user?.customerID) {
+//             return res.status(403).json({ message: "Bạn không có quyền xác nhận cho xe này!" });
+//         }
+
+//         // Cập nhật trạng thái booking thành 'completed'
+//         // booking.bookingStatus = "completed";
+//         // await booking.save();
+
+//         // Kiểm tra file video được upload
+//         const file = req.file; // Sử dụng req.file thay vì req.files vì chỉ upload 1 file
+//         if (!file) {
+//             return res.status(400).json({ message: "Vui lòng upload video hư hỏng!" });
+//         }
+
+//         // Tạo một report mới
+//         const report = await Report.create({
+//             bookingID,
+//             idCard, // Lấy thông tin căn cước của người thuê từ bảng Booking
+//             returnDate: new Date(), // Ngày trả xe hiện tại
+//             damageVideo: file.filename, // Lưu tên file video
+//             description,
+//         });
+
+//         return res.status(200).json({
+//             message: "Xác nhận hoàn thành thuê xe thành công!",
+//             report,
+//         });
+//     } catch (error) {
+//         console.error("Lỗi khi submit report:", error);
+//         return res.status(500).json({
+//             message: "Đã xảy ra lỗi khi xác nhận thuê xe, vui lòng thử lại!",
+//         });
+//     }
+// };
 export const SubmitReport = async (req: Request, res: Response, next: NextFunction) => {
     const user = req.user; // Lấy thông tin user từ middleware xác thực
     const { bookingID, idCard, description } = req.body;
@@ -249,14 +364,11 @@ export const SubmitReport = async (req: Request, res: Response, next: NextFuncti
             return res.status(403).json({ message: "Bạn không có quyền xác nhận cho xe này!" });
         }
 
-        // Cập nhật trạng thái booking thành 'completed'
-        booking.bookingStatus = "completed";
-        await booking.save();
-
-        // Kiểm tra file video được upload
-        const file = req.file; // Sử dụng req.file thay vì req.files vì chỉ upload 1 file
-        if (!file) {
-            return res.status(400).json({ message: "Vui lòng upload video hư hỏng!" });
+        // Kiểm tra file video (nếu có)
+        const file = req.file; // Sử dụng req.file vì chỉ upload 1 file (tùy vào middleware)
+        let damageVideo = null;
+        if (file) {
+            damageVideo = file.filename; // Lưu tên file video nếu có
         }
 
         // Tạo một report mới
@@ -264,12 +376,12 @@ export const SubmitReport = async (req: Request, res: Response, next: NextFuncti
             bookingID,
             idCard, // Lấy thông tin căn cước của người thuê từ bảng Booking
             returnDate: new Date(), // Ngày trả xe hiện tại
-            damageVideo: file.filename, // Lưu tên file video
+            damageVideo, // Có thể để null nếu không có file
             description,
         });
 
         return res.status(200).json({
-            message: "Xác nhận hoàn thành thuê xe thành công!",
+            message: "Xác nhận hoàn thành thuê xe thành công từ chủ xe!",
             report,
         });
     } catch (error) {

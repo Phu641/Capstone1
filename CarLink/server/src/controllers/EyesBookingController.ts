@@ -7,7 +7,7 @@ import { calculateDistance, getCoordinates } from '../utility';
 export const GetCarAvailability = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const result = await Car.findAll({
-            where: { isAvailable: true },
+            where: { isAvailable: true, booked: false },
             include: [
                 {
                     model: Overview,
