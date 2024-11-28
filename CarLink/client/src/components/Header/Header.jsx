@@ -12,7 +12,8 @@ import {
   FaShieldAlt,
   FaTools,
   FaCalculator,
-  FaHeart
+  FaHeart,
+  FaFileAlt
 } from "react-icons/fa";
 
 const NAV_LINKS = [
@@ -23,20 +24,9 @@ const NAV_LINKS = [
   { path: "/contact", display: "Liên hệ" },
 ];
 
-const MENU_ITEMS = [
-  { path: "/add-car", icon: FaCarAlt, text: "Đăng xe cho thuê" },
-  { path: "/favorites", icon: FaHeart, text: "Danh sách xe yêu thích của bạn" },
-  { path: "/how-it-works", icon: FaQuestionCircle, text: "CarLink hoạt động như thế nào?" },
-  { path: "/gift-cards", icon: FaGift, text: "Voucher" },
-  { path: "/contact-support", icon: FaPhone, text: "Liên hệ hỗ trợ" },
-  { path: "/legal", icon: FaGavel, text: "Chính sách" },
-  { path: "/insurance", icon: FaShieldAlt, text: "Bảo hiểm và bảo dưỡng" },
-  { path: "/host-tools", icon: FaTools, text: "Công cụ" },
-  { path: "/calculator", icon: FaCalculator, text: "Máy tính" },
-];
-
 const Header = () => {
   const [userInfo, setUserInfo] = useState(null);
+  const [userRole, setUserRole] = useState(null);
   const [isNavVisible, setIsNavVisible] = useState(false);
   const navRef = useRef(null);
   const menuIconRef = useRef(null);
@@ -97,6 +87,26 @@ const Header = () => {
     }
   };
 
+  const getMenuItems = () => {
+    const baseItems = [
+      { path: "/add-car", icon: FaCarAlt, text: "Đăng xe cho thuê" },
+      { path: "/favorites", icon: FaHeart, text: "Danh sách xe yêu thích của bạn" },
+      { path: "/how-it-works", icon: FaQuestionCircle, text: "CarLink hoạt động như thế nào?" },
+      { path: "/gift-cards", icon: FaGift, text: "Voucher" },
+      { path: "/contact-support", icon: FaPhone, text: "Liên hệ hỗ trợ" },
+      { path: "/legal", icon: FaGavel, text: "Chính sách" },
+      { path: "/insurance", icon: FaShieldAlt, text: "Bảo hiểm và bảo dưỡng" },
+      { path: "/host-tools", icon: FaTools, text: "Công cụ" },
+      { path: "/calculator", icon: FaCalculator, text: "Máy tính" },
+    ];
+
+    if (userRole === 'owner') {
+      baseItems.splice(1, 0, { path: `/report/:bookingID`, icon: FaFileAlt, text: "Báo cáo" });
+    }
+
+    return baseItems;
+  };
+
   const renderMenuItems = () => (
     <ul>
       {!userInfo && (
@@ -110,7 +120,7 @@ const Header = () => {
           </li>
         </>
       )}
-      {MENU_ITEMS.map(({ path, icon: Icon, text }) => (
+      {userInfo && getMenuItems().map(({ path, icon: Icon, text }) => (
         <li key={path}>
           <Link to={path}>
             <Icon />{text}
@@ -119,6 +129,39 @@ const Header = () => {
       ))}
     </ul>
   );
+
+  useEffect(() => {
+    const checkUserRole = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          setUserRole(null);
+          return;
+        }
+
+        const response = await fetch('http://localhost:3000/customer/check-role', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch role');
+        }
+
+        const data = await response.json();
+        console.log("Current user role:", data.role);
+        setUserRole(data.role);
+
+      } catch (error) {
+        console.error('Error checking role:', error);
+        localStorage.removeItem('token');
+        setUserRole(null);
+      }
+    };
+
+    checkUserRole();
+  }, []);
 
   return (
     <header className={styles.header}>

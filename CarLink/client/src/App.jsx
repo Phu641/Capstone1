@@ -21,6 +21,7 @@ import Favorites from "./components/Favorite/Favorite.jsx";
 //owner
 import ManageVehiclesPage from "../pages/ManageVehiclesPage"; // Import trang quản lý xe
 import UpdateVehiclePage from "../pages/UpdateVehiclePage";
+import Report from "../pages/Report";
 import { ToastContainer } from "react-toastify";
 
 function App() {
@@ -47,7 +48,8 @@ function App() {
         <Route path="/user-list" element={<UserList />} />
         <Route path="/booking-form" element={<BookingForm />} />  
         <Route path="/payment" element={<Payment />} />
-        <Route path="/favorites" element={<Favorites />} /> 
+        <Route path="/favorites" element={<Favorites />} />
+        <Route path="/report/:bookingID" element={<Report />} />
       </Routes>
       <Footer />
       <ToastContainer />
