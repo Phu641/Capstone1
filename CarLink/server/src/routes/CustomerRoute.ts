@@ -1,8 +1,11 @@
 import express from 'express';
-import { CustomerLogIn, CustomerSignUp, CustomerVerify, EditCustomerProfile, GetCustomerProfile, onRequestOTP, GetCurrentRole, addToFavorite, getAllCarsFavorite, BookCar, MakePayment } from '../controllers';
+import { CustomerLogIn, CustomerSignUp, CustomerVerify, EditCustomerProfile, GetCustomerProfile, onRequestOTP, GetCurrentRole, addToFavorite, getAllCarsFavorite, BookCar, createPayment, handlePayOSCallback } from '../controllers';
 import { Authenticate } from '../middlewares';
 
 const router = express.Router();
+
+router.use(express.json());
+router.use(express.urlencoded({ extended: true }));
 
 //SIGN UP
 router.post('/signup', CustomerSignUp as any);
@@ -11,7 +14,7 @@ router.post('/signup', CustomerSignUp as any);
 router.post('/login', CustomerLogIn as any);
 
 //AUTHENTICATION
-router.use(Authenticate as any);
+//router.use(Authenticate as any);
 
 //GET OTP
 router.get('/otp', onRequestOTP as any);
@@ -38,8 +41,10 @@ router.get('/cars-favorite', getAllCarsFavorite as any);
 router.post('/book-car', BookCar as any);
 
 //CREATE PAYMENT
-router.post('/create-payment-link', MakePayment as any);
+router.post('/create-payment', createPayment as any);
 
+//UPDATE BALANCE
+router.post('/update-balance', handlePayOSCallback as any);
 
 
 export { router as CustomerRoute}

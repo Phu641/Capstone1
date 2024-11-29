@@ -3,12 +3,22 @@ import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 import { CreateCustomerInputs, UserLoginInputs, EditCustomerProfileInputs } from '../dto';
 import { GeneratePassword, GenerateSalt, GenerateSignature, ValidatePassword, GenerateOtp, GetCarByID} from '../utility';
-import { Booking, Car, Customer, Favorite, Images, Overview, Role } from '../models';
+import { Booking, Car, Customer, Favorite, Images, Overview, Role, Transaction, Wallet } from '../models';
 import path from 'path';
 const dotenv = require('dotenv');
 dotenv.config({ path: path.resolve(__dirname, '.././.env') });
 const nodemailer = require("nodemailer");
 import PayOS from "@payos/node";
+const payOS = new PayOS("6b808926-685f-45a1-a532-908bccb31368", "da86690d-b052-4928-a51a-b9c52659062a", "1fd42ecdf13c1c4cbf8aaebd0063c0bea084ddb6961809d3e02c7e207bcc7b3e");
+const axios = require('axios');
+import express from 'express';
+import bodyParser from 'body-parser';
+
+const app = express();
+app.use(bodyParser.json());
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
 
 
 /**------------------------------PROFILE SECTION------------------------------------------ */
@@ -435,23 +445,168 @@ export const BookCar = async (req: Request, res: Response, next: NextFunction) =
 
 /**------------------------------PAYMENT SECTION------------------------------------------ */
 
-//MAKE PAYMENT
-export const MakePayment = async(req: Request, res: Response, next: NextFunction)  => {
+//TẠO YÊU CẦU THANH TOÁN QUA PAY OS
+export const createPaymentPayos = async (amount: number, walletID: number) => {
 
-    const payos = new PayOS("YOUR_PAYOS_CLIENT_ID", "YOUR_PAYOS_API_KEY", "YOUR_PAYOS_CHECKSUM_KEY");
+    try {
 
-    const order = {
+        const orderCode = Number(String(new Date().getTime()).slice(-6));  // bởi vì payos yêu cầu mã đơn hàng phải là số
 
-        amount: 1000,
-        description: 'Thanh toán cọc',
-        orderCode: 10,
-        returnUrl: 'http://localhost:3000/customer/sucess.html',
-        cancelUrl: 'http://localhost:3000/customer/cancel.html'
+        const paymentData = {
 
-    };
+            orderCode,
+            amount,
+            description: "Thanh toán qua PayOS",
+            returnUrl: 'http://localhost:3000/he-thong/nap-tien', // Đảm bảo returnUrl được đặt đúng
+            cancelUrl: 'http://localhost:3000/he-thong/nap-tien' // Đảm bảo cancelUrl được đặt đúng
 
-    const paymentLink = await payos.createPaymentLink(order as any);
-    res.redirect(303, paymentLink.checkoutUrl);
+        };
 
+        console.log("Payment Data:", paymentData); // Kiểm tra giá trị của paymentData
+
+        // Gửi yêu cầu tạo thanh toán đến payOS
+        const response = await payOS.createPaymentLink(paymentData);
+
+
+        console.log("Full PayOS Response:", response); // Kiểm tra toàn bộ phản hồi
+
+        if (response && (response as any).error) {
+            const error = (response as any).error as { message: string };
+            console.error("PayOS API Error:", error);
+            throw new Error(`PayOS API Error: ${error.message}`);
+        }        
+
+
+        if (response && response.checkoutUrl) {
+
+            // Lưu thông tin giao dịch vào DB
+            await Transaction.create({
+                walletID: walletID,
+                paycode: orderCode,
+                amount,
+                paymentMode: 'Thẻ tín dụng',
+                PaymentResponse: 'Đang chờ',
+                status: 'Đang thanh toán bằng PayOS',
+                created_at: new Date(),
+                updated_at: new Date()
+            });
+
+            // Trả về URL thanh toán từ payOS
+            return response.checkoutUrl;
+
+        }
+
+        throw new Error("Invalid PayOS response");
+    } catch (error) {
+    console.error("Error creating PayOS payment request:", error);
+
+        if (error instanceof Error) {
+            throw new Error(error.message);
+        } else {
+            throw new Error("An unexpected error occurred.");
+        }
+    }
+
+};
+
+//CREATE PAYMENT
+export const  createPayment = async (req: Request, res: Response) => {
+
+    const amount = parseInt(req.body.amount);
+    const user = req.user;
+
+    //console.log(user);
+
+    const customerID = user?.customerID;
+
+
+    console.log('Amount:', amount, 'User ID:', customerID);
+
+    try {
+        // Kiểm tra ví của người dùng
+        const wallet = await Wallet.findOne({ where: { customerID: customerID }, attributes: ['walletID'] });
+
+        if (!wallet) {
+
+            console.log('Wallet not found for user ID:', customerID);
+            return res.status(404).json({ message: 'Wallet not found' });
+
+        }
+
+
+        // Gọi dịch vụ thanh toán phù hợp dựa trên paymentMethod
+        let paymentUrl = await createPaymentPayos(amount, wallet.walletID); // Gọi PayOS service
+        
+        // Trả về URL thanh toán cho người dùng
+        return res.status(200).json({ payUrl: paymentUrl, message: 'Payment request created, please proceed with the payment' });
+
+    } catch (error) {
+
+        console.error('Error creating payment request:', error);
+    
+        if (error instanceof Error) {
+            return res.status(500).json({ message: error.message });
+        } else {
+            return res.status(500).json({ message: 'An unknown error occurred.' });
+        }
+    }
+    
+};
+
+// Cập nhật số dư của ví sau khi giao dịch thành công
+export const updateWallet = async(walletID: number, amount: number, orderCode: string) => {
+
+    const wallet = await Wallet.findOne({ where: { walletID: walletID } });
+
+    if (wallet) {
+
+        wallet.balance += (amount * 2/3);
+        await wallet.save();
+
+        // Cập nhật trạng thái giao dịch
+        await Transaction.update(
+            { status: 'Thanh toán PayOS thành công' },
+            { where: { walletID: walletID, paycode: String(orderCode) } }
+        );
+    }
+
+    if (!wallet) {
+        throw new Error(`Wallet with ID ${walletID} not found`);
+    }
+    
 }
 
+// Xử lý callback từ PayOS khi giao dịch hoàn thành
+export const handlePayOSCallback = async (req: Request, res: Response) => {
+
+    console.log("PayOS callback response:", req.body);
+
+    const { code, data } = req.body;
+
+    // Kiểm tra nếu giao dịch thành công
+    if (code === '00') {
+
+        const { orderCode, amount } = data;
+        const transaction = await Transaction.findOne({ where: { paycode: orderCode } });
+
+        if (transaction) {
+
+            // Cập nhật số dư của ví tương ứng bằng hàm updateWallet
+            await updateWallet(transaction.walletID, amount, orderCode);
+            //console.log(Wallet balance updated for w: ${transaction.walletID}, amount: ${amount} (PayOS));
+            return res.status(200).send("OK"); // Phản hồi thành công về cho PayOS
+
+        } else {
+            console.log("Transaction not found in database.");
+            return res.status(404).json({ message: 'Transaction not found in database.' });
+        }
+    } else {
+        const message = "An unknown error occurred";
+        console.log("Transaction failed:", message);
+        return res.status(400).json({
+            message: `Transaction failed with resultCode:}`,
+            error: message
+        });
+    }
+    
+}
