@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom"; // Thay useHistory thành useNavigate
+import { useParams, useNavigate } from "react-router-dom"; 
 import { Container, Row, Col } from "reactstrap";
 import { toast } from "react-toastify";
 
