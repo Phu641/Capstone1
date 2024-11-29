@@ -2,9 +2,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: 90vh;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  position: relative;
+  padding: 20px;
 }
 
 .backButton {
@@ -38,12 +38,11 @@
 
 .loginForm {
   background-color: white;
-  padding: 2.5rem;
+  padding: 3rem;
   border-radius: 12px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   width: 100%;
-  max-width: 500px;
-  transition: all 0.3s ease;
+  max-width: 450px;
 }
 
 .loginForm h2 {
@@ -132,9 +131,12 @@
 
 /* Màn hình máy tính bảng và điện thoại*/
 @media (max-width: 63.9375em) {
+  .loginContainer {
+    padding: 15px;
+  }
+
   .loginForm {
     padding: 2rem;
-    margin: 1rem;
     max-width: 90%;
   }
 
@@ -167,6 +169,7 @@
   }
 
   .loginButton {
+    height: 45px;
     font-size: 1rem;
   }
 
@@ -180,9 +183,13 @@
 
 /* Màn hình điện thoại */
 @media (max-width: 46.1875em) {
+  .loginContainer {
+    padding: 10px;
+  }
+
   .loginForm {
     padding: 1.5rem;
-    margin: 0.5rem;
+    max-width: 100%;
   }
 
   .backButton {
@@ -199,7 +206,7 @@
   }
 
   .formGroup label {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
   }
 
   .formGroup label svg {
@@ -207,20 +214,19 @@
   }
 
   .formGroup input[type="text"],
-  .formGroup input[type="email"],
   .formGroup input[type="password"] {
     padding: 0.7rem;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
+    height: 40px;
   }
 
   .loginButton {
+    height: 40px;
     font-size: 0.9rem;
   }
 
   .forgotPassword,
-  .signupAccount,
-  .terms {
-    font-size: 0.7rem;
-    margin-top: 1rem;
+  .signupAccount {
+    font-size: 0.85rem;
   }
 }

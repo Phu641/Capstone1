@@ -17,11 +17,6 @@ const Fieldset = ({ onImagesChange }) => {
     }
   };
 
-  useEffect(() => {
-    const validImages = images.filter((img) => img !== null);
-    onImagesChange(validImages);
-  }, [images, onImagesChange]);
-
   return (
     <fieldset className={styles.uploadFieldset}>
       <legend className={styles.legend}>Đăng tải hình ảnh về xe của bạn</legend>

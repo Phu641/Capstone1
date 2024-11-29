@@ -4,7 +4,7 @@
   align-items: center;
   min-height: 90vh;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  position: relative;
+  padding: 20px;
 }
 
 .backButton {
@@ -38,13 +38,12 @@
 
 .signupForm {
   background-color: white;
-  padding: 2.5rem;
+  padding: 3rem;
   border-radius: 12px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   width: 100%;
   max-width: 515px;
-  transition: all 0.3s ease;
-  max-height: 80vh;
+  max-height: 85vh;
   overflow-y: auto;
 }
 
@@ -155,36 +154,28 @@
     display: none;
   }
 
+  .signupContainer {
+    padding: 15px;
+  }
+
   .signupForm {
-    padding: 2.5rem;
+    padding: 2rem;
     max-width: 90%;
   }
 
-  .title {
-    font-size: 2rem;
-    margin-bottom: 2rem;
-  }
-
   .formGroup {
-    margin-bottom: 2rem;
+    margin-bottom: 1.2rem;
   }
 
-  .label {
-    font-size: 1.1rem;
-  }
-
-  .input {
-    font-size: 1rem;
-    padding: 1rem;
+  .formGroup input {
+    padding: 0.8rem;
+    font-size: 0.9rem;
+    height: 45px;
   }
 
   .signupButton {
-    font-size: 1.2rem;
-  }
-
-  .terms {
-    font-size: 0.9rem;
-    margin-top: 2rem;
+    height: 45px;
+    font-size: 1rem;
   }
 }
 
@@ -195,46 +186,31 @@
   }
 
   .signupContainer {
-    padding: 1rem;
+    padding: 10px;
   }
 
   .signupForm {
-    padding: 2rem;
+    padding: 1.5rem;
     max-width: 100%;
+    max-height: 80vh;
   }
 
-  .title {
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .formGroup {
-    margin-bottom: 1.5rem;
-  }
-
-  .label {
-    font-size: 1rem;
-    margin-bottom: 0.8rem;
-  }
-
-  .label svg {
-    font-size: 1.4rem;
-    margin-right: 0.8rem;
-  }
-
-  .input {
+  .formGroup label {
     font-size: 0.9rem;
-    padding: 0.9rem;
-    height: 45px;
+  }
+
+  .formGroup input {
+    padding: 0.7rem;
+    font-size: 0.85rem;
+    height: 40px;
   }
 
   .signupButton {
-    font-size: 1.1rem;
-    height: 45px;
+    height: 40px;
+    font-size: 0.9rem;
   }
 
   .terms {
     font-size: 0.8rem;
-    margin-top: 1.5rem;
   }
 }

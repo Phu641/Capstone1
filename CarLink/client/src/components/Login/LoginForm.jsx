@@ -72,6 +72,9 @@ const LoginForm = () => {
 
       localStorage.setItem('userInfo', JSON.stringify(profileResponse.data));
 
+      console.log('User Email:', roleResponse.data.user);
+      console.log('User Role:', roleResponse.data.role);
+
       const validRoles = ['user', 'admin', 'owner'];
       if (validRoles.includes(roleResponse.data.role)) {
         navigate('/', { replace: true });
@@ -83,10 +86,14 @@ const LoginForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!validateForm()) return;
+
+    if (!validateForm()) {
+      return;
+    }
 
     try {
+      localStorage.clear();
+
       const { email, password } = formData;
       const loginResponse = await axios.post('http://localhost:3000/customer/login', {
         email,
@@ -94,15 +101,16 @@ const LoginForm = () => {
       });
 
       if (loginResponse.data.signature) {
-        localStorage.clear();
-        setFormData(prev => ({
-          ...prev,
-          email: '',
-          password: ''
-        }));
-
         const token = loginResponse.data.signature;
         localStorage.setItem('token', token);
+
+        // Reset form data
+        setFormData({
+          email: '',
+          password: '',
+          showPassword: false
+        });
+
         await handleAuthentication(token);
       }
     } catch (err) {

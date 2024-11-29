@@ -28,16 +28,24 @@
   display: flex;
   flex-grow: 1;
   justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
 .mainNav ul {
   display: flex;
   list-style-type: none;
   padding: 0;
+  margin: 0;
+  align-items: center;
+  height: 100%;
 }
 
 .mainNav ul li {
   margin: 0 20px;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .mainNav ul li a {
@@ -48,6 +56,8 @@
   padding: 8px 12px;
   border-radius: 6px;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
 }
 
 .mainNav ul li a:hover {
@@ -169,60 +179,67 @@
 /* Màn hình máy tính bảng*/
 @media (max-width: 63.9375em) {
   .header {
-    padding: 8px 15px;
+    height: 70px;
+    padding: 0 15px;
   }
 
-  .logo img {
-    width: 80px;
+  .logoContainer img {
+    height: 60px;
   }
 
-  .navButton {
-    padding: 6px 12px;
-    font-size: 0.9rem;
+  .mainNav {
+    display: none; /* Ẩn navigation chính */
   }
 
-  .hamburgerIcon,
-  .avatarIcon {
-    font-size: 20px;
+  .mobileNav {
+    display: block; /* Hiển thị mobile menu */
   }
 
-  .navigation {
-    width: 200px;
+  .hamburgerMenu {
+    display: block;
+    font-size: 24px;
+    cursor: pointer;
+  }
+
+  .userSection {
+    gap: 6px;
+  }
+
+  .userName {
+    font-size: 14px;
+  }
+
+  .logoutButton {
+    padding: 6px;
+    font-size: 14px;
   }
 }
 
 /* Mobile styles */
 @media (max-width: 46.1875em) {
   .header {
-    padding: 5px 10px;
+    height: 60px;
+    padding: 0 10px;
   }
 
-  .logo img {
-    width: 60px;
+  .logoContainer img {
+    height: 50px;
   }
 
-  .navButton {
-    padding: 5px 10px;
-    font-size: 0.8rem;
-    margin-right: 10px;
+  .hamburgerMenu {
+    font-size: 20px;
   }
 
-  .hamburgerIcon,
-  .avatarIcon {
-    font-size: 18px;
-    margin-left: 5px;
+  .userSection {
+    gap: 4px;
   }
 
-  .navigation {
-    width: 180px;
-    right: 10px;
+  .userName {
+    display: none; /* Ẩn tên người dùng trên mobile */
   }
 
-  .navigation li {
-    margin: 8px 0;
-  }
-
-  .navigation li a {
-    font-size: 0.9rem;
+  .logoutButton {
+    padding: 4px;
+    font-size: 12px;
   }
 }
