@@ -89,6 +89,7 @@ const Header = () => {
 
   const getMenuItems = () => {
     const baseItems = [
+      { path: "/profile", icon: FaCarAlt, text: "Thông tin của bạn" },
       { path: "/add-car", icon: FaCarAlt, text: "Đăng xe cho thuê" },
       { path: "/favorites", icon: FaHeart, text: "Danh sách xe yêu thích của bạn" },
       { path: "/how-it-works", icon: FaQuestionCircle, text: "CarLink hoạt động như thế nào?" },

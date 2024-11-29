@@ -18,8 +18,10 @@ import UserList from "../pages/UserList";
 import BookingForm from "./components/UI/BookingForm.jsx";
 import Payment from "./components/UI/PaymentMethod.jsx";
 import Favorites from "./components/Favorite/Favorite.jsx";
+import UserProfile from "./components/UserProfile/UserProfile.jsx";
+import EditProfile from "./components/UserProfile/EditProfile.jsx";
 //owner
-import ManageVehiclesPage from "../pages/ManageVehiclesPage"; // Import trang quản lý xe
+import ManageVehiclesPage from "../pages/ManageVehiclesPage"; 
 import UpdateVehiclePage from "../pages/UpdateVehiclePage";
 import Report from "../pages/Report";
 import { ToastContainer } from "react-toastify";
@@ -50,6 +52,8 @@ function App() {
         <Route path="/payment" element={<Payment />} />
         <Route path="/favorites" element={<Favorites />} />
         <Route path="/report/:bookingID" element={<Report />} />
+        <Route path="/profile" element={<UserProfile />} />
+        <Route path="/edit-profile" element={<EditProfile />} />
       </Routes>
       <Footer />
       <ToastContainer />
