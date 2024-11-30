@@ -10,9 +10,10 @@ dotenv.config({ path: path.resolve(__dirname, '.././.env') });
 const nodemailer = require("nodemailer");
 import PayOS from "@payos/node";
 const payOS = new PayOS("6b808926-685f-45a1-a532-908bccb31368", "da86690d-b052-4928-a51a-b9c52659062a", "1fd42ecdf13c1c4cbf8aaebd0063c0bea084ddb6961809d3e02c7e207bcc7b3e");
-const axios = require('axios');
 import express from 'express';
 import bodyParser from 'body-parser';
+import Decimal from 'decimal.js';
+import { AcceptBooking } from './AdminController';
 
 const app = express();
 app.use(bodyParser.json());
@@ -446,7 +447,7 @@ export const BookCar = async (req: Request, res: Response, next: NextFunction) =
 /**------------------------------PAYMENT SECTION------------------------------------------ */
 
 //TẠO YÊU CẦU THANH TOÁN QUA PAY OS
-export const createPaymentPayos = async (amount: number, walletID: number) => {
+export const createPaymentPayos = async (amount: number, walletID: number, bookingID: number) => {
 
     try {
 
@@ -467,7 +468,6 @@ export const createPaymentPayos = async (amount: number, walletID: number) => {
         // Gửi yêu cầu tạo thanh toán đến payOS
         const response = await payOS.createPaymentLink(paymentData);
 
-
         console.log("Full PayOS Response:", response); // Kiểm tra toàn bộ phản hồi
 
         if (response && (response as any).error) {
@@ -482,10 +482,11 @@ export const createPaymentPayos = async (amount: number, walletID: number) => {
             // Lưu thông tin giao dịch vào DB
             await Transaction.create({
                 walletID: walletID,
+                bookingID: bookingID,
                 paycode: orderCode,
                 amount,
                 paymentMode: 'Thẻ tín dụng',
-                PaymentResponse: 'Đang chờ',
+                paymentResponse: 'Đang chờ',
                 status: 'Đang thanh toán bằng PayOS',
                 created_at: new Date(),
                 updated_at: new Date()
@@ -512,30 +513,35 @@ export const createPaymentPayos = async (amount: number, walletID: number) => {
 //CREATE PAYMENT
 export const  createPayment = async (req: Request, res: Response) => {
 
-    const amount = parseInt(req.body.amount);
+    const amount = req.body.amount;
     const user = req.user;
+    
+    console.log(typeof amount);
 
-    //console.log(user);
+    const customerID = user?.customerID; //thay bằng id của owner??????????
 
-    const customerID = user?.customerID;
+    const booking = await Booking.findOne({where: {customerID: customerID, bookingStatus: 'pending'}});
+    const bookingID = booking?.bookingID;
 
+    const car = await Car.findByPk(booking?.carID);
+
+    const ownerID = car?.customerID;
 
     console.log('Amount:', amount, 'User ID:', customerID);
 
     try {
         // Kiểm tra ví của người dùng
-        const wallet = await Wallet.findOne({ where: { customerID: customerID }, attributes: ['walletID'] });
+        const wallet = await Wallet.findOne({ where: { customerID: ownerID }, attributes: ['walletID'] });
 
         if (!wallet) {
 
-            console.log('Wallet not found for user ID:', customerID);
+            console.log('Wallet not found for user ID:', ownerID);
             return res.status(404).json({ message: 'Wallet not found' });
 
         }
 
-
         // Gọi dịch vụ thanh toán phù hợp dựa trên paymentMethod
-        let paymentUrl = await createPaymentPayos(amount, wallet.walletID); // Gọi PayOS service
+        let paymentUrl = await createPaymentPayos(amount, wallet.walletID, bookingID as any); // Gọi PayOS service
         
         // Trả về URL thanh toán cho người dùng
         return res.status(200).json({ payUrl: paymentUrl, message: 'Payment request created, please proceed with the payment' });
@@ -560,14 +566,22 @@ export const updateWallet = async(walletID: number, amount: number, orderCode: s
 
     if (wallet) {
 
-        wallet.balance += (amount * 2/3);
+        const balance = new Decimal(wallet.balance);
+
+        const amountToAdd = new Decimal(amount * 2/3);
+
+        const updatedBalance = balance.plus(amountToAdd);
+
+        wallet.balance = Number(updatedBalance);
+
         await wallet.save();
 
         // Cập nhật trạng thái giao dịch
         await Transaction.update(
-            { status: 'Thanh toán PayOS thành công' },
-            { where: { walletID: walletID, paycode: String(orderCode) } }
+            { status: 'Thanh toán PayOS thành công', paymentResponse: 'Thành công' },
+            { where: { walletID: walletID, paycode: String(orderCode) }}
         );
+
     }
 
     if (!wallet) {
@@ -593,7 +607,9 @@ export const handlePayOSCallback = async (req: Request, res: Response) => {
 
             // Cập nhật số dư của ví tương ứng bằng hàm updateWallet
             await updateWallet(transaction.walletID, amount, orderCode);
-            //console.log(Wallet balance updated for w: ${transaction.walletID}, amount: ${amount} (PayOS));
+            
+            await AcceptBooking(transaction.bookingID);
+
             return res.status(200).send("OK"); // Phản hồi thành công về cho PayOS
 
         } else {
@@ -608,5 +624,37 @@ export const handlePayOSCallback = async (req: Request, res: Response) => {
             error: message
         });
     }
+    //res.json();
     
 }
+
+// export const testMoney = async(req: Request, res: Response) => {
+
+//    const user = req.user;
+
+//    if(user) {
+
+//     const wallet = await Wallet.findByPk(1);
+
+//         if(wallet) {
+
+//             const balance = new Decimal(wallet.balance);
+            
+//             const amountToAdd = new Decimal(3000);
+
+//             const updatedBalance = balance.plus(amountToAdd);
+            
+//             await console.log('Balance: ', updatedBalance);
+//             await console.log(typeof updatedBalance);
+
+//             wallet.balance = Number(updatedBalance);
+
+//             await wallet.save();
+
+//         }
+
+//         return res.status(200).json(wallet)
+
+//    }
+
+// }

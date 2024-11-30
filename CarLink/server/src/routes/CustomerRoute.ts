@@ -13,8 +13,11 @@ router.post('/signup', CustomerSignUp as any);
 //LOGIN
 router.post('/login', CustomerLogIn as any);
 
+//UPDATE BALANCE
+router.post('/update-balance', handlePayOSCallback as any);
+
 //AUTHENTICATION
-//router.use(Authenticate as any);
+router.use(Authenticate as any);
 
 //GET OTP
 router.get('/otp', onRequestOTP as any);
@@ -43,8 +46,9 @@ router.post('/book-car', BookCar as any);
 //CREATE PAYMENT
 router.post('/create-payment', createPayment as any);
 
-//UPDATE BALANCE
-router.post('/update-balance', handlePayOSCallback as any);
+//GET MONEY
+// router.get('/get-money', testMoney as any);
+
 
 
 export { router as CustomerRoute}
