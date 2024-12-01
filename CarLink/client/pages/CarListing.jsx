@@ -124,6 +124,9 @@ const CarListing = () => {
                           transmission: car.overview.transmission,
                           fuelType: car.overview.fuelType,
                           address: car.overview.address,
+                          delivery: car.delivery,
+                          isAvailable: car.isAvailable,
+                          selfPickUp: car.selfPickUp,
                         }}
                       />
                     </Col>

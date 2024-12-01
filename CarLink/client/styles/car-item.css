@@ -96,6 +96,7 @@
 }
 
 .car__item-btn {
+  width: 100%;
   border-radius: 0;
   border: none;
   outline: none;
@@ -113,11 +114,6 @@
   color: #fff;
 }
 
-.car__btn-details {
-  background: #f9a826;
-  border-radius: 0px 4px 4px 0px;
-}
-
 .car__btn-rent {
   border-radius: 4px 0px 0px 4px;
 }
@@ -129,6 +125,26 @@
 .car__item-content h6 {
   font-size: 1.2rem;
   font-weight: 600;
+}
+
+/* CSS cho phần isAvailable và delivery */
+.car__item-status {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.car__item-status span {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.car__item-status span i {
+  color: #28a745;
+  margin-right: 5px;
+  font-size: 1.2rem;
 }
 
 @media only screen and (max-width: 992px) {

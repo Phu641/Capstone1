@@ -6,14 +6,15 @@ import axios from "axios";
 import "../../../styles/car-item.css";
 
 const CarItem = (props) => {
-  const { id, images, model, carName, transmission, price, seats, address } = props.item;
+  const { id, images, model, carName, transmission, price, seats, address, delivery, isAvailable, selfPickUp } = props.item;
+  console.log(delivery)
   const [isLiked, setIsLiked] = useState(false);
 
   useEffect(() => {
     const fetchFavoriteCars = async () => {
       const token = localStorage.getItem("token"); // Kiểm tra token
       if (!token) return; // Nếu không có token, thoát hàm
-  
+
       try {
         const response = await axios.get("http://localhost:3000/customer/cars-favorite", {
           headers: { Authorization: `Bearer ${token}` },
@@ -28,26 +29,26 @@ const CarItem = (props) => {
         toast.error("Không thể tải danh sách yêu thích!");
       }
     };
-  
+
     fetchFavoriteCars();
   }, [id]);
-  
+
   const handleLike = async () => {
     const token = localStorage.getItem("token"); // Lấy token
     if (!token) {
       toast.error("Vui lòng đăng nhập để sử dụng chức năng này!");
       return;
     }
-  
+
     try {
       setIsLiked((prevState) => !prevState);
-  
+
       const response = await axios.post(
         `http://localhost:3000/customer/add-favorite/${id}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-  
+
       if (response.status === 200) {
         const likedCars = JSON.parse(localStorage.getItem("likedCars")) || [];
         if (isLiked) {
@@ -67,7 +68,7 @@ const CarItem = (props) => {
       console.error(error);
     }
   };
-  
+
 
   const carImage = images && images.length > 0 ? `http://localhost:3000/images/${images[0]}` : "./default-image.jpg";
   const isVideo = carImage && (carImage.endsWith(".mp4") || carImage.endsWith(".webm") || carImage.endsWith(".ogg"));
@@ -111,25 +112,34 @@ const CarItem = (props) => {
             </span>
           </div>
 
-          <div className="mt-2 icons-container">
+          <div className="car__item-status d-flex align-items-center justify-content-between">
+            {delivery && (
+              <span className="d-flex align-items-center gap-1">
+                <i className="ri-truck-line"></i> Giao tận nơi
+              </span>
+            )}
+            {selfPickUp && (
+              <span className="d-flex align-items-center gap-1">
+                <i className="ri-user-location-line"></i> Tự lấy xe
+              </span>
+            )}
+          </div>
+
+          {/* <div className="mt-2 icons-container">
             <div className="icon-item">
               <i className="ri-thumb-up-line like-icon"></i>
             </div>
             <div className="icon-item">
               <i className="ri-car-line car-icon"></i>
             </div>
-          </div>
+          </div> */}
 
           <div className="location-container">
             <i className="ri-map-pin-line"></i>
             <span>{address.split(",")[0]}</span>
           </div>
 
-          <button className="w-50 car__item-btn car__btn-rent">
-            <Link to={`/cars/${id}`}>Thuê</Link>
-          </button>
-
-          <button className="w-50 car__item-btn car__btn-details">
+          <button className="car__item-btn car__btn-rent">
             <Link to={`/cars/${id}`}>Chi tiết</Link>
           </button>
         </div>
