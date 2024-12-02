@@ -41,6 +41,15 @@ const Header = () => {
       const data = await response.json();
       setUserInfo(data);
       localStorage.setItem('userInfo', JSON.stringify(data));
+
+      const roleResponse = await fetch('http://localhost:3000/customer/check-role', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (roleResponse.ok) {
+        const roleData = await roleResponse.json();
+        setUserRole(roleData.role);
+      }
     } catch (error) {
       console.error('Error fetching user info:', error);
       handleLogout();
@@ -72,18 +81,17 @@ const Header = () => {
 
   const handleLogout = () => {
     try {
-      localStorage.removeItem('token');
-      localStorage.removeItem('userInfo');
+      localStorage.clear();
 
       setTimeout(() => {
         setUserInfo(null);
+        setUserRole(null);
         setIsNavVisible(false);
         navigate('/login');
       }, 100);
     } catch (error) {
       console.error('Lỗi khi đăng xuất:', error);
-      localStorage.removeItem('token');
-      localStorage.removeItem('userInfo');
+      localStorage.clear();
     }
   };
 

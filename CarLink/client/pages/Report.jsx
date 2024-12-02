@@ -29,7 +29,6 @@ const Report = () => {
         }
 
         const data = await response.json();
-        console.log("Current user role:", data.role);
         setUserRole(data.role);
       } catch (error) {
         console.error('Error checking role:', error);
