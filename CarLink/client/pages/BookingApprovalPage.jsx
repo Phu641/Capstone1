@@ -315,4 +315,4 @@ const BookingApprovalPage = () => {
   );
 };
 
-export default BookingApprovalPage;
+export default BookingApprovalPage; 
