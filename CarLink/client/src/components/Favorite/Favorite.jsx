@@ -102,7 +102,7 @@ const Favorite = () => {
               favoriteCars.length > 0 ? (
                 favoriteCars.map((car) => {
                   return car.carID ? (
-                    <Col lg="4" md="6" sm="6" key={car.carID}>
+                    <Col lg="3" md="6" sm="6" key={car.carID}>
                       <CarItem
                         item={{
                           id: car.carID,
@@ -114,6 +114,9 @@ const Favorite = () => {
                           transmission: car.overview.transmission,
                           fuelType: car.overview.fuelType,
                           address: car.overview.address,
+                          delivery: car.delivery,
+                          isAvailable: car.isAvailable,
+                          selfPickUp: car.selfPickUp,
                         }}
                       />
                     </Col>

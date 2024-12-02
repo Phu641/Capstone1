@@ -75,12 +75,12 @@ const CarItem = (props) => {
 
   return (
     <Col lg="4" md="4" sm="6" className="mb-5" style={{ width: "100%" }}>
-      <Link to={`/cars/${id}`} className="car-card">
-        <div className="car__item">
-          <div className="like__icon" onClick={handleLike}>
-            <i className={isLiked ? "ri-heart-fill liked" : "ri-heart-line"}></i>
-          </div>
 
+      <div className="car__item">
+        <div className="like__icon" onClick={handleLike}>
+          <i className={isLiked ? "ri-heart-fill liked" : "ri-heart-line"}></i>
+        </div>
+        <Link to={`/cars/${id}`} className="car-card">
           <div className="car__img">
             {isVideo ? (
               <video
@@ -136,8 +136,8 @@ const CarItem = (props) => {
               <Link to={`/cars/${id}`}>Chi tiết</Link>
             </button>
           </div>
-        </div>
-      </Link>
+        </Link>
+      </div>
     </Col>
   );
 };

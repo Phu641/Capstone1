@@ -40,10 +40,12 @@
 }
 
 .location-container span {
+  color: #333;
   font-size: 0.9rem;
 }
 
 .location-container i {
+  color: #f9a826;
   margin-right: 5px;
 }
 

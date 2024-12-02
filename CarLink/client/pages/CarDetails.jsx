@@ -374,7 +374,7 @@ const CarDetails = () => {
             </div>
 
             <p style={{ fontSize: '16px', color: '#333', marginTop: '20px' }}>
-              <span style={{ color: '#f00' }}>* lưu ý:</span> Khoản phí thanh toán ban đầu là 30% của tổng tiền thuê xe. Phí còn lại sẽ được thanh toán khi nhận xe. Khoản phí này được tính vào tổng giá thuê và không hoàn lại.
+              <span style={{ color: '#f00' }}>* lưu ý:</span> Khoảng phí cọc thanh toán trước 30% của tổng tiền thuê xe, số còn lại trả khi nhận xe. Phí này sẽ không được trả khi hoàn lại.
             </p>
           </Col>
         </Row>
