@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
 import HomePage from "../pages/HomePage";
+import Contact from '../pages/Contact';
 import Carlistting from "../pages/CarListing";
 import CarDetails from "../pages/CarDetails";
 import SignupForm from "./components/Signup/SignupForm";
@@ -18,8 +19,10 @@ import UserList from "../pages/UserList";
 import BookingForm from "./components/UI/BookingForm.jsx";
 import Payment from "./components/UI/PaymentMethod.jsx";
 import Favorites from "./components/Favorite/Favorite.jsx";
+import UserProfile from "./components/UserProfile/UserProfile.jsx";
+import EditProfile from "./components/UserProfile/EditProfile.jsx";
 //owner
-import ManageVehiclesPage from "../pages/ManageVehiclesPage"; // Import trang quản lý xe
+import ManageVehiclesPage from "../pages/ManageVehiclesPage";
 import UpdateVehiclePage from "../pages/UpdateVehiclePage";
 import Report from "../pages/Report";
 import { ToastContainer } from "react-toastify";
@@ -32,6 +35,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/Home" element={<HomePage />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/Cars" element={<Carlistting />} />
         <Route path="/cars/:carID" element={<CarDetails />} />
         <Route path="/login" element={<LoginForm />} />
@@ -46,10 +50,12 @@ function App() {
         <Route path="/vehicle-approval" element={<VehicleApprovalPage />} />
         <Route path="/booking-approval" element={<BookingApprovalPage />} />
         <Route path="/user-list" element={<UserList />} />
-        <Route path="/booking-form" element={<BookingForm />} />  
+        <Route path="/booking-form" element={<BookingForm />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/favorites" element={<Favorites />} />
         <Route path="/report/:bookingID" element={<Report />} />
+        <Route path="/profile" element={<UserProfile />} />
+        <Route path="/edit-profile" element={<EditProfile />} />
       </Routes>
       <Footer />
       <ToastContainer />

@@ -1,0 +1,82 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+  }
+  
+.profile-container {
+    max-width: 600px;
+    margin: 100px auto 50px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .profile-card {
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+  }
+  
+  .profile-card p {
+    margin: 15px 0; 
+    font-size: 18px; 
+    line-height: 1.6; 
+    color: #444; 
+    font-weight: 500; 
+    padding: 10px;
+    background-color: #fdfdfd; 
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); 
+  }
+    
+  .profile-card p strong {
+    color: #222; 
+    font-weight: bold; 
+  }
+  
+
+  .edit-button {
+    display: block;
+    width: 100%;
+    padding: 10px 15px;
+    margin-top: 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+  
+  .edit-button:hover {
+    background-color: #0056b3;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  }
+  
+  .edit-button:active {
+    background-color: #003d80;
+  }
+  
+  
+  .loading {
+    text-align: center;
+    font-size: 18px;
+    color: #888;
+  }
+  

@@ -1,14 +1,20 @@
 import express from 'express';
-import { CustomerLogIn, CustomerSignUp, CustomerVerify, EditCustomerProfile, GetCustomerProfile, onRequestOTP, GetCurrentRole, addToFavorite, getAllCarsFavorite, BookCar, MakePayment } from '../controllers';
+import { CustomerLogIn, CustomerSignUp, CustomerVerify, EditCustomerProfile, GetCustomerProfile, onRequestOTP, GetCurrentRole, addToFavorite, getAllCarsFavorite, BookCar, createPayment, handlePayOSCallback } from '../controllers';
 import { Authenticate } from '../middlewares';
 
 const router = express.Router();
+
+router.use(express.json());
+router.use(express.urlencoded({ extended: true }));
 
 //SIGN UP
 router.post('/signup', CustomerSignUp as any);
 
 //LOGIN
 router.post('/login', CustomerLogIn as any);
+
+//UPDATE BALANCE
+router.post('/update-balance', handlePayOSCallback as any);
 
 //AUTHENTICATION
 router.use(Authenticate as any);
@@ -38,7 +44,10 @@ router.get('/cars-favorite', getAllCarsFavorite as any);
 router.post('/book-car', BookCar as any);
 
 //CREATE PAYMENT
-router.post('/create-payment-link', MakePayment as any);
+router.post('/create-payment', createPayment as any);
+
+//GET MONEY
+// router.get('/get-money', testMoney as any);
 
 
 
