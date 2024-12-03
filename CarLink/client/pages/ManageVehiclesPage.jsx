@@ -95,7 +95,7 @@ const ManageVehiclesPage = () => {
                 <td>{car.overview.description}</td>
                 <td>
                   {car.carImages && car.carImages.length > 0 ? (
-                    // Ưu tiên hiển thị ảnh nếu có
+                    // hiển thị ảnh nếu có
                     car.carImages[0].imageUrl.toLowerCase().endsWith(".mp4") ? (
                       <video
                         controls
@@ -121,13 +121,13 @@ const ManageVehiclesPage = () => {
                     Cập nhật thông tin
                   </button>
                 </td>
-                {/* Cột chứa toggle switch */}
+                {/* toggle switch on off car hoạt động*/}
                 <td>
                   <label className="switch">
                     <input
                       type="checkbox"
-                      checked={!car.booked} // Chuyển trạng thái booked từ true/false sang trạng thái switch
-                      onChange={() => handleToggleChange(car.carID, car.booked)} // Gọi sự kiện thay đổi
+                      checked={!car.booked} // chuyển trạng thái của booked từ true/false sang trạng thái switch
+                      onChange={() => handleToggleChange(car.carID, car.booked)} //  gọi sự kiện thay đổi
                     />
                     <span className="slider"></span>
                   </label>
