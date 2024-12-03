@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
 import HomePage from "../pages/HomePage";
 import Contact from '../pages/Contact';
+import AboutUs from "../pages/AboutUs";
+import Blog from "../pages/Blog"
 import Carlistting from "../pages/CarListing";
 import CarDetails from "../pages/CarDetails";
 import SignupForm from "./components/Signup/SignupForm";
@@ -36,6 +38,8 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/Home" element={<HomePage />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/blogs" element={<Blog />} />
         <Route path="/Cars" element={<Carlistting />} />
         <Route path="/cars/:carID" element={<CarDetails />} />
         <Route path="/login" element={<LoginForm />} />
