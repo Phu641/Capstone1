@@ -2,19 +2,16 @@ import React, { useEffect, useState } from "react";
 import "./EditProfile.css";
 
 const EditProfile = () => {
-  const [userInfo, setUserInfo] = useState({
+  const [thongTinUser, setThongTinUser] = useState({
     firstName: "",
     lastName: "",
     email: "",
     phone: "",
     address: "",
-    password: "",
   });
 
-  const [showPassword, setShowPassword] = useState(false); // Trạng thái hiển thị mật khẩu
-
   useEffect(() => {
-    const fetchUserProfile = async () => {
+    const layThongTinUser = async () => {
       try {
         const token = localStorage.getItem("token");
         const response = await fetch("http://localhost:3000/customer/profile", {
@@ -25,47 +22,61 @@ const EditProfile = () => {
 
         if (response.ok) {
           const data = await response.json();
-          setUserInfo(data);
+          setThongTinUser(data);
         } else {
-          throw new Error("Failed to fetch user profile");
+          throw new Error("Lấy thông tin người dùng thất bại");
         }
       } catch (error) {
         console.error(error);
       }
     };
 
-    fetchUserProfile();
+    layThongTinUser();
   }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUserInfo((prevInfo) => ({ ...prevInfo, [name]: value }));
+    setThongTinUser((prevInfo) => ({ ...prevInfo, [name]: value }));
   };
 
   const handleSave = async (e) => {
     e.preventDefault();
+    
+    const { customerID, idCard, salt, isVerified, OTP, otpExpiry, loyalPoint, createdAt, updatedAt, password, ...userToUpdate } = thongTinUser;
+    
+    if (!userToUpdate.firstName || !userToUpdate.lastName || !userToUpdate.email) {
+        alert("Vui lòng điền đầy đủ thông tin quan trọng!");
+        return;
+    }
+    
+    userToUpdate.password = userToUpdate.password || 'default_password';  
+  
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:3000/customer/profile", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(userInfo),
-      });
-
-      if (response.ok) {
+        const token = localStorage.getItem("token");
+        const response = await fetch("http://localhost:3000/customer/profile", {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(userToUpdate),
+        });
+  
+        if (!response.ok) {
+            const errorDetails = await response.json();
+            console.error("Chi tiết lỗi từ API:", errorDetails); 
+            throw new Error(`Lỗi HTTP! Mã trạng thái: ${response.status}`);
+        }
+  
         alert("Cập nhật thông tin thành công!");
         window.location.href = "/profile";
-      } else {
-        throw new Error("Cập nhật thông tin thất bại");
-      }
     } catch (error) {
-      console.error(error);
-      alert("Có lỗi xảy ra, vui lòng thử lại!");
+        console.error("Lỗi khi gọi API:", error);
+        alert("Có lỗi xảy ra: " + error.message);
     }
   };
+  
+  
 
   return (
     <div className="edit-profile-container">
@@ -77,7 +88,7 @@ const EditProfile = () => {
             type="text"
             id="firstName"
             name="firstName"
-            value={userInfo.firstName}
+            value={thongTinUser.firstName}
             onChange={handleChange}
             required
           />
@@ -88,7 +99,7 @@ const EditProfile = () => {
             type="text"
             id="lastName"
             name="lastName"
-            value={userInfo.lastName}
+            value={thongTinUser.lastName}
             onChange={handleChange}
             required
           />
@@ -99,7 +110,7 @@ const EditProfile = () => {
             type="text"
             id="phone"
             name="phone"
-            value={userInfo.phone}
+            value={thongTinUser.phone}
             onChange={handleChange}
             required
           />
@@ -110,7 +121,7 @@ const EditProfile = () => {
             type="text"
             id="address"
             name="address"
-            value={userInfo.address}
+            value={thongTinUser.address}
             onChange={handleChange}
             required
           />
@@ -121,31 +132,10 @@ const EditProfile = () => {
             type="email"
             id="email"
             name="email"
-            value={userInfo.email}
+            value={thongTinUser.email}
             onChange={handleChange}
             required
           />
-        </div>
-        <div className="form-group password-group">
-          <label htmlFor="password">Mật khẩu:</label>
-          <div className="password-input-wrapper">
-            <input
-              type={showPassword ? "text" : "password"} 
-              id="password"
-              name="password"
-              value={userInfo.password}
-              onChange={handleChange}
-              required
-            />
-            <button
-              type="button"
-              className="toggle-password"
-              onClick={() => setShowPassword(!showPassword)}
-              aria-label="Hiển thị hoặc ẩn mật khẩu"
-            >
-              {showPassword ? "👁️‍🗨️" : "🙈"}
-            </button>
-          </div>
         </div>
         <button type="submit" className="save-button">
           Lưu

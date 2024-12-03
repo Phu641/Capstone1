@@ -1,10 +1,10 @@
 import { Table, Column, Model, ForeignKey, DataType, BelongsTo, PrimaryKey, AutoIncrement } from 'sequelize-typescript';
-import { Customer } from './Customer';
 import { Booking } from './Booking';
+import { Wallet } from './Wallet';
 
 @Table({
   tableName: 'transactions',
-  timestamps: true
+  timestamps: true,
 })
 export class Transaction extends Model {
   @PrimaryKey
@@ -12,13 +12,16 @@ export class Transaction extends Model {
   @Column(DataType.INTEGER)
   transactionID!: number;
 
-  @ForeignKey(() => Customer)
-  @Column(DataType.INTEGER)
-  customerID!: number;
-
   @ForeignKey(() => Booking)
   @Column(DataType.INTEGER)
   bookingID!: number;
+
+  @ForeignKey(() => Wallet)
+  @Column(DataType.INTEGER)
+  walletID!: number;
+
+  @Column(DataType.INTEGER)
+  paycode!: number;
 
   @Column(DataType.STRING)
   paymentMode!: string;
@@ -29,9 +32,9 @@ export class Transaction extends Model {
   @Column(DataType.STRING)
   status!: string;
 
-  @BelongsTo(() => Customer)
-  customers!: Customer;
-
   @BelongsTo(() => Booking)
-  bookings!: Booking;
+  booking!: Booking;
+
+  @BelongsTo(() => Wallet)
+  wallet!: Wallet;
 }

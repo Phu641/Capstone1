@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { Booking, Car, Customer, Images, Overview, Role } from '../models';
+import { Booking, Car, Customer, Images, Overview, Role, Wallet } from '../models';
 const nodemailer = require('nodemailer');
 import path from 'path';
 import { CheckRole } from '../utility';
@@ -287,8 +287,10 @@ export const sendEmailServiceAccepted = async (email: string) => {
   };
   
   //ACCEPT ADD CAR
-  export const AcceptCar = async (req: Request, res: Response) => {
+export const AcceptCar = async (req: Request, res: Response) => {
+
     try {
+
       const carID = req.params.id;
   
       const car = await Car.findByPk(carID);
@@ -300,9 +302,18 @@ export const sendEmailServiceAccepted = async (email: string) => {
       car.isAvailable = true; // Duyệt xe
       await car.save();
   
+      //UPDATE ROLE
       const owner = await Role.findOne({ where: { customerID: ownerID } });
       if (owner) owner.type = 'owner';
       await owner?.save();
+
+      //CREATE WALLET FOR OWNER
+      await Wallet.create({
+
+        customerID: ownerID,
+        balance: 0
+
+      });
   
       try {
         await onSendAccepted(profileOwner?.email ?? '');
@@ -316,7 +327,7 @@ export const sendEmailServiceAccepted = async (email: string) => {
       console.error('Lỗi khi duyệt xe:', error);
       return res.status(500).json({ message: 'Lỗi máy chủ!' });
     }
-  };
+};
 
 // };
   
@@ -558,11 +569,11 @@ export const MailAcceptBookingUser = async (email: string, bookingID: number) =>
 };
 
 //ACCEPT BOOKING
-export const AcceptBooking = async(req: Request, res: Response, next: NextFunction) => {
+export const AcceptBooking = async(bookingID: number) => {
 
     try {
         
-        const bookingID = req.params.id;
+        //const bookingID = req.params.id;
         const booking = await Booking.findByPk(bookingID);
         const customerID = booking?.customerID;
         const customer = await Customer.findByPk(customerID);
@@ -592,11 +603,11 @@ export const AcceptBooking = async(req: Request, res: Response, next: NextFuncti
             console.log(error);
         }
 
-        return res.status(200).json('Quá trình thuê xe đã được duyệt!');
+        //return res.status(200).json('Quá trình thuê xe đã được duyệt!');
 
     } catch (error) {
 
-        res.status(500).json('Lỗi!');
+        console.log(error);
 
     }
 

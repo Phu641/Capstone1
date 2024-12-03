@@ -43,6 +43,6 @@ router.put('/stop-service', StopService as any);
 router.put('/start-service', StartService as any);
 
 //SUBMIT REPORT
-router.put('/submit-report', uploadVideo, SubmitReport as any);
+router.put('/submit-report', uploadVideo as any, SubmitReport as any);
 
 export { router as OwnerRoute }

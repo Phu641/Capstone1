@@ -112,7 +112,7 @@ const CarListing = () => {
                 filteredCars.map((car) => (
                   // Kiểm tra nếu carID tồn tại
                   car.carID ? (
-                    <Col lg="4" md="6" sm="6" key={car.carID}>
+                    <Col lg="3" md="6" sm="6" key={car.carID}>
                       <CarItem
                         item={{
                           id: car.carID,
@@ -124,6 +124,9 @@ const CarListing = () => {
                           transmission: car.overview.transmission,
                           fuelType: car.overview.fuelType,
                           address: car.overview.address,
+                          delivery: car.delivery,
+                          isAvailable: car.isAvailable,
+                          selfPickUp: car.selfPickUp,
                         }}
                       />
                     </Col>

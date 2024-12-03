@@ -1,0 +1,67 @@
+.about-us {
+    font-family: Arial, sans-serif;
+    padding: 2rem;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.about-us-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.about-us-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.about-us-header p {
+    font-size: 1.2rem;
+    color: #555;
+}
+
+.about-us-content section {
+    margin-bottom: 2rem;
+}
+
+.about-us-content h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.about-us-content p,
+.about-us-content ul {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.about-us-content ul {
+    list-style-type: disc;
+    margin-left: 1.5rem;
+}
+
+.about-us-content li {
+    margin-bottom: 0.5rem;
+}
+
+.mission,
+.how-we-work,
+.commitments {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.mission {
+    border-left: 4px solid #ff4c4c;
+}
+
+.how-we-work {
+    border-left: 4px solid #ffbd59;
+}
+
+.commitments {
+    border-left: 4px solid #4caf50;
+}

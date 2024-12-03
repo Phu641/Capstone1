@@ -1,5 +1,5 @@
 import { Table, Column, Model, HasMany, DataType, HasOne, AutoIncrement, AllowNull, PrimaryKey } from 'sequelize-typescript';
-import { Role, Car, Favorite, Comment, Transaction, Booking } from '.';
+import { Role, Car, Favorite, Comment, Booking } from '.';
 
 @Table({
   tableName: 'customers',
@@ -62,9 +62,6 @@ export class Customer extends Model {
 
   @HasMany(() => Favorite)
   favorites!: Favorite[];
-
-  @HasMany(() => Transaction)
-  transactions!: Transaction[];
 
   @HasMany(() => Booking)
   bookings!: Booking[];

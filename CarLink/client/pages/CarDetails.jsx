@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom"; 
+import { useParams, useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "reactstrap";
 import { toast } from "react-toastify";
 
@@ -199,61 +199,83 @@ const CarDetails = () => {
     return isValid;
   };
 
-
-  
   const handleRentButtonClick = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
       toast.error("Vui lòng đăng nhập để sử dụng chức năng này!");
       return;
     }
-  
-      if (!isAcceptedTerms) {
-        setErrorMessage("Bạn cần chấp nhận điều khoản sử dụng trước khi đặt xe.");
+
+    if (!isAcceptedTerms) {
+      setErrorMessage("Bạn cần chấp nhận điều khoản sử dụng trước khi đặt xe.");
+      return;
+    }
+
+    if (!validateAllFields()) {
+      setErrorMessage("Vui lòng điền đầy đủ thông tin trước khi đặt xe.");
+      return;
+    }
+
+    const bookingData = {
+      carID: parseInt(carID, 10),
+      bookingDate: userInfo.bookingDate,
+      untilDate: userInfo.untilDate,
+      address: deliveryOption === "delivery" ? address : "",
+      pricePerDay: singleCarItem?.overview?.pricePerDay || 0,
+      days: totalDays,
+    };
+
+    try {
+      const bookingResponse = await fetch("http://localhost:3000/customer/book-car", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify(bookingData),
+      });
+
+      if (!bookingResponse.ok) {
+        const data = await bookingResponse.json();
+        toast.error(data.message || "Đặt xe không thành công, vui lòng thử lại.");
         return;
       }
-    
-      // Kiểm tra tất cả các trường form
-      if (!validateAllFields()) {
-        setErrorMessage("Vui lòng điền đầy đủ thông tin trước khi đặt xe.");
+
+      // Gọi API thanh toán
+      const paymentAmount = totalPrice * 0.3;
+      const paymentResponse = await fetch("http://localhost:3000/customer/create-payment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({ amount: paymentAmount }),
+      });
+
+      if (!paymentResponse.ok) {
+        const paymentData = await paymentResponse.json();
+        toast.error(paymentData.message || "Không thể tạo yêu cầu thanh toán, vui lòng thử lại.");
         return;
       }
-    
-      const bookingData = {
-        carID: parseInt(carID, 10),
-        bookingDate: userInfo.bookingDate,
-        untilDate: userInfo.untilDate,
-        address: deliveryOption === "delivery" ? address : "",
-        pricePerDay: singleCarItem?.overview?.pricePerDay || 0,
-        days: totalDays,
-      };
-    
-      try {
-        const response = await fetch("http://localhost:3000/customer/book-car", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`  // Thêm token vào header Authorization
-          },
-          body: JSON.stringify(bookingData),
-        });
-    
-        if (response.ok) {
-          toast.success("Đặt xe thành công!");
-          navigate("/booking-success"); // Điều hướng sau khi đặt xe thành công
-        } else {
-          const data = await response.json();
-          toast.error(data.message || "Đặt xe không thành công, vui lòng thử lại.");
-        }
-      } catch (error) {
-        toast.error("Lỗi kết nối đến máy chủ, vui lòng thử lại sau.");
+
+      const paymentData = await paymentResponse.json();
+      const { payUrl } = paymentData;
+
+      if (payUrl) {
+        toast.success("Đang chuyển hướng đến trang thanh toán...");
+        window.location.href = payUrl; // Chuyển hướng đến URL thanh toán
+      } else {
+        toast.error("Không tìm thấy URL thanh toán, vui lòng thử lại.");
       }
+    } catch (error) {
+      toast.error("Lỗi kết nối đến máy chủ, vui lòng thử lại sau.");
+    }
   };
-  
+
   if (!singleCarItem) {
     return <p>Loading...</p>;
   }
- 
+
   const isVideo = currentMedia && (currentMedia.endsWith(".mp4") || currentMedia.endsWith(".avi"));
 
   return (
@@ -324,7 +346,6 @@ const CarDetails = () => {
                   ({singleCarItem.rating || 0} đánh giá)
                 </span>
               </div>
-
               <p className="section__description">{singleCarItem.overview?.description}</p>
 
               <div className="d-flex align-items-center mt-3" style={{ columnGap: "4rem" }}>
@@ -351,6 +372,10 @@ const CarDetails = () => {
                 </span>
               </div>
             </div>
+
+            <p style={{ fontSize: '16px', color: '#333', marginTop: '20px' }}>
+              <span style={{ color: '#f00' }}>* lưu ý:</span> Khoảng phí cọc thanh toán trước 30% của tổng tiền thuê xe, số còn lại trả khi nhận xe. Phí này sẽ không được trả khi hoàn lại.
+            </p>
           </Col>
         </Row>
         <Row>
@@ -511,9 +536,13 @@ const CarDetails = () => {
         <Col lg="12">
           {/* Chi tiết giá thuê */}
           <div className="mt-4">
-            <h5>Chi tiết giá thuê:</h5>
-            <p>Số ngày thuê: <strong>{totalDays}</strong></p>
-            <p>Tổng chi phí: <strong>{totalPrice.toLocaleString("vi-VN")} VND</strong></p>
+            <h3>Chi tiết giá thuê:</h3>
+            <p style={{ margin: '0 0 2px' }}>Số ngày thuê: <strong>{totalDays}</strong></p>
+            <p style={{ margin: '0 0 2px' }}>Tổng chi phí: <strong>{totalPrice.toLocaleString("vi-VN")} VND</strong></p>
+            <p style={{ margin: '0 0 2px' }}>
+              Số tiền cần cọc <span style={{ color: '#f00' }}>(30%)</span> : <strong>{(totalPrice * 0.3).toLocaleString("vi-VN")} VND</strong>
+            </p>
+
           </div>
 
         </Col>

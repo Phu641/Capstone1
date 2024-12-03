@@ -27,17 +27,17 @@ export class Car extends Model {
   @Column(DataType.BOOLEAN)
   selfPickUp!: boolean;
 
-   @BelongsTo(() => Customer)
-   customer!: Customer;
+  @BelongsTo(() => Customer)
+  customer!: Customer;
 
-   // Một chiếc xe có thể có nhiều mục yêu thích
-   @HasMany(() => Favorite)
-   favorites!: Favorite[];
+  // Một chiếc xe có thể có nhiều mục yêu thích
+  @HasMany(() => Favorite)
+  favorites!: Favorite[];
 
-   @HasMany(() => Images)
-   carImages!: Images[];
+  @HasMany(() => Images)
+  carImages!: Images[];
 
-   @HasOne(() => Overview)
+  @HasOne(() => Overview)
   overview!: Overview;
 
   @HasOne(() => Coordinate)
