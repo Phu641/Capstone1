@@ -10,7 +10,6 @@
 
 .blog-header h1 {
     font-size: 2.5rem;
-    color: #d32f2f;
 }
 
 .blog-header p {
@@ -68,12 +67,12 @@
 }
 
 .read-more {
-    color: #d32f2f;
+    color: #000d6b;
     font-weight: bold;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 .read-more:hover {
-    color: #b71c1c;
+opacity: 0.8;
 }

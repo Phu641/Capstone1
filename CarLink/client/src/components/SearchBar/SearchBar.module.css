@@ -1,6 +1,7 @@
 
 /* Các phần đã có của SearchBar */
 .searchBar {
+  z-index: 50;
   display: flex;
   align-items: center;
   background-color: white;
