@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { Booking, Car, Customer, Images, Overview, Role, Wallet } from '../models';
+import { Booking, Car, Customer, Images, Overview, Report, Role, Wallet } from '../models';
 const nodemailer = require('nodemailer');
 import path from 'path';
 import { CheckRole } from '../utility';
@@ -307,13 +307,19 @@ export const AcceptCar = async (req: Request, res: Response) => {
       if (owner) owner.type = 'owner';
       await owner?.save();
 
-      //CREATE WALLET FOR OWNER
-      await Wallet.create({
+      const wallet = await Wallet.findOne({where: {customerID: ownerID}});
 
-        customerID: ownerID,
-        balance: 0
+      if(!wallet) {
 
-      });
+        //CREATE WALLET FOR OWNER
+        await Wallet.create({
+
+            customerID: ownerID,
+            balance: 0
+
+        });
+
+      }
   
       try {
         await onSendAccepted(profileOwner?.email ?? '');
@@ -613,8 +619,93 @@ export const AcceptBooking = async(bookingID: number) => {
 
 }
 
-//ACCEPT REPORT
+/**------------------------------------------------------Report--------------------------------------------------------- */
+
+//GET ALL REPORTS
+export const GetAllReports = async(req: Request, res: Response, next: NextFunction) => {
+
+    try {
+        
+        const reports = await Report.findAll({
+          order: [['createdAt', 'DESC']],
+        });
+
+    
+        if (reports.length === 0) {
+          return res.status(404).json({ message: 'No reports found.' });
+        }
+    
+        return res.status(200).json(reports);
+      } catch (error) {
+        return res.status(500).json('Đã xảy ra lỗi!');
+      }
+
+}
+
+//GET REPORT BY ID
+export const GetReportById = async (req: Request, res: Response, next: NextFunction) => {
+
+    const { id } = req.params;
+  
+    try {
+
+      const report = await Report.findOne({
+
+        where: { reportID: id }, 
+        
+      });
+  
+      if (!report) {
+        return res.status(404).json({ message: 'Report not found.' });
+      }
+  
+      return res.status(200).json(report);
+
+    } catch (error) {
+      console.error('Error fetching report:', error);
+      return res.status(500).json('Đã xảy ra lỗi');
+    }
+  };
 
 
+//CONFIRM COMPLETE
+export const ConfirmComplete = async (req: Request, res: Response, next: NextFunction) => {
+
+    const  reportID  = req.params.id;
+  
+    try {
+
+        const report = await Report.findByPk(reportID);
+            
+        const booking = await Booking.findByPk(report?.bookingID);
+    
+        if (!booking) {
+
+            return res.status(404).json({ message: 'Booking not found.' });
+
+        }
+    
+        if (booking.bookingStatus === 'completed') {
+
+            return res.status(400).json({ message: 'Đơn này đã được hoàn thành.' });
+
+        }
+    
+        booking.bookingStatus = 'completed';
+        await booking.save();
+    
+        return res.status(200).json({
+
+            message: 'Đơn thuê này đã xác nhận hoàn thành! ',
+            booking,
+
+        });
+        } catch (error) {
+
+        console.error('Error confirming booking completion:', error);
+        return res.status(500).json('Đã xảy ra lỗi');
+
+        }
+  };
 
 /**------------------------------------------------------Payment--------------------------------------------------------- */
