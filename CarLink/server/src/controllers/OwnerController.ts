@@ -350,7 +350,7 @@ export const StartService = async (req: Request, res: Response, next: NextFuncti
 //SUBMIT REPORT
 export const SubmitReport = async (req: Request, res: Response, next: NextFunction) => {
     const user = req.user; // Lấy thông tin user từ middleware xác thực
-    const { bookingID, idCard, description } = req.body;
+    const { bookingID, validate, idCard, description, returnDate } = req.body;
 
     try {
         // Tìm booking theo bookingID
@@ -366,18 +366,28 @@ export const SubmitReport = async (req: Request, res: Response, next: NextFuncti
             return res.status(403).json({ message: "Bạn không có quyền xác nhận cho xe này!" });
         }
 
+        // Kiểm tra xem validate có phải là true không
+        if (validate) {
+            return res.status(200).json({
+                booking: {
+                    bookingID: booking.bookingID,
+                    customerID: booking.customerID
+                }
+            });
+        }
+
         // Kiểm tra file video (nếu có)
-        const file = req.file; // Sử dụng req.file vì chỉ upload 1 file (tùy vào middleware)
+        const file = req.file;
         let damageVideo = null;
         if (file) {
-            damageVideo = file.filename; // Lưu tên file video nếu có
+            damageVideo = file.filename;
         }
 
         // Tạo một report mới
         const report = await Report.create({
             bookingID,
             idCard, // Lấy thông tin căn cước của người thuê từ bảng Booking
-            returnDate: new Date(), // Ngày trả xe hiện tại
+            returnDate: new Date(returnDate), // Ngày trả xe hiện tại
             damageVideo, // Có thể để null nếu không có file
             description,
         });
@@ -387,46 +397,9 @@ export const SubmitReport = async (req: Request, res: Response, next: NextFuncti
             report,
         });
     } catch (error) {
-        console.error("Lỗi khi submit report:", error);
+        console.error("Lỗi:", error);
         return res.status(500).json({
-            message: "Đã xảy ra lỗi khi xác nhận thuê xe, vui lòng thử lại!",
+            message: "Đã xảy ra lỗi, vui lòng thử lại!",
         });
     }
 };
-
-//GET ACTIVE BOOKINGS
-export const GetActiveBookings = async (req: Request, res: Response) => {
-    const user = req.user;
-
-    try {
-        // Lấy tất cả xe của owner
-        const ownerCars = await Car.findAll({
-            where: { customerID: user?.customerID }
-        });
-
-        const carIDs = ownerCars.map(car => car.carID);
-
-        // Lấy các booking đang hoạt động của những xe này
-        const activeBookings = await Booking.findAll({
-            where: {
-                carID: carIDs,
-                bookingStatus: 'booking'
-            },
-            include: [{
-                model: Car,
-                include: [{
-                    model: Overview,
-                    attributes: ['model']
-                }]
-            }]
-        });
-
-        return res.status(200).json(activeBookings);
-
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json('Đã xảy ra lỗi khi lấy danh sách booking');
-    }
-};
-
-

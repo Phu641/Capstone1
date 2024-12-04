@@ -1,5 +1,5 @@
 import express from "express";
-import { AddCar, GetActiveBookings, GetCarsByOwner, StartService, StopService, SubmitReport, UpdateCar } from "../controllers";
+import { AddCar, GetCarsByOwner, StartService, StopService, SubmitReport, UpdateCar } from "../controllers";
 import multer from 'multer';
 import { Authenticate, uploadVideo } from "../middlewares";
 
@@ -44,8 +44,5 @@ router.put('/start-service', StartService as any);
 
 //SUBMIT REPORT
 router.put('/submit-report', uploadVideo as any, SubmitReport as any);
-
-//GET ACTIVE BOOKINGS
-router.get('/active-bookings', GetActiveBookings as any);
 
 export { router as OwnerRoute }
