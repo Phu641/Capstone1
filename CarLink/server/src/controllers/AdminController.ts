@@ -622,25 +622,81 @@ export const AcceptBooking = async(bookingID: number) => {
 /**------------------------------------------------------Report--------------------------------------------------------- */
 
 //GET ALL REPORTS
-export const GetAllReports = async(req: Request, res: Response, next: NextFunction) => {
+// export const GetAllReports = async(req: Request, res: Response, next: NextFunction) => {
 
-    try {
+//     try {
         
-        const reports = await Report.findAll({
-          order: [['createdAt', 'DESC']],
-        });
+//         const reports = await Report.findAll({
+//           order: [['createdAt', 'DESC']],
+//         });
 
     
-        if (reports.length === 0) {
-          return res.status(404).json({ message: 'No reports found.' });
-        }
+//         if (reports.length === 0) {
+//           return res.status(404).json({ message: 'No reports found.' });
+//         }
     
-        return res.status(200).json(reports);
-      } catch (error) {
-        return res.status(500).json('Đã xảy ra lỗi!');
+//         return res.status(200).json(reports);
+//       } catch (error) {
+//         return res.status(500).json('Đã xảy ra lỗi!');
+//       }
+
+// }
+
+// GET ALL REPORTS with condition on bookingStatus in Booking
+export const GetAllPendingReports = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const reports = await Report.findAll({
+        include: [
+          {
+            model: Booking,
+            attributes: [],
+            where: {
+              bookingStatus: 'booking',
+            },
+          },
+        ],
+        order: [['createdAt', 'DESC']],
+      });
+  
+      if (reports.length === 0) {
+        return res.status(404).json({ message: 'No reports found.' });
       }
+  
+      return res.status(200).json(reports);
+    } catch (error) {
+      console.error('Error fetching reports:', error);
+      return res.status(500).json('Đã xảy ra lỗi!');
+    }
+  };
 
-}
+
+  // GET ALL REPORTS with condition on bookingStatus in Booking
+export const GetAllCompleteReports = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const reports = await Report.findAll({
+        include: [
+          {
+            model: Booking,
+            attributes: [],
+            where: {
+              bookingStatus: 'completed',
+            },
+          },
+        ],
+        order: [['createdAt', 'DESC']],
+      });
+  
+      if (reports.length === 0) {
+        return res.status(404).json({ message: 'No reports found.' });
+      }
+  
+      return res.status(200).json(reports);
+    } catch (error) {
+      console.error('Error fetching reports:', error);
+      return res.status(500).json('Đã xảy ra lỗi!');
+    }
+  };
+  
 
 //GET REPORT BY ID
 export const GetReportById = async (req: Request, res: Response, next: NextFunction) => {
