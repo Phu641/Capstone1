@@ -159,7 +159,6 @@ const Header = () => {
         }
 
         const data = await response.json();
-        console.log("Current user role:", data.role);
         setUserRole(data.role);
 
       } catch (error) {

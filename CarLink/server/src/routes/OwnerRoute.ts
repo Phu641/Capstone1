@@ -1,5 +1,5 @@
 import express from "express";
-import { AddCar, GetCarsByOwner, StartService, StopService, SubmitReport, UpdateCar } from "../controllers";
+import { AddCar, GetActiveBookings, GetCarsByOwner, StartService, StopService, SubmitReport, UpdateCar } from "../controllers";
 import multer from 'multer';
 import { Authenticate, uploadVideo } from "../middlewares";
 
@@ -10,7 +10,7 @@ const path = require('path');
 
 const imageStorage = multer.diskStorage({
     destination: function (req, file, cb) {
-        const dir = path.join(__dirname, '..' , 'images');
+        const dir = path.join(__dirname, '..', 'images');
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir);
         }
@@ -44,5 +44,8 @@ router.put('/start-service', StartService as any);
 
 //SUBMIT REPORT
 router.put('/submit-report', uploadVideo as any, SubmitReport as any);
+
+//GET ACTIVE BOOKINGS
+router.get('/active-bookings', GetActiveBookings as any);
 
 export { router as OwnerRoute }
