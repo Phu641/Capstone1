@@ -8,30 +8,30 @@ import { getCoordinates } from "../utility";
 
 
 //ADD CAR
-export const AddCar = async(req: Request, res: Response, next: NextFunction) => {
+export const AddCar = async (req: Request, res: Response, next: NextFunction) => {
 
     const user = req.user;
 
-    if(user) {
+    if (user) {
 
         const {
             delivery,
             selfPickUp,
-            model, 
-            type, 
+            model,
+            type,
             year,
             transmission,
             fuelType,
             seats,
-            pricePerDay, 
-            address, 
-            description 
+            pricePerDay,
+            address,
+            description
         } = <CreateCarInputs>req.body;
-        
-        
+
+
         const owner = await FindOwner(user.customerID);
 
-        if(owner) {
+        if (owner) {
 
             const files = req.files as [Express.Multer.File];
 
@@ -45,17 +45,17 @@ export const AddCar = async(req: Request, res: Response, next: NextFunction) => 
 
             const createdOverview = await Overview.create({
                 carID: createdCar.carID,
-                model, 
-                type, 
-                year, 
+                model,
+                type,
+                year,
                 transmission,
-                fuelType, 
-                seats, 
-                pricePerDay, 
-                address, 
+                fuelType,
+                seats,
+                pricePerDay,
+                address,
                 description
             });
-            
+
             const resultCar = await createdCar.save();
             await createdOverview.save();
 
@@ -88,7 +88,7 @@ export const AddCar = async(req: Request, res: Response, next: NextFunction) => 
                 });
             }
 
-           return res.status(200).json(resultCar);
+            return res.status(200).json(resultCar);
 
         }
 
@@ -105,7 +105,7 @@ export const GetCarsByOwner = async (req: Request, res: Response) => {
 
     if (user) {
         try {
-            
+
             const cars = await Car.findAll({
                 where: { customerID: user.customerID },
                 include: [
@@ -136,24 +136,24 @@ export const GetCarsByOwner = async (req: Request, res: Response) => {
 
 // UPDATE CAR
 export const UpdateCar = async (req: Request, res: Response, next: NextFunction) => {
-    
+
     const user = req.user;
 
     if (user) {
-        const { 
-            carID, 
-            delivery, 
-            selfPickUp, 
-            isAvailable, 
-            pricePerDay, 
-            address, 
-            model, 
-            type, 
-            year, 
-            transmission, 
-            fuelType, 
-            seats, 
-            description 
+        const {
+            carID,
+            delivery,
+            selfPickUp,
+            isAvailable,
+            pricePerDay,
+            address,
+            model,
+            type,
+            year,
+            transmission,
+            fuelType,
+            seats,
+            description
         } = req.body;
 
         try {
@@ -243,11 +243,11 @@ export const StopService = async (req: Request, res: Response, next: NextFunctio
 
         const { carID } = req.body;
 
-        if (!carID)  return res.status(400).json({ message: "Thiếu thông tin carID." });
+        if (!carID) return res.status(400).json({ message: "Thiếu thông tin carID." });
 
         const car = await Car.findByPk(carID);
 
-        if (!car)  return res.status(404).json({ message: "Không tìm thấy xe với ID này." });
+        if (!car) return res.status(404).json({ message: "Không tìm thấy xe với ID này." });
 
         car.booked = true;
 
@@ -276,11 +276,11 @@ export const StartService = async (req: Request, res: Response, next: NextFuncti
 
         const { carID } = req.body;
 
-        if (!carID)  return res.status(400).json({ message: "Thiếu thông tin carID." });
+        if (!carID) return res.status(400).json({ message: "Thiếu thông tin carID." });
 
         const car = await Car.findByPk(carID);
 
-        if (!car)  return res.status(404).json({ message: "Không tìm thấy xe với ID này." });
+        if (!car) return res.status(404).json({ message: "Không tìm thấy xe với ID này." });
 
         car.booked = false;
 
@@ -346,6 +346,8 @@ export const StartService = async (req: Request, res: Response, next: NextFuncti
 //         });
 //     }
 // };
+
+//SUBMIT REPORT
 export const SubmitReport = async (req: Request, res: Response, next: NextFunction) => {
     const user = req.user; // Lấy thông tin user từ middleware xác thực
     const { bookingID, idCard, description } = req.body;
@@ -391,3 +393,40 @@ export const SubmitReport = async (req: Request, res: Response, next: NextFuncti
         });
     }
 };
+
+//GET ACTIVE BOOKINGS
+export const GetActiveBookings = async (req: Request, res: Response) => {
+    const user = req.user;
+
+    try {
+        // Lấy tất cả xe của owner
+        const ownerCars = await Car.findAll({
+            where: { customerID: user?.customerID }
+        });
+
+        const carIDs = ownerCars.map(car => car.carID);
+
+        // Lấy các booking đang hoạt động của những xe này
+        const activeBookings = await Booking.findAll({
+            where: {
+                carID: carIDs,
+                bookingStatus: 'booking'
+            },
+            include: [{
+                model: Car,
+                include: [{
+                    model: Overview,
+                    attributes: ['model']
+                }]
+            }]
+        });
+
+        return res.status(200).json(activeBookings);
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json('Đã xảy ra lỗi khi lấy danh sách booking');
+    }
+};
+
+

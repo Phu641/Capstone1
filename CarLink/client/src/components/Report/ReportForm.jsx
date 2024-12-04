@@ -1,56 +1,73 @@
 import React, { useState, useEffect } from 'react';
-import styles from './ReportForm.module.css';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import styles from './ReportForm.module.css';
 
 const ReportForm = () => {
+    // Form hooks
     const { register, handleSubmit, formState: { errors }, setValue } = useForm();
-    const [loading, setLoading] = useState(false);
-    const [videoFile, setVideoFile] = useState(null);
-    const [bookings, setBookings] = useState([]);
-    const [selectedBooking, setSelectedBooking] = useState(null);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchBookings = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                const response = await fetch('http://localhost:3000/owner/all-cars', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
+    // State management
+    const [loading, setLoading] = useState(false);
+    const [videoFile, setVideoFile] = useState(null);
+    const [selectedBooking, setSelectedBooking] = useState(null);
 
-                if (!response.ok) {
-                    throw new Error('Không thể lấy danh sách xe');
+    // Event handlers
+    const handleVideoChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setVideoFile(file);
+        }
+    };
+
+    const handleBookingIDChange = async (e) => {
+        const bookingID = e.target.value;
+        if (!bookingID) {
+            setSelectedBooking(null);
+            return;
+        }
+
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch('http://localhost:3000/owner/active-bookings', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
                 }
+            });
 
-                const carData = await response.json();
-                
-                // Lọc ra các xe đang được thuê và có đầy đủ thông tin overview
-                const bookedCars = carData.filter(car => 
-                    car.booked && 
-                    car.overview && 
-                    car.overview.model && 
-                    car.overview.address
-                );
-                setBookings(bookedCars);
-            } catch (error) {
-                toast.error('Không thể lấy danh sách xe đang cho thuê');
-                console.error('Error fetching cars:', error);
+            const data = await response.json();
+            const selectedBookingData = data.find(
+                booking => booking.bookingID.toString() === bookingID
+            );
+
+            if (selectedBookingData) {
+                setSelectedBooking(bookingID);
+                setValue('bookingID', bookingID);
+                setValue('returnDate', new Date().toISOString().slice(0, 16));
+                if (selectedBookingData.idCard) {
+                    setValue('idCard', selectedBookingData.idCard);
+                }
+            } else {
+                toast.error('Không tìm thấy booking với ID này hoặc booking không thuộc về bạn');
+                setSelectedBooking(null);
+                setValue('bookingID', '');
             }
-        };
+        } catch (error) {
+            console.error('Error validating booking:', error);
+            toast.error('Không thể kiểm tra thông tin booking');
+        }
+    };
 
-        fetchBookings();
-    }, []);
-
+    // Form submission
     const onSubmit = async (data) => {
         try {
             setLoading(true);
-
             const formData = new FormData();
-            formData.append('bookingID', selectedBooking);
+
+            // Append form data
+            formData.append('bookingID', data.bookingID);
             formData.append('idCard', data.idCard);
             formData.append('returnDate', data.returnDate);
             formData.append('description', data.description);
@@ -59,15 +76,28 @@ const ReportForm = () => {
                 formData.append('damageVideo', videoFile);
             }
 
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('Vui lòng đăng nhập lại');
+            }
+
             const response = await fetch('http://localhost:3000/owner/submit-report', {
                 method: 'PUT',
                 headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Authorization': `Bearer ${token}`
                 },
                 body: formData
             });
 
-            const result = await response.json();
+            // Thử parse text trước khi parse JSON
+            const textResult = await response.text();
+            let result;
+            try {
+                result = JSON.parse(textResult);
+            } catch (e) {
+                console.error('Error parsing response:', textResult);
+                throw new Error('Invalid response format');
+            }
 
             if (!response.ok) {
                 throw new Error(result.message || 'Đã xảy ra lỗi');
@@ -76,24 +106,13 @@ const ReportForm = () => {
             toast.success('Gửi báo cáo thành công');
             setTimeout(() => {
                 navigate('/dashboard-owner');
-            }, 3000);
+            }, 3500);
         } catch (error) {
+            console.error('Error submitting report:', error);
             toast.error(error.message || 'Không thể gửi báo cáo');
         } finally {
             setLoading(false);
         }
-    };
-
-    const handleVideoChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setVideoFile(file);
-        }
-    };
-
-    const handleBookingSelect = (e) => {
-        setSelectedBooking(e.target.value);
-        setValue('bookingID', e.target.value);
     };
 
     return (
@@ -101,23 +120,23 @@ const ReportForm = () => {
             <h2 className={styles.reportHeading}>Gửi Báo Cáo</h2>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className={styles.formGroup}>
-                    <label>Chọn xe đang cho thuê</label>
-                    <select 
-                        onChange={handleBookingSelect}
-                        className={styles.select}
-                        required
-                    >
-                        <option value="">-- Chọn xe --</option>
-                        {bookings && bookings.length > 0 ? (
-                            bookings.map((car) => (
-                                <option key={car.carID} value={car.carID}>
-                                    {car.overview?.model || 'Không có tên'} - {car.overview?.address || 'Không có địa chỉ'}
-                                </option>
-                            ))
-                        ) : (
-                            <option value="" disabled>Không có xe nào đang cho thuê</option>
-                        )}
-                    </select>
+                    <label>Nhập Booking ID</label>
+                    <input
+                        type="text"
+                        {...register('bookingID', { 
+                            required: 'Vui lòng nhập Booking ID',
+                            pattern: {
+                                value: /^[0-9]+$/,
+                                message: 'Booking ID phải là số'
+                            }
+                        })}
+                        onChange={handleBookingIDChange}
+                        className={styles.input}
+                        placeholder="Nhập Booking ID"
+                    />
+                    {errors.bookingID && 
+                        <p className={styles.errorMessage}>{errors.bookingID.message}</p>
+                    }
                 </div>
 
                 <div className={styles.formGroup}>
