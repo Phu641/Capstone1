@@ -348,7 +348,7 @@ export const StartService = async (req: Request, res: Response, next: NextFuncti
 // };
 export const SubmitReport = async (req: Request, res: Response, next: NextFunction) => {
     const user = req.user; // Lấy thông tin user từ middleware xác thực
-    const { bookingID, idCard, description } = req.body;
+    const { bookingID, validate, idCard, description, returnDate } = req.body;
 
     try {
         // Tìm booking theo bookingID
@@ -370,7 +370,7 @@ export const SubmitReport = async (req: Request, res: Response, next: NextFuncti
         }
 
         // Kiểm tra xem validate có phải là true không
-        if (req.body.validate) {
+        if (validate) {
             const customer = await Customer.findByPk(booking.customerID);
             return res.status(200).json({
                 booking: {
