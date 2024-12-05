@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import HomePage from "../pages/HomePage";
-import Contact from '../pages/Contact';
+import Contact from "../pages/Contact";
 import AboutUs from "../pages/AboutUs";
-import Blog from "../pages/Blog"
+import Blog from "../pages/Blog";
 import Carlistting from "../pages/CarListing";
 import CarDetails from "../pages/CarDetails";
 import SignupForm from "./components/Signup/SignupForm";
@@ -23,6 +23,8 @@ import Payment from "./components/UI/PaymentMethod.jsx";
 import Favorites from "./components/Favorite/Favorite.jsx";
 import UserProfile from "./components/UserProfile/UserProfile.jsx";
 import EditProfile from "./components/UserProfile/EditProfile.jsx";
+import OwnerReportsPage from "../pages/OwnerReportsPage";
+import ReportHistoryPage from "../pages/ReportHistoryPage";
 //owner
 import ManageVehiclesPage from "../pages/ManageVehiclesPage";
 import UpdateVehiclePage from "../pages/UpdateVehiclePage";
@@ -60,6 +62,8 @@ function App() {
         <Route path="/report/:bookingID" element={<Report />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/edit-profile" element={<EditProfile />} />
+        <Route path="/owner-reports" element={<OwnerReportsPage />} />
+        <Route path="/report-history" element={<ReportHistoryPage />} />
       </Routes>
       <Footer />
       <ToastContainer />
