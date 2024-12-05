@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import styles from './ReportForm.module.css';
 import { useForm } from 'react-hook-form';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
+import styles from './ReportForm.module.css';
 
 const TOAST_CONFIG = {
     position: "top-right",
@@ -35,45 +35,33 @@ const debounce = (func, delay) => {
 };
 
 const ReportForm = () => {
+    // Form hooks
     const { register, handleSubmit, formState: { errors }, setValue } = useForm();
-    const [loading, setLoading] = useState(false);
-    const [videoFile, setVideoFile] = useState(null);
-    const [bookings, setBookings] = useState([]);
-    const [selectedBooking, setSelectedBooking] = useState(null);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchBookings = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                const response = await fetch('http://localhost:3000/owner/all-cars', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
+    // State management
+    const [loading, setLoading] = useState(false);
+    const [videoFile, setVideoFile] = useState(null);
+    const [selectedBooking, setSelectedBooking] = useState(null);
 
-                if (!response.ok) {
-                    throw new Error('Không thể lấy danh sách xe');
-                }
-
-                const carData = await response.json();
-                
-                // Lọc ra các xe đang được thuê và có đầy đủ thông tin overview
-                const bookedCars = carData.filter(car => 
-                    car.booked && 
-                    car.overview && 
-                    car.overview.model && 
-                    car.overview.address
-                );
-                setBookings(bookedCars);
-            } catch (error) {
-                toast.error('Không thể lấy danh sách xe đang cho thuê');
-                console.error('Error fetching cars:', error);
-            }
+    // Debounce function
+    const debounce = (func, delay) => {
+        let timeoutId;
+        return (...args) => {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+                func.apply(null, args);
+            }, delay);
         };
+    };
 
-        fetchBookings();
-    }, []);
+    // Event handlers
+    const handleVideoChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setVideoFile(file);
+        }
+    };
 
     const handleBookingIDChange = async (e) => {
         const bookingID = e.target.value;
@@ -134,9 +122,10 @@ const ReportForm = () => {
     const onSubmit = async (data) => {
         try {
             setLoading(true);
-
             const formData = new FormData();
-            formData.append('bookingID', selectedBooking);
+
+            // Append form data
+            formData.append('bookingID', data.bookingID);
             formData.append('idCard', data.idCard);
             formData.append('returnDate', data.returnDate);
             formData.append('description', data.description);
@@ -145,10 +134,15 @@ const ReportForm = () => {
                 formData.append('damageVideo', videoFile);
             }
 
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('Vui lòng đăng nhập lại');
+            }
+
             const response = await fetch('http://localhost:3000/owner/submit-report', {
                 method: 'PUT',
                 headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Authorization': `Bearer ${token}`
                 },
                 body: formData
             });
@@ -167,18 +161,6 @@ const ReportForm = () => {
         } finally {
             setLoading(false);
         }
-    };
-
-    const handleVideoChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setVideoFile(file);
-        }
-    };
-
-    const handleBookingSelect = (e) => {
-        setSelectedBooking(e.target.value);
-        setValue('bookingID', e.target.value);
     };
 
     return (

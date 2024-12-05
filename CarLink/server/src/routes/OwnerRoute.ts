@@ -10,7 +10,7 @@ const path = require('path');
 
 const imageStorage = multer.diskStorage({
     destination: function (req, file, cb) {
-        const dir = path.join(__dirname, '..' , 'images');
+        const dir = path.join(__dirname, '..', 'images');
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir);
         }

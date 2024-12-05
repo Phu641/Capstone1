@@ -33,7 +33,7 @@ const Contact = () => {
         <div className="contactContainer">
             <h1 className="heading">Liên hệ với chúng tôi</h1>
             <p className="description">
-                Nếu bạn có bất kỳ câu hỏi nào, đừng ngần ngại liên hệ với chúng tôi.
+                Nếu bạn có câu hỏi hoặc góp ý về website, hãy liên hệ với chúng tôi. Chúng tôi luôn sẵn sàng lắng nghe!
             </p>
             <form ref={formRef} onSubmit={sendEmail} className="contactForm">
                 <div className="formGroup">
