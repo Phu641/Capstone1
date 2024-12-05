@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { CreateCarInputs } from "../dto";
 import { FindOwner } from "./AdminController";
-import { Car, Coordinate, Images, Overview, Booking, Report } from "../models";
+import { Car, Coordinate, Images, Overview, Booking, Report, Customer } from "../models";
 import { getCoordinates } from "../utility";
 
 
@@ -358,10 +358,26 @@ export const SubmitReport = async (req: Request, res: Response, next: NextFuncti
             return res.status(404).json({ message: "Không tìm thấy thông tin thuê xe!" });
         }
 
+        // Kiểm tra xem đơn thuê đã được hoàn thành chưa
+        if (booking.bookingStatus === 'completed') {
+            return res.status(400).json({ message: "Đơn thuê này đã được hoàn thành và báo cáo!" });
+        }
+
         // Kiểm tra xem user có phải là chủ xe không
         const car = await Car.findByPk(booking.carID);
         if (!car || car.customerID !== user?.customerID) {
             return res.status(403).json({ message: "Bạn không có quyền xác nhận cho xe này!" });
+        }
+
+        // Kiểm tra xem validate có phải là true không
+        if (req.body.validate) {
+            const customer = await Customer.findByPk(booking.customerID);
+            return res.status(200).json({
+                booking: {
+                    bookingID: booking.bookingID,
+                    idCard: customer?.idCard
+                }
+            });
         }
 
         // Kiểm tra file video (nếu có)

@@ -1,8 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import styles from './ReportForm.module.css';
 import { useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
+
+const TOAST_CONFIG = {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    style: {
+        color: 'black',
+        fontSize: '16px',
+        borderRadius: '10px',
+        padding: '15px',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+    }
+};
+
+const debounce = (func, delay) => {
+    let timeoutId;
+    return (...args) => {
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+        }
+        timeoutId = setTimeout(() => {
+            func(...args);
+        }, delay);
+    };
+};
 
 const ReportForm = () => {
     const { register, handleSubmit, formState: { errors }, setValue } = useForm();
@@ -45,6 +75,62 @@ const ReportForm = () => {
         fetchBookings();
     }, []);
 
+    const handleBookingIDChange = async (e) => {
+        const bookingID = e.target.value;
+        if (!bookingID) {
+            setSelectedBooking(null);
+            setValue('bookingID', '');
+            return;
+        }
+
+        // Kiểm tra số âm trước khi gửi request
+        const num = parseInt(bookingID);
+        if (num <= 0) {
+            toast.error('Booking ID không hợp lệ', TOAST_CONFIG);
+            setSelectedBooking(null);
+            setValue('bookingID', '');
+            return;
+        }
+
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch('http://localhost:3000/owner/submit-report', {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    bookingID,
+                    validate: true
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                toast.error(data.message || 'Booking không hợp lệ', TOAST_CONFIG);
+                setSelectedBooking(null);
+                setValue('bookingID', '');
+                return;
+            }
+
+            if (data.booking) {
+                setSelectedBooking(bookingID);
+                setValue('bookingID', bookingID);
+                setValue('returnDate', new Date().toISOString().slice(0, 16));
+                setValue('idCard', data.booking.customerID);
+            }
+        } catch (error) {
+            setSelectedBooking(null);
+            setValue('bookingID', '');
+        }
+    };
+
+    // Debounced version of handleBookingIDChange
+    const debouncedHandleBookingIDChange = debounce(handleBookingIDChange, 2000);
+
+    // Form submission
     const onSubmit = async (data) => {
         try {
             setLoading(true);
@@ -73,12 +159,11 @@ const ReportForm = () => {
                 throw new Error(result.message || 'Đã xảy ra lỗi');
             }
 
-            toast.success('Gửi báo cáo thành công');
-            setTimeout(() => {
-                navigate('/dashboard-owner');
-            }, 3000);
+            toast.success('Gửi báo cáo thành công', TOAST_CONFIG);
+            setTimeout(() => navigate('/DashboardOwner'), 3500);
         } catch (error) {
-            toast.error(error.message || 'Không thể gửi báo cáo');
+            console.error('Error submitting report:', error);
+            toast.error(error.message, TOAST_CONFIG);
         } finally {
             setLoading(false);
         }
@@ -101,30 +186,45 @@ const ReportForm = () => {
             <h2 className={styles.reportHeading}>Gửi Báo Cáo</h2>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className={styles.formGroup}>
-                    <label>Chọn xe đang cho thuê</label>
-                    <select 
-                        onChange={handleBookingSelect}
-                        className={styles.select}
-                        required
-                    >
-                        <option value="">-- Chọn xe --</option>
-                        {bookings && bookings.length > 0 ? (
-                            bookings.map((car) => (
-                                <option key={car.carID} value={car.carID}>
-                                    {car.overview?.model || 'Không có tên'} - {car.overview?.address || 'Không có địa chỉ'}
-                                </option>
-                            ))
-                        ) : (
-                            <option value="" disabled>Không có xe nào đang cho thuê</option>
-                        )}
-                    </select>
+                    <label>Nhập Booking ID</label>
+                    <input
+                        type="text"
+                        {...register('bookingID', {
+                            required: 'Vui lòng nhập Booking ID',
+                            pattern: {
+                                value: /^\d+$/
+                            },
+                            validate: {
+                                isValidNumber: (value) => {
+                                    const num = parseInt(value);
+                                    return num > 0;
+                                }
+                            }
+                        })}
+                        onChange={(e) => {
+                            debouncedHandleBookingIDChange(e);
+                        }}
+                        className={styles.input}
+                        placeholder="Nhập Booking ID"
+                    />
+                    {errors.bookingID &&
+                        <p className={styles.errorMessage}>{errors.bookingID.message}</p>
+                    }
                 </div>
 
                 <div className={styles.formGroup}>
                     <label>CMND/CCCD</label>
                     <input
                         type="text"
-                        {...register('idCard', { required: 'Vui lòng nhập CMND/CCCD' })}
+                        {...register('idCard', {
+                            required: 'Vui lòng nhập CMND/CCCD',
+                            pattern: {
+                                value: /^\d{12}$/,
+                                message: 'Sai định dạng CCCD'
+                            }
+                        })}
+                        className={styles.input}
+                        placeholder="Nhập CCCD/CMND"
                     />
                     {errors.idCard && <p className={styles.errorMessage}>{errors.idCard.message}</p>}
                 </div>
@@ -164,6 +264,7 @@ const ReportForm = () => {
                     {loading ? 'Đang gửi...' : 'Gửi báo cáo'}
                 </button>
             </form>
+            <ToastContainer />
         </div>
     );
 };
