@@ -1,0 +1,83 @@
+/* Định dạng cho phần yêu cầu rút tiền */
+.withdraw-section {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.withdraw-section h3 {
+  font-size: 24px;
+  color: #343a40;
+  margin-bottom: 15px;
+}
+
+/* Điều chỉnh chiều rộng ô nhập số tiền */
+.withdraw-section input[type="number"] {
+  width: 250px; /* Đặt chiều rộng cố định cho ô nhập */
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+/* Điều chỉnh kích thước nút gửi yêu cầu */
+.withdraw-section button {
+  width: auto; /* Điều chỉnh để không chiếm hết chiều rộng */
+  padding: 8px 15px; /* Giảm padding */
+  font-size: 14px; /* Giảm kích thước font chữ */
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 10px; /* Khoảng cách với input */
+}
+
+.withdraw-section button:hover {
+  background-color: #0056b3;
+}
+
+.withdraw-section p {
+  color: #28a745;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.withdraw-section table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+}
+
+.withdraw-section table th,
+.withdraw-section table td {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.withdraw-section table th {
+  background-color: #f1f1f1;
+}
+
+.withdraw-section table td {
+  background-color: #fff;
+}
+
+.withdraw-section table tr:nth-child(even) td {
+  background-color: #f9f9f9;
+}
+
+.withdraw-section table td {
+  color: #333;
+}
+
+.withdraw-section table td:last-child {
+  width: 150px;
+}

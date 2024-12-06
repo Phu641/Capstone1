@@ -4,7 +4,7 @@ import HomePage from "../pages/HomePage";
 import Contact from "../pages/Contact";
 import AboutUs from "../pages/AboutUs";
 import Blog from "../pages/Blog";
-import BlogDetail from "../pages/BlogDetail"
+import BlogDetail from "../pages/BlogDetail";
 import Carlistting from "../pages/CarListing";
 import CarDetails from "../pages/CarDetails";
 import SignupForm from "./components/Signup/SignupForm";
@@ -17,7 +17,6 @@ import DashboardAdmin from "../pages/DashboardAdmin";
 import DashboardOwner from "../pages/DashboardOwner";
 import VehicleDetailsPage from "../pages/VehicleDetailsPage";
 import VehicleApprovalPage from "../pages/VehicleApprovalPage";
-import BookingApprovalPage from "../pages/BookingApprovalPage";
 import UserList from "../pages/UserList";
 import BookingForm from "./components/UI/BookingForm.jsx";
 import Payment from "./components/UI/PaymentMethod.jsx";
@@ -56,7 +55,6 @@ function App() {
         <Route path="/dashboardAdmin" element={<DashboardAdmin />} />
         <Route path="/vehicle/:id" element={<VehicleDetailsPage />} />
         <Route path="/vehicle-approval" element={<VehicleApprovalPage />} />
-        <Route path="/booking-approval" element={<BookingApprovalPage />} />
         <Route path="/user-list" element={<UserList />} />
         <Route path="/booking-form" element={<BookingForm />} />
         <Route path="/payment" element={<Payment />} />
