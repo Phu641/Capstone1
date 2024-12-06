@@ -458,8 +458,8 @@ export const createPaymentPayos = async (amount: number, walletID: number, booki
             orderCode,
             amount,
             description: "Thanh toán qua PayOS",
-            returnUrl: 'http://localhost:3000/he-thong/nap-tien', // Đảm bảo returnUrl được đặt đúng
-            cancelUrl: 'http://localhost:3000/he-thong/nap-tien' // Đảm bảo cancelUrl được đặt đúng
+            returnUrl: 'http://localhost:5173/', // Đảm bảo returnUrl được đặt đúng
+            cancelUrl: 'http://localhost:5173/' // Đảm bảo cancelUrl được đặt đúng
 
         };
 

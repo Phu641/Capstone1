@@ -26,8 +26,19 @@
 
 .about-us-content h2 {
     font-size: 1.8rem;
-    color: #333;
     margin-bottom: 1rem;
+}
+
+.about-us__heading--mission{
+    color: #ff4c4c;
+}
+
+.about-us__heading--work{
+    color: #ffbd59;
+}
+
+.about-us__heading--commit{
+    color: #4caf50;
 }
 
 .about-us-content p,
