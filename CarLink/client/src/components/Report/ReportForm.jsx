@@ -1,8 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import styles from './ReportForm.module.css';
+
+const TOAST_CONFIG = {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    style: {
+        color: 'black',
+        fontSize: '16px',
+        borderRadius: '10px',
+        padding: '15px',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+    }
+};
+
+const debounce = (func, delay) => {
+    let timeoutId;
+    return (...args) => {
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+        }
+        timeoutId = setTimeout(() => {
+            func(...args);
+        }, delay);
+    };
+};
 
 const ReportForm = () => {
     // Form hooks
@@ -13,6 +43,17 @@ const ReportForm = () => {
     const [loading, setLoading] = useState(false);
     const [videoFile, setVideoFile] = useState(null);
     const [selectedBooking, setSelectedBooking] = useState(null);
+
+    // Debounce function
+    const debounce = (func, delay) => {
+        let timeoutId;
+        return (...args) => {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+                func.apply(null, args);
+            }, delay);
+        };
+    };
 
     // Event handlers
     const handleVideoChange = (e) => {
@@ -26,39 +67,56 @@ const ReportForm = () => {
         const bookingID = e.target.value;
         if (!bookingID) {
             setSelectedBooking(null);
+            setValue('bookingID', '');
+            return;
+        }
+
+        // Kiểm tra số âm trước khi gửi request
+        const num = parseInt(bookingID);
+        if (num <= 0) {
+            toast.error('Booking ID không hợp lệ', TOAST_CONFIG);
+            setSelectedBooking(null);
+            setValue('bookingID', '');
             return;
         }
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:3000/owner/active-bookings', {
+            const response = await fetch('http://localhost:3000/owner/submit-report', {
+                method: 'PUT',
                 headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    bookingID,
+                    validate: true
+                })
             });
 
             const data = await response.json();
-            const selectedBookingData = data.find(
-                booking => booking.bookingID.toString() === bookingID
-            );
 
-            if (selectedBookingData) {
+            if (!response.ok) {
+                toast.error(data.message || 'Booking không hợp lệ', TOAST_CONFIG);
+                setSelectedBooking(null);
+                setValue('bookingID', '');
+                return;
+            }
+
+            if (data.booking) {
                 setSelectedBooking(bookingID);
                 setValue('bookingID', bookingID);
                 setValue('returnDate', new Date().toISOString().slice(0, 16));
-                if (selectedBookingData.idCard) {
-                    setValue('idCard', selectedBookingData.idCard);
-                }
-            } else {
-                toast.error('Không tìm thấy booking với ID này hoặc booking không thuộc về bạn');
-                setSelectedBooking(null);
-                setValue('bookingID', '');
+                setValue('idCard', data.booking.customerID);
             }
         } catch (error) {
-            console.error('Error validating booking:', error);
-            toast.error('Không thể kiểm tra thông tin booking');
+            setSelectedBooking(null);
+            setValue('bookingID', '');
         }
     };
+
+    // Debounced version of handleBookingIDChange
+    const debouncedHandleBookingIDChange = debounce(handleBookingIDChange, 2000);
 
     // Form submission
     const onSubmit = async (data) => {
@@ -89,27 +147,17 @@ const ReportForm = () => {
                 body: formData
             });
 
-            // Thử parse text trước khi parse JSON
-            const textResult = await response.text();
-            let result;
-            try {
-                result = JSON.parse(textResult);
-            } catch (e) {
-                console.error('Error parsing response:', textResult);
-                throw new Error('Invalid response format');
-            }
+            const result = await response.json();
 
             if (!response.ok) {
                 throw new Error(result.message || 'Đã xảy ra lỗi');
             }
 
-            toast.success('Gửi báo cáo thành công');
-            setTimeout(() => {
-                navigate('/dashboard-owner');
-            }, 3500);
+            toast.success('Gửi báo cáo thành công', TOAST_CONFIG);
+            setTimeout(() => navigate('/DashboardOwner'), 3500);
         } catch (error) {
             console.error('Error submitting report:', error);
-            toast.error(error.message || 'Không thể gửi báo cáo');
+            toast.error(error.message, TOAST_CONFIG);
         } finally {
             setLoading(false);
         }
@@ -123,18 +171,25 @@ const ReportForm = () => {
                     <label>Nhập Booking ID</label>
                     <input
                         type="text"
-                        {...register('bookingID', { 
+                        {...register('bookingID', {
                             required: 'Vui lòng nhập Booking ID',
                             pattern: {
-                                value: /^[0-9]+$/,
-                                message: 'Booking ID phải là số'
+                                value: /^\d+$/
+                            },
+                            validate: {
+                                isValidNumber: (value) => {
+                                    const num = parseInt(value);
+                                    return num > 0;
+                                }
                             }
                         })}
-                        onChange={handleBookingIDChange}
+                        onChange={(e) => {
+                            debouncedHandleBookingIDChange(e);
+                        }}
                         className={styles.input}
                         placeholder="Nhập Booking ID"
                     />
-                    {errors.bookingID && 
+                    {errors.bookingID &&
                         <p className={styles.errorMessage}>{errors.bookingID.message}</p>
                     }
                 </div>
@@ -143,7 +198,15 @@ const ReportForm = () => {
                     <label>CMND/CCCD</label>
                     <input
                         type="text"
-                        {...register('idCard', { required: 'Vui lòng nhập CMND/CCCD' })}
+                        {...register('idCard', {
+                            required: 'Vui lòng nhập CMND/CCCD',
+                            pattern: {
+                                value: /^\d{12}$/,
+                                message: 'Sai định dạng CCCD'
+                            }
+                        })}
+                        className={styles.input}
+                        placeholder="Nhập CCCD/CMND"
                     />
                     {errors.idCard && <p className={styles.errorMessage}>{errors.idCard.message}</p>}
                 </div>
@@ -183,6 +246,7 @@ const ReportForm = () => {
                     {loading ? 'Đang gửi...' : 'Gửi báo cáo'}
                 </button>
             </form>
+            <ToastContainer />
         </div>
     );
 };

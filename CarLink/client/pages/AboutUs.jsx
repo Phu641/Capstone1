@@ -11,14 +11,14 @@ const AboutUs = () => {
 
             <div className="about-us-content">
                 <section className="mission">
-                    <h2>Sứ mệnh của chúng tôi</h2>
+                    <h2 className="about-us__heading--mission">Sứ mệnh của chúng tôi</h2>
                     <p>
                         CarLink hướng đến việc kết nối những chủ sở hữu xe ít sử dụng xe của họ với những người có nhu cầu thuê xe, phục vụ mục đích du lịch, khám phá, hay di chuyển đi phượt trong thành phố một mình, cùng bạn bè hay gia đình,vv. Chúng tôi hướng đến việc tối ưu hóa nguồn tài nguyên, giảm thiểu lãng phí và mang lại trải nghiệm thuê xe tiện lợi, an toàn, và đáng tin cậy cho mọi khách hàng.
                     </p>
                 </section>
 
                 <section className="how-we-work">
-                    <h2>Cách chúng tôi hoạt động</h2>
+                    <h2 className="about-us__heading--work">Cách chúng tôi hoạt động</h2>
                     <ul>
                         <li>
                             <strong>Dành cho chủ xe:</strong> Đăng ký xe của bạn trên CarLink để biến những chiếc xe <strong>"nhàn rỗi"</strong> thành nguồn thu nhập dễ dàng.
@@ -30,7 +30,7 @@ const AboutUs = () => {
                 </section>
 
                 <section className="commitments">
-                    <h2>Cam kết của chúng tôi</h2>
+                    <h2 className="about-us__heading--commit">Cam kết của chúng tôi</h2>
                     <p>
                         Tại CarLink, chúng tôi cam kết đảm bảo:
                     </p>

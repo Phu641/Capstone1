@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/DashboardAdmin.css";
 import RevenueChart from "../src/components/Chart/RevenueChart";
-// import UserList from "./UserList";
 import VehicleApprovalPage from "./VehicleApprovalPage";
 
 const DashboardAdmin = () => {
@@ -25,23 +24,28 @@ const DashboardAdmin = () => {
       try {
         // Lấy token admin từ localStorage (hoặc một nguồn khác)
         const token = localStorage.getItem("token");
-        
+
         if (!token) {
           console.error("Không tìm thấy token admin. Vui lòng đăng nhập lại.");
           return;
         }
 
         // Gọi API để lấy dữ liệu xe với header authorization
-        const carsResponse = await fetch("http://localhost:3000/admin/all-cars-availability", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}` // Thêm token vào header
+        const carsResponse = await fetch(
+          "http://localhost:3000/admin/all-cars-availability",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`, // Thêm token vào header
+            },
           }
-        });
+        );
 
         if (!carsResponse.ok) {
-          console.error("Không thể truy cập dữ liệu xe. Vui lòng kiểm tra quyền admin.");
+          console.error(
+            "Không thể truy cập dữ liệu xe. Vui lòng kiểm tra quyền admin."
+          );
           return;
         }
 
@@ -49,16 +53,21 @@ const DashboardAdmin = () => {
         const totalCars = carsData.length;
 
         // Gọi API để lấy dữ liệu người dùng với header authorization
-        const usersResponse = await fetch("http://localhost:3000/admin/all-users", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}` // Thêm token vào header
+        const usersResponse = await fetch(
+          "http://localhost:3000/admin/all-users",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`, // Thêm token vào header
+            },
           }
-        });
+        );
 
         if (!usersResponse.ok) {
-          console.error("Không thể truy cập dữ liệu người dùng. Vui lòng kiểm tra quyền admin.");
+          console.error(
+            "Không thể truy cập dữ liệu người dùng. Vui lòng kiểm tra quyền admin."
+          );
           return;
         }
 
@@ -81,30 +90,37 @@ const DashboardAdmin = () => {
 
   const handleManageUsersClick = () => {
     navigate("/user-list");
-    setShowDashboard(false);
-    setShowVehicleApproval(false);
     setActivePage("manageUsers");
   };
 
   const handleDashboardClick = () => {
-    setShowDashboard(true);
-    setShowVehicleApproval(false);
-    setActivePage("dashboard");
+    navigate("/DashboardAdmin");
+    setActivePage("DashboardAdmin");
   };
 
   const handleVehicleApprovalClick = () => {
     navigate("/vehicle-approval");
-    setShowVehicleApproval(true);
-    setShowDashboard(false);
     setActivePage("vehicleApproval");
+  };
+
+  const handleOwnerReportsClick = () => {
+    navigate("/owner-reports");
+    setActivePage("ownerReports");
+  };
+
+  const handleReportHistoryClick = () => {
+    navigate("/report-history");
+    setActivePage("reportHistory");
   };
 
   return (
     <div className="dashboard-container">
       <div className="sidebar">
+        {" "}
+        {/* Đã sửa className "sideb ar" thành "sidebar" */}
         <ul>
           <li
-            className={activePage === "dashboard" ? "active" : ""}
+            className={activePage === "DashboardAdmin" ? "active" : ""}
             onClick={handleDashboardClick}
           >
             Dashboard
@@ -127,9 +143,19 @@ const DashboardAdmin = () => {
           <li className={activePage === "customerFeedback" ? "active" : ""}>
             Phản hồi của khách hàng
           </li>
-          <li className={activePage === "settings" ? "active" : ""}>
-            Cài đặt
+          <li
+            className={activePage === "ownerReports" ? "active" : ""}
+            onClick={handleOwnerReportsClick}
+          >
+            Báo cáo của chủ xe
           </li>
+          <li
+            className={activePage === "reportHistory" ? "active" : ""}
+            onClick={handleReportHistoryClick}
+          >
+            Lịch sử báo cáo
+          </li>
+          <li className={activePage === "settings" ? "active" : ""}>Cài đặt</li>
         </ul>
       </div>
 

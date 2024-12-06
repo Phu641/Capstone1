@@ -1,0 +1,84 @@
+/* ReportHistoryPage.css */
+.main-content {
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.report-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.report-header h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.search-input {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 250px;
+}
+
+.report-table {
+  margin-top: 20px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.report-table table {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.report-table th,
+.report-table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.report-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.report-table td a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+.report-table td a:hover {
+  text-decoration: underline;
+}
+
+.report-table td {
+  word-wrap: break-word;
+  max-width: 200px;
+}
+
+.report-table td,
+.report-table th {
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 768px) {
+  .report-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .search-input {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .report-table {
+    margin-top: 10px;
+  }
+}

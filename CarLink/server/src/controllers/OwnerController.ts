@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { CreateCarInputs } from "../dto";
 import { FindOwner } from "./AdminController";
-import { Car, Coordinate, Images, Overview, Booking, Report, Wallet, Withdraw } from "../models";
+import { Car, Coordinate, Images, Overview, Booking, Report, Wallet, Withdraw, Customer } from "../models";
 import { deleteExpiredWithdrawRequests, GenerateOtp, getCoordinates } from "../utility";
 import Decimal from "decimal.js";
 import { Op } from 'sequelize';
@@ -302,7 +302,7 @@ export const StartService = async (req: Request, res: Response, next: NextFuncti
 //SUBMIT REPORT
 export const SubmitReport = async (req: Request, res: Response, next: NextFunction) => {
     const user = req.user; // Lấy thông tin user từ middleware xác thực
-    const { bookingID, idCard, description } = req.body;
+    const { bookingID, validate, idCard, description, returnDate } = req.body;
 
     try {
         // Tìm booking theo bookingID
@@ -312,24 +312,40 @@ export const SubmitReport = async (req: Request, res: Response, next: NextFuncti
             return res.status(404).json({ message: "Không tìm thấy thông tin thuê xe!" });
         }
 
+        // Kiểm tra xem đơn thuê đã được hoàn thành chưa
+        if (booking.bookingStatus === 'completed') {
+            return res.status(400).json({ message: "Đơn thuê này đã được hoàn thành và báo cáo!" });
+        }
+
         // Kiểm tra xem user có phải là chủ xe không
         const car = await Car.findByPk(booking.carID);
         if (!car || car.customerID !== user?.customerID) {
             return res.status(403).json({ message: "Bạn không có quyền xác nhận cho xe này!" });
         }
 
+        // Kiểm tra xem validate có phải là true không
+        if (validate) {
+            const customer = await Customer.findByPk(booking.customerID);
+            return res.status(200).json({
+                booking: {
+                    bookingID: booking.bookingID,
+                    idCard: customer?.idCard
+                }
+            });
+        }
+
         // Kiểm tra file video (nếu có)
-        const file = req.file; // Sử dụng req.file vì chỉ upload 1 file (tùy vào middleware)
+        const file = req.file;
         let damageVideo = null;
         if (file) {
-            damageVideo = file.filename; // Lưu tên file video nếu có
+            damageVideo = file.filename;
         }
 
         // Tạo một report mới
         const report = await Report.create({
             bookingID,
             idCard, // Lấy thông tin căn cước của người thuê từ bảng Booking
-            returnDate: new Date(), // Ngày trả xe hiện tại
+            returnDate: new Date(returnDate), // Ngày trả xe hiện tại
             damageVideo, // Có thể để null nếu không có file
             description,
         });
@@ -339,9 +355,9 @@ export const SubmitReport = async (req: Request, res: Response, next: NextFuncti
             report,
         });
     } catch (error) {
-        console.error("Lỗi khi submit report:", error);
+        console.error("Lỗi:", error);
         return res.status(500).json({
-            message: "Đã xảy ra lỗi khi xác nhận thuê xe, vui lòng thử lại!",
+            message: "Đã xảy ra lỗi, vui lòng thử lại!",
         });
     }
 };

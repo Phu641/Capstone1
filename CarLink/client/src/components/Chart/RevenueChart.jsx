@@ -1,83 +1,27 @@
-// import React, { useState, useEffect } from "react";
-// import { Line, Pie } from "react-chartjs-2";
-// import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
-
-// ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement);
-
-// const RevenueChart = () => {
-//   const [lineData, setLineData] = useState([]);
-//   const [pieData, setPieData] = useState([]);
-
-//   useEffect(() => {
-//     fetch("")// api
-//       .then(response => response.json())
-//       .then(data => {
-//         setLineData(data.lineData);
-//         setPieData(data.pieData);
-//       })
-//       .catch(error => console.error("Error fetching data:", error));
-//   }, []);
-
-//   const carBrandsData = {
-//     labels: ["Brand A", "Brand B", "Brand C", "Brand D", "Khác"],
-//     datasets: [
-//       {
-//         label: "Thị phần (%)",
-//         data: pieData,
-//         backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#0dcaf0", "#4bc0c0"],
-//         borderWidth: 1,
-//       },
-//     ],
-//   };
-
-//   const lineChartData = {
-//     labels: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6","Tháng 7","Tháng 8","Tháng 9","Tháng 10","Tháng 11","Tháng 12"],
-//     datasets: [
-//       {
-//         label: "Danh thu (VND)",
-//         data: lineData,
-//         fill: false,
-//         backgroundColor: "#0dcaf0",
-//         borderColor: "#0dcaf0",
-//       },
-//     ],
-//   };
-
-//   const lineOptions = {
-//     responsive: true,
-//     maintainAspectRatio: false,
-//     plugins: {
-//       legend: { position: "top" },
-//       title: { display: true, text: "Tổng danh thu theo từng tháng" },
-//     },
-//   };
-
-//   const pieOptions = {
-//     responsive: true,
-//     plugins: {
-//       legend: { position: "top" },
-//       title: { display: true, text: "Thị phần các hãng xe ô tô" },
-//     },
-//   };
-
-//   return (
-//     <div style={{ display: "flex", justifyContent: "space-between", gap: "20px" }}>
-//       <div style={{ position: "relative", height: "500px", width: "700px", border: "1px solid #ccc", borderRadius: "8px", padding: "20px", flex: "1" }}>
-//         <Line data={lineChartData} options={lineOptions} />
-//       </div>
-//       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "500px", width: "400px", border: "1px solid #ccc", borderRadius: "8px", padding: "20px", flex: "1" }}>
-//         <Pie data={carBrandsData} options={pieOptions} />
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default RevenueChart;
 import React, { useState, useEffect } from "react";
 import { Line, Pie } from "react-chartjs-2";
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+} from "chart.js";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ArcElement);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement
+);
 
 const RevenueChart = () => {
   const [lineData, setLineData] = useState([]);
@@ -87,7 +31,13 @@ const RevenueChart = () => {
       {
         label: "Thị phần (%)",
         data: [],
-        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#0dcaf0", "#4bc0c0"],
+        backgroundColor: [
+          "#FF6384",
+          "#36A2EB",
+          "#FFCE56",
+          "#0dcaf0",
+          "#4bc0c0",
+        ],
         borderWidth: 1,
       },
     ],
@@ -104,16 +54,21 @@ const RevenueChart = () => {
         }
 
         // Gọi API để lấy thông tin xe
-        const response = await fetch("http://localhost:3000/admin/all-cars-availability", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}` // Thêm token vào header
+        const response = await fetch(
+          "http://localhost:3000/admin/all-cars-availability",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`, // Thêm token vào header
+            },
           }
-        });
+        );
 
         if (!response.ok) {
-          console.error("Không thể truy cập dữ liệu xe. Vui lòng kiểm tra quyền admin.");
+          console.error(
+            "Không thể truy cập dữ liệu xe. Vui lòng kiểm tra quyền admin."
+          );
           return;
         }
 
@@ -123,10 +78,19 @@ const RevenueChart = () => {
         const carModelCount = {};
         data.forEach((car) => {
           const model = car.overview.model;
-          if (carModelCount[model]) {
-            carModelCount[model]++;
+
+          // Sử dụng Regex để tách lấy tên hãng xe (phần đầu tiên trước dấu cách)
+          const brandName = model.split(" ")[0]; // Lấy phần đầu tiên trước dấu cách
+
+          // Chuyển chữ cái đầu của tên hãng thành chữ hoa
+          const formattedBrandName =
+            brandName.charAt(0).toUpperCase() +
+            brandName.slice(1).toLowerCase();
+
+          if (carModelCount[formattedBrandName]) {
+            carModelCount[formattedBrandName]++;
           } else {
-            carModelCount[model] = 1;
+            carModelCount[formattedBrandName] = 1;
           }
         });
 
@@ -140,7 +104,13 @@ const RevenueChart = () => {
             {
               label: "Thị phần (%)",
               data: carData,
-              backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#0dcaf0", "#4bc0c0"],
+              backgroundColor: [
+                "#FF6384",
+                "#36A2EB",
+                "#FFCE56",
+                "#0dcaf0",
+                "#4bc0c0",
+              ],
               borderWidth: 1,
             },
           ],
@@ -157,7 +127,20 @@ const RevenueChart = () => {
   }, []);
 
   const lineChartData = {
-    labels: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+    labels: [
+      "Tháng 1",
+      "Tháng 2",
+      "Tháng 3",
+      "Tháng 4",
+      "Tháng 5",
+      "Tháng 6",
+      "Tháng 7",
+      "Tháng 8",
+      "Tháng 9",
+      "Tháng 10",
+      "Tháng 11",
+      "Tháng 12",
+    ],
     datasets: [
       {
         label: "Danh thu (VND)",
@@ -187,11 +170,35 @@ const RevenueChart = () => {
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "space-between", gap: "20px" }}>
-      <div style={{ position: "relative", height: "500px", width: "700px", border: "1px solid #ccc", borderRadius: "8px", padding: "20px", flex: "1" }}>
+    <div
+      style={{ display: "flex", justifyContent: "space-between", gap: "20px" }}
+    >
+      <div
+        style={{
+          position: "relative",
+          height: "500px",
+          width: "700px",
+          border: "1px solid #ccc",
+          borderRadius: "8px",
+          padding: "20px",
+          flex: "1",
+        }}
+      >
         <Line data={lineChartData} options={lineOptions} />
       </div>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "500px", width: "400px", border: "1px solid #ccc", borderRadius: "8px", padding: "20px", flex: "1" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "500px",
+          width: "400px",
+          border: "1px solid #ccc",
+          borderRadius: "8px",
+          padding: "20px",
+          flex: "1",
+        }}
+      >
         <Pie data={carBrandsData} options={pieOptions} />
       </div>
     </div>

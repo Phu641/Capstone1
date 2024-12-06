@@ -1,0 +1,88 @@
+/* Container bao quanh nội dung báo cáo */
+.owner-reports-container {
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.owner-reports-container h2 {
+  text-align: center;
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.owner-reports-container p {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #555;
+}
+
+/* Kiểu cho bảng báo cáo */
+.reports-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+/* Tiêu đề bảng */
+.reports-table th {
+  background-color: #2196f3; /* Màu xanh da trời */
+  color: white; /* Màu chữ trắng */
+  padding: 10px;
+  text-align: left;
+  font-size: 1rem;
+}
+
+.reports-table th:hover {
+  background-color: #1976d2; /* Màu xanh đậm hơn khi hover */
+}
+
+/* Các phần tử trong bảng */
+.reports-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+  font-size: 1rem;
+}
+
+.reports-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.reports-table a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.reports-table a:hover {
+  text-decoration: underline;
+}
+
+/* Kiểu cho nút Duyệt */
+.approve-button {
+  background-color: #4caf50; /* Màu xanh lá cây */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.approve-button:hover {
+  background-color: #45a049; /* Tối hơn khi hover */
+}
+
+.approve-button:disabled {
+  background-color: #c8e6c9; /* Màu xanh nhạt khi không thể duyệt */
+  cursor: not-allowed;
+}
+
+/* Kiểu cho thông báo (Toast) */
+.Toastify__toast-container {
+  top: 80px; /* Vị trí của các toast */
+  z-index: 9999; /* Đảm bảo toast hiển thị trên cùng */
+}
