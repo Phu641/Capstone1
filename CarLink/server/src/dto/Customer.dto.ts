@@ -52,7 +52,7 @@ export class EditCustomerProfileInputs {
     @Length(2, 16)
     lastName!: string;
 
-    @Length(3, 16)
+    @Length(3, 100)
     address!: string;
 
 }

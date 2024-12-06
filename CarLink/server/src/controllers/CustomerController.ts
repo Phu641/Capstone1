@@ -627,34 +627,3 @@ export const handlePayOSCallback = async (req: Request, res: Response) => {
     //res.json();
     
 }
-
-// export const testMoney = async(req: Request, res: Response) => {
-
-//    const user = req.user;
-
-//    if(user) {
-
-//     const wallet = await Wallet.findByPk(1);
-
-//         if(wallet) {
-
-//             const balance = new Decimal(wallet.balance);
-            
-//             const amountToAdd = new Decimal(3000);
-
-//             const updatedBalance = balance.plus(amountToAdd);
-            
-//             await console.log('Balance: ', updatedBalance);
-//             await console.log(typeof updatedBalance);
-
-//             wallet.balance = Number(updatedBalance);
-
-//             await wallet.save();
-
-//         }
-
-//         return res.status(200).json(wallet)
-
-//    }
-
-// }

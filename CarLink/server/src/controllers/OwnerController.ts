@@ -1,8 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import { CreateCarInputs } from "../dto";
 import { FindOwner } from "./AdminController";
-import { Car, Coordinate, Images, Overview, Booking, Report } from "../models";
-import { getCoordinates } from "../utility";
+import { Car, Coordinate, Images, Overview, Booking, Report, Wallet, Withdraw } from "../models";
+import { deleteExpiredWithdrawRequests, GenerateOtp, getCoordinates } from "../utility";
+import Decimal from "decimal.js";
+import { Op } from 'sequelize';
 
 
 
@@ -297,56 +299,6 @@ export const StartService = async (req: Request, res: Response, next: NextFuncti
 
 }
 
-// //CONFRIM 
-// export const SubmitReport = async (req: Request, res: Response, next: NextFunction) => {
-//     const user = req.user; // Lấy thông tin user từ middleware xác thực
-//     const { bookingID, idCard, description } = req.body;
-
-//     try {
-//         // Tìm booking theo bookingID
-//         const booking = await Booking.findByPk(bookingID);
-
-//         if (!booking) {
-//             return res.status(404).json({ message: "Không tìm thấy thông tin thuê xe!" });
-//         }
-
-//         // Kiểm tra xem user có phải là chủ xe không
-//         const car = await Car.findByPk(booking.carID);
-//         if (!car || car.customerID !== user?.customerID) {
-//             return res.status(403).json({ message: "Bạn không có quyền xác nhận cho xe này!" });
-//         }
-
-//         // Cập nhật trạng thái booking thành 'completed'
-//         // booking.bookingStatus = "completed";
-//         // await booking.save();
-
-//         // Kiểm tra file video được upload
-//         const file = req.file; // Sử dụng req.file thay vì req.files vì chỉ upload 1 file
-//         if (!file) {
-//             return res.status(400).json({ message: "Vui lòng upload video hư hỏng!" });
-//         }
-
-//         // Tạo một report mới
-//         const report = await Report.create({
-//             bookingID,
-//             idCard, // Lấy thông tin căn cước của người thuê từ bảng Booking
-//             returnDate: new Date(), // Ngày trả xe hiện tại
-//             damageVideo: file.filename, // Lưu tên file video
-//             description,
-//         });
-
-//         return res.status(200).json({
-//             message: "Xác nhận hoàn thành thuê xe thành công!",
-//             report,
-//         });
-//     } catch (error) {
-//         console.error("Lỗi khi submit report:", error);
-//         return res.status(500).json({
-//             message: "Đã xảy ra lỗi khi xác nhận thuê xe, vui lòng thử lại!",
-//         });
-//     }
-// };
-
 //SUBMIT REPORT
 export const SubmitReport = async (req: Request, res: Response, next: NextFunction) => {
     const user = req.user; // Lấy thông tin user từ middleware xác thực
@@ -430,3 +382,101 @@ export const GetActiveBookings = async (req: Request, res: Response) => {
 };
 
 
+//VIEW BALANCE
+export const ViewBalance = async (req: Request, res: Response) => {
+
+    const user = req.user;
+
+    if(user) {
+
+        console.log(user);
+
+        const wallet = await Wallet.findOne({where: {customerID: user.customerID}});
+
+        const balance = Number(wallet?.balance);
+
+        console.log(balance);
+        console.log(typeof balance);
+
+        return res.status(200).json(`Số dư hiện tại của bạn là: ${balance} VND`);
+
+    } else {
+
+        return res.status(500).json('Người dùng chưa đăng nhập!');
+
+    }
+
+}
+
+//REQUEST WITHDRAW
+export const CreateWithdrawalRequest = async (req: Request, res: Response) => {
+    try {
+        const user = req.user;
+
+        if (user) {
+            const { amount } = req.body;
+
+            // Tìm ví của người dùng
+            const wallet = await Wallet.findOne({ where: { customerID: user.customerID } });
+
+            const wantedAmount = new Decimal(amount);
+            const realAmount = new Decimal(wallet?.balance ?? 0);
+
+            console.log(wantedAmount, realAmount);
+
+            // Kiểm tra số dư có đủ để rút tiền không
+            if (wantedAmount <= realAmount) {
+                // Kiểm tra yêu cầu rút tiền trong vòng 3 ngày qua
+                const fiveDaysAgo = new Date();
+                fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 3);
+
+                const recentRequest = await Withdraw.findOne({
+                    where: {
+                        customerID: user.customerID,
+                        createdAt: {
+                            [Op.gte]: fiveDaysAgo, // Kiểm tra yêu cầu được tạo từ 3 ngày trước đến nay
+                        },
+                        status: 'pending', // Chỉ xét các yêu cầu đang chờ xử lý (nếu có)
+                    },
+                });
+
+                if (recentRequest) {
+                    return res.status(400).json({
+                        message: 'Bạn chỉ có thể gửi yêu cầu rút tiền 5 ngày một lần. Vui lòng thử lại sau.',
+                    });
+                }
+
+                // Tạo mã OTP và lưu yêu cầu mới
+                const { OTP, otpExpiry } = GenerateOtp();
+
+                const newRequest = await Withdraw.create({
+                    customerID: user.customerID,
+                    amount,
+                    OTP,
+                    otpExpiry,
+                    status: 'pending',
+                });
+
+                return res.status(201).json({
+                    message: 'Đã gửi yêu cầu rút tiền thành công!',
+                    newRequest,
+                });
+            } else {
+                return res.status(400).json({
+                    message: 'Số tiền bạn yêu cầu rút lớn hơn số dư trong ví!',
+                });
+            }
+        } else {
+            return res.status(401).json({ message: 'Người dùng chưa đăng nhập!' });
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: 'Lỗi trong lúc gửi yêu cầu',
+            error,
+        });
+    }
+};
+
+//AUTO DELETE WITHDRAW REQUEST
+deleteExpiredWithdrawRequests();

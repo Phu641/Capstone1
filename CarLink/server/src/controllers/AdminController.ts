@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
-import { Booking, Car, Customer, Images, Overview, Report, Role, Wallet } from '../models';
+import { Booking, Car, Customer, Images, Overview, Report, Role, Wallet, Withdraw } from '../models';
 const nodemailer = require('nodemailer');
 import path from 'path';
 import { CheckRole } from '../utility';
 import { promises } from 'fs-extra';
+import Decimal from 'decimal.js';
 const dotenv = require('dotenv');
 dotenv.config({ path: path.resolve(__dirname, './.env') });
 
@@ -620,28 +621,6 @@ export const AcceptBooking = async(bookingID: number) => {
 }
 
 /**------------------------------------------------------Report--------------------------------------------------------- */
-
-//GET ALL REPORTS
-// export const GetAllReports = async(req: Request, res: Response, next: NextFunction) => {
-
-//     try {
-        
-//         const reports = await Report.findAll({
-//           order: [['createdAt', 'DESC']],
-//         });
-
-    
-//         if (reports.length === 0) {
-//           return res.status(404).json({ message: 'No reports found.' });
-//         }
-    
-//         return res.status(200).json(reports);
-//       } catch (error) {
-//         return res.status(500).json('Đã xảy ra lỗi!');
-//       }
-
-// }
-
 // GET ALL REPORTS with condition on bookingStatus in Booking
 export const GetAllPendingReports = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -721,7 +700,7 @@ export const GetReportById = async (req: Request, res: Response, next: NextFunct
       console.error('Error fetching report:', error);
       return res.status(500).json('Đã xảy ra lỗi');
     }
-  };
+};
 
 
 //CONFIRM COMPLETE
@@ -764,4 +743,207 @@ export const ConfirmComplete = async (req: Request, res: Response, next: NextFun
         }
   };
 
+
 /**------------------------------------------------------Payment--------------------------------------------------------- */
+
+//GET ALL PENDING WITHDRAW
+export const GetPendingWithdrawals = async (req: Request, res: Response) => {
+
+  try {
+
+    const pendingWithdrawals = await Withdraw.findAll({
+      where: { status: 'pending' }
+    });
+
+    if (pendingWithdrawals.length === 0) return res.status(404).json({ message: 'Không có yêu cầu rút tiền nào trong trạng thái pending.' });
+
+    return res.status(200).json(pendingWithdrawals);
+
+  } catch (error) {
+
+    console.error(error);
+    res.status(500).json({ message: 'Đã có lỗi xảy ra khi lấy danh sách yêu cầu rút tiền.' });
+
+  }
+
+};
+
+//GET ALL APPROVAL AND COMPLETED WITHDRAW
+export const GetApprovedOrCompletedWithdrawals = async (req: Request, res: Response) => {
+
+  try {
+    
+    const approvedOrCompletedWithdrawals = await Withdraw.findAll({
+      where: {
+        status: ['approval', 'completed']
+      }
+    });
+
+    if (approvedOrCompletedWithdrawals.length === 0) return res.status(404).json({ message: 'Không có yêu cầu rút tiền nào trong trạng thái approval hoặc completed.' });
+
+    return res.status(200).json(approvedOrCompletedWithdrawals);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Đã có lỗi xảy ra khi lấy danh sách yêu cầu rút tiền.' });
+  }
+};
+
+//SEND MAIL TO OWNER
+export const sendEmailServiceAcceptedRequestWithdraw = async (email: string, withdrawID: number) => {
+
+  const profileOwner = await Customer.findOne({where: {email: email }});
+  
+  const profileRequest = await Withdraw.findByPk(withdrawID);
+
+  const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false, // true for port 465, false for other ports
+      auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASSWORD,
+      },
+  });
+
+
+  const info = await transporter.sendMail({
+      from: '"CAR LINK" <carlinkwebsite@gmail.com>', // sender address
+      to: email, // list of receivers
+      subject: "Thông báo: Yêu cầu rút tiền của bản trên CarLink đã được chấp thuận", // Subject line
+      text: "Phản hồi dựa trên yêu cầu của bạn", // plain text body
+      html: `<div>Kính gửi ${profileOwner?.firstName},
+
+                  Chúng tôi xin thông báo rằng yêu cầu rút tiền của bạn trên CarLink đã được phê duyệt. Dưới đây là thông tin chi tiết về việc rút tiền:<br><br/>
+
+                  <ul>
+                      <strong>Thông tin chi tiết:</strong>
+                      <li><strong>Số tiền rút:</strong> ${profileRequest?.amount} VND</li>
+                      <li><strong>Ngày yêu cầu:</strong> ${profileRequest?.createdAt}</li>
+                  </ul>
+
+                  <ul>
+                      <strong>Để hoàn tất việc rút tiền tại trụ sở của chúng tôi, vui lòng cung cấp mã các thông tin sau::</strong>
+                      <li><strong>Mã OTP:</strong> ${profileRequest?.OTP}</li>
+                      <li><strong>Mã OTP này sẽ có hiệu lưc trong vòng 3 ngày, nếu sau 3 ngày mà bạn không đến rút tiền thì yêu cầu của bạn sẽ bị huỷ!</strong>}</li>
+                  </ul>
+
+                  Nếu bạn có bất kỳ thắc mắc hoặc cần hỗ trợ, vui lòng liên hệ với chúng tôi qua email: ${process.env.EMAIL_USER} hoặc số điện thoại: ${process.env.PHONE_ADMIN}.<br><br/>
+
+                  Trân trọng,<br><br/>
+                  Đội ngũ CarLink</div>`, // html body
+  });
+
+  return info;
+
+}
+
+//SEND MAIL TO OWNER TO NOTIFY
+export const MailAcceptWithdrawOwner = async (email: string, withdrawID: number) => {
+
+  try {
+
+      const profile = await Customer.findOne({ where: { email } });
+
+      if (profile) {
+
+          await sendEmailServiceAcceptedRequestWithdraw(profile.email, withdrawID);
+          return 'Thông tin chấp nhận đã được gửi đến email của bạn!';
+      }
+
+      return 'Email không tồn tại trong hệ thống!';
+
+  } catch (error) {
+
+      console.log(error);
+      throw new Error('Có lỗi xảy ra khi gửi email!');
+
+  }
+
+};
+
+//APPROVAL WITHDRAW
+export const ApproveWithdrawalRequest = async (req: Request, res: Response) => {
+
+  try {
+
+    const withdrawID = req.params.id;
+
+    const withdraw = await Withdraw.findByPk(withdrawID);
+
+    const ownerProfile = await Customer.findByPk(withdraw?.customerID);
+
+    if (!withdraw || withdraw.status !== 'pending') return res.status(404).json({ message: 'Không tìm thấy yêu cầu rút tiền!' });
+
+    withdraw.status = 'approved';
+
+    await withdraw.save();
+
+    // Gửi OTP qua email
+    if (ownerProfile?.email) {
+      await MailAcceptWithdrawOwner(ownerProfile.email, withdraw.withdrawID);
+    } else {
+      // Xử lý khi email không có giá trị hợp lệ
+      console.log("Email không hợp lệ");
+    }
+    
+
+    res.status(200).json({ message: 'Đã chấp nhận yêu cầu rút tiền thành công!', withdraw });
+
+  } catch (error) {
+
+    res.status(500).json({ message: 'Đã xảy ra lỗi trong việc chấp nhận yêu cầu rút tiền!', error });
+
+  }
+
+};
+
+
+//CONFRIM WITHDRAW
+export const ConfirmWithdraw = async (req: Request, res: Response) => {
+
+  try {
+
+    const { withdrawID, OTP } = req.body;
+
+    const withdraw = await Withdraw.findByPk(withdrawID);
+    const amount = new Decimal(withdraw?.amount??0);
+
+    const wallet = await Wallet.findOne({where: {customerID: withdraw?.customerID}});
+
+    if(wallet) {
+
+      const balance = new Decimal(wallet?.balance??0);
+
+      const resting = balance.minus(amount);
+      wallet.balance = Number(resting);
+      
+      await wallet.save();
+
+    }
+    const balance = new Decimal(wallet?.balance??0);
+
+    const resting = balance.minus(amount);
+
+    if (!withdraw || withdraw.status !== 'approved') {
+
+      return res.status(404).json({ message: 'Không tìm thấy yêu cầu rút tiền nào!' });
+
+    }
+
+    if (withdraw.OTP !== OTP) {
+
+      return res.status(400).json({ message: 'Sai mã OTP!' });
+
+    }
+
+    withdraw.status = 'completed';
+    await withdraw.save();
+
+    return res.status(200).json({ message: 'Đã hoàn thành việc rút tiền!', withdraw });
+
+  } catch (error) {
+
+    res.status(500).json({ message: 'Đã xảy ra lỗi trong quá trình xác nhận rút tiền!', error });
+  }
+
+};

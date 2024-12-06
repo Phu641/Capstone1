@@ -1,5 +1,5 @@
 import express from 'express';
-import { AcceptBooking, AcceptCar, ConfirmComplete, DeleteCar, DeleteUser, GetACar, GetAllBookings, GetAllCars, GetAllCompleteReports, GetAllPendingBookings, GetAllPendingReports, GetAllUsers, GetAnUser, GetCarSAvailability, GetReportById } from '../controllers/AdminController';
+import { AcceptBooking, AcceptCar, ApproveWithdrawalRequest, ConfirmComplete, ConfirmWithdraw, DeleteCar, DeleteUser, GetACar, GetAllBookings, GetAllCars, GetAllCompleteReports, GetAllPendingBookings, GetAllPendingReports, GetAllUsers, GetAnUser, GetApprovedOrCompletedWithdrawals, GetCarSAvailability, GetPendingWithdrawals, GetReportById } from '../controllers/AdminController';
 import { AdminMiddleware, Authenticate } from '../middlewares';
 
 const router = express.Router();
@@ -54,5 +54,16 @@ router.get('/report/:id', GetReportById as any);
 //CONFIRM COMPLETE
 router.put('/confirm-report/:id', ConfirmComplete as any);
 
+//GET PENDING WITHDRAW
+router.get('/pending-withdraw', GetPendingWithdrawals as any);
+
+//GET COMPLETED WITHDRAW
+router.get('/completed-withdraw', GetApprovedOrCompletedWithdrawals as any);
+
+//APPROVE WITHDRAW REQUEST
+router.put('/approve-withdraw/:id', ApproveWithdrawalRequest as any);
+
+//CONFIRM WITHDRAW
+router.put('/confirm-withdraw', ConfirmWithdraw as any);
 
 export { router as AdminRoute}
