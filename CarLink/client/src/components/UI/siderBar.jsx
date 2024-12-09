@@ -37,7 +37,7 @@ const Sidebar = ({ onFilterChange }) => {
   return (
     <div className="sidebar">
       <h4>Loại</h4>
-      {["sport", "suv", "mpv", "sedan", "coupe", "hatchback"].map((carType) => (
+      {["Sport", "Suv", "Mpv", "Sedan", "Coupe", "Hatchback"].map((carType) => (
         <FormGroup check key={carType}>
           <Label check>
             <Input
@@ -45,7 +45,7 @@ const Sidebar = ({ onFilterChange }) => {
               name="type"
               value={carType}
               onChange={handleTypeChange}
-              checked={type === carType}
+              checked={type.toLowerCase() === carType.toLowerCase()} 
             />
             {carType.charAt(0).toUpperCase() + carType.slice(1)}
           </Label>
