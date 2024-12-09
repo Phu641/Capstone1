@@ -594,6 +594,7 @@ export const AcceptBooking = async(bookingID: number) => {
         await booking?.save();
 
         if(car) car.booked = true;
+        console.log(car);
 
         await car?.save();
 
@@ -775,7 +776,7 @@ export const GetApprovedOrCompletedWithdrawals = async (req: Request, res: Respo
     
     const approvedOrCompletedWithdrawals = await Withdraw.findAll({
       where: {
-        status: ['approval', 'completed']
+        status: ['approved', 'completed']
       }
     });
 

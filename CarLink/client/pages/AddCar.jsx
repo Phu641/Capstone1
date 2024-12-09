@@ -64,7 +64,7 @@ const AddCarForm = () => {
     condition: "Used",
     transmission: "Manual Transmission",
     fuelType: "Petrol",
-    seats: "1",
+    seats: "4",
     pricePerDay: "",
     address: "",
     description: "",

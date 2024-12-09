@@ -483,7 +483,7 @@ export const createPaymentPayos = async (amount: number, walletID: number, booki
             await Transaction.create({
                 walletID: walletID,
                 bookingID: bookingID,
-                paycode: orderCode,
+                paycode: orderCode.toString(),
                 amount,
                 paymentMode: 'Thẻ tín dụng',
                 paymentResponse: 'Đang chờ',
@@ -564,22 +564,24 @@ export const updateWallet = async(walletID: number, amount: number, orderCode: s
 
     const wallet = await Wallet.findOne({ where: { walletID: walletID } });
 
+    console.log(wallet);
+
     if (wallet) {
 
         const balance = new Decimal(wallet.balance);
-
-        const amountToAdd = new Decimal(amount * 2/3);
-
+        const amountToAdd = new Decimal(amount * 2 / 3);
         const updatedBalance = balance.plus(amountToAdd);
 
-        wallet.balance = Number(updatedBalance);
+        // Cập nhật trực tiếp số dư vào cơ sở dữ liệu
+        await Wallet.update(
+            { balance: Number(updatedBalance) },
+            { where: { walletID: walletID } }
+        );
 
-        await wallet.save();
-
-        // Cập nhật trạng thái giao dịch
+        // Cập nhật trạng thái giao dịch trong bảng Transaction
         await Transaction.update(
             { status: 'Thanh toán PayOS thành công', paymentResponse: 'Thành công' },
-            { where: { walletID: walletID, paycode: String(orderCode) }}
+            { where: { walletID: walletID, paycode: String(orderCode) } }
         );
 
     }
@@ -601,14 +603,15 @@ export const handlePayOSCallback = async (req: Request, res: Response) => {
     if (code === '00') {
 
         const { orderCode, amount } = data;
+        console.log(`orderCode: ${orderCode}, amount: ${amount}`);
         const transaction = await Transaction.findOne({ where: { paycode: orderCode } });
 
         if (transaction) {
 
             // Cập nhật số dư của ví tương ứng bằng hàm updateWallet
-            await updateWallet(transaction.walletID, amount, orderCode);
+            updateWallet(transaction.walletID, amount, orderCode);
             
-            await AcceptBooking(transaction.bookingID);
+            AcceptBooking(transaction.bookingID);
 
             return res.status(200).send("OK"); // Phản hồi thành công về cho PayOS
 
@@ -624,6 +627,7 @@ export const handlePayOSCallback = async (req: Request, res: Response) => {
             error: message
         });
     }
-    //res.json();
+
+    res.json();
     
 }

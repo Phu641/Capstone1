@@ -40,7 +40,7 @@ router.get('/all-bookings', GetAllBookings as any);
 router.get('/all-pending-bookings', GetAllPendingBookings as any);
 
 //ACCEPT BOOKING
-router.patch('/booking/:id', AcceptBooking as any);
+router.patch('/booking', AcceptBooking as any);
 
 //GET ALL REPORTS
 router.get('/all-reports', GetAllPendingReports as any);
@@ -65,5 +65,8 @@ router.put('/approve-withdraw/:id', ApproveWithdrawalRequest as any);
 
 //CONFIRM WITHDRAW
 router.put('/confirm-withdraw', ConfirmWithdraw as any);
+
+//UPDATE WALLET
+//router.post('/update-wallet', updateWallet as any);
 
 export { router as AdminRoute}
