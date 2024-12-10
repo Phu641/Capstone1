@@ -30,6 +30,7 @@ import ManageVehiclesPage from "../pages/ManageVehiclesPage";
 import UpdateVehiclePage from "../pages/UpdateVehiclePage";
 import Report from "../pages/Report";
 import { ToastContainer } from "react-toastify";
+import Chatbot from "./components/Chatbot/chatbot.jsx";
 //import Chatbot from "./components/Chatbot/chatbot.jsx";
 
 function App() {
@@ -68,7 +69,7 @@ function App() {
       </Routes>
       <Footer />
       <ToastContainer />
-      {/* <Chatbot/> */}
+      <Chatbot/>
     </Router>
   );
 }
