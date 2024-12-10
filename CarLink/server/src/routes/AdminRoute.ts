@@ -1,5 +1,5 @@
 import express from 'express';
-import { AcceptBooking, AcceptCar, ApproveWithdrawalRequest, ConfirmComplete, ConfirmWithdraw, DeleteCar, DeleteUser, GetACar, GetAllBookings, GetAllCars, GetAllCompleteReports, GetAllPendingBookings, GetAllPendingReports, GetAllUsers, GetAnUser, GetApprovedOrCompletedWithdrawals, GetCarSAvailability, GetPendingWithdrawals, GetReportById } from '../controllers/AdminController';
+import { AcceptBooking, AcceptCar, ApproveWithdrawalRequest, ConfirmComplete, ConfirmWithdraw, DeleteCar, DeleteUser, GetACar, getAllBookingCompleted, GetAllBookings, GetAllCars, GetAllCompleteReports, GetAllPendingBookings, GetAllPendingReports, GetAllUsers, GetAnUser, GetApprovedOrCompletedWithdrawals, GetCarSAvailability, GetPendingWithdrawals, GetReportById } from '../controllers/AdminController';
 import { AdminMiddleware, Authenticate } from '../middlewares';
 
 const router = express.Router();
@@ -41,6 +41,8 @@ router.get('/all-pending-bookings', GetAllPendingBookings as any);
 
 //ACCEPT BOOKING
 router.patch('/booking', AcceptBooking as any);
+
+router.get('/booking-completed', getAllBookingCompleted as any);
 
 //GET ALL REPORTS
 router.get('/all-reports', GetAllPendingReports as any);

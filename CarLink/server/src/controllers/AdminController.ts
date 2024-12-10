@@ -747,6 +747,33 @@ export const ConfirmComplete = async (req: Request, res: Response, next: NextFun
 
 /**------------------------------------------------------Payment--------------------------------------------------------- */
 
+//GET ALL BOOKING COMPLETED
+export const getAllBookingCompleted = async (req: Request, res: Response) => {
+  try {
+    // Truy vấn để lấy tất cả booking có bookingStatus là 'completed'
+    const completedBookings = await Booking.findAll({
+      where: {
+        bookingStatus: 'completed',
+      },
+    });
+
+    // Trả về kết quả
+    res.status(200).json({
+      success: true,
+      data: completedBookings,
+    });
+  } catch (error) {
+    // Xử lý lỗi nếu xảy ra
+    console.error('Error fetching completed bookings:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching completed bookings',
+    });
+  }
+};
+
+
+
 //GET ALL PENDING WITHDRAW
 export const GetPendingWithdrawals = async (req: Request, res: Response) => {
 
