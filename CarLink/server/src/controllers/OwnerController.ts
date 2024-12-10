@@ -505,7 +505,7 @@ export const CreateWithdrawalRequest = async (req: Request, res: Response) => {
         if (recentRequest) {
           return res.status(400).json({
             message:
-              "Bạn chỉ có thể gửi yêu cầu rút tiền 5 ngày một lần. Vui lòng thử lại sau.",
+              "Bạn chỉ có thể gửi yêu cầu rút tiền 3 ngày một lần. Vui lòng thử lại sau.",
           });
         }
 

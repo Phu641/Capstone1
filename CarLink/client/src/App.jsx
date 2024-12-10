@@ -29,6 +29,7 @@ import ReportHistoryPage from "../pages/ReportHistoryPage";
 import ManageVehiclesPage from "../pages/ManageVehiclesPage";
 import UpdateVehiclePage from "../pages/UpdateVehiclePage";
 import Report from "../pages/Report";
+import WithdrawApprovalPage from "../pages/WithdrawApprovalPage";
 import { ToastContainer } from "react-toastify";
 import Chatbot from "./components/Chatbot/chatbot.jsx";
 //import Chatbot from "./components/Chatbot/chatbot.jsx";
@@ -66,6 +67,7 @@ function App() {
         <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/owner-reports" element={<OwnerReportsPage />} />
         <Route path="/report-history" element={<ReportHistoryPage />} />
+        <Route path="/withdraw-approval" element={<WithdrawApprovalPage />} />
       </Routes>
       <Footer />
       <ToastContainer />
