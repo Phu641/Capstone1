@@ -1,5 +1,6 @@
 import { Table, Column, Model, HasMany, DataType, HasOne, AutoIncrement, AllowNull, PrimaryKey } from 'sequelize-typescript';
 import { Role, Car, Favorite, Comment, Booking } from '.';
+import { Withdraw } from './Withdraw';
 
 @Table({
   tableName: 'customers',
@@ -65,4 +66,7 @@ export class Customer extends Model {
 
   @HasMany(() => Booking)
   bookings!: Booking[];
+
+  @HasMany(() => Withdraw)
+  withdraws!: Withdraw[];
 }

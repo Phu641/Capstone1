@@ -6,6 +6,7 @@ const UserList = () => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+  const [activePage, setActivePage] = useState("manageUsers");
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -51,12 +52,15 @@ const UserList = () => {
         return;
       }
 
-      const response = await fetch(`http://localhost:3000/admin/user/${userId}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `http://localhost:3000/admin/user/${userId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (response.ok) {
         alert("Người dùng đã được xóa thành công");
@@ -78,16 +82,30 @@ const UserList = () => {
       user.phone.includes(searchTerm)
   );
 
+  // Hàm điều hướng
   const handleDashboardClick = () => {
     navigate("/dashboardAdmin");
+    setActivePage("dashboard");
   };
 
   const handleManageUsersClick = () => {
     navigate("/user-list");
+    setActivePage("manageUsers");
   };
 
   const handleVehicleApprovalClick = () => {
     navigate("/vehicle-approval");
+    setActivePage("vehicleApproval");
+  };
+
+  const handleOwnerReportsClick = () => {
+    navigate("/owner-reports");
+    setActivePage("ownerReports");
+  };
+
+  const handleReportHistoryClick = () => {
+    navigate("/report-history");
+    setActivePage("reportHistory");
   };
 
   return (
@@ -95,32 +113,42 @@ const UserList = () => {
       <div className="sidebar">
         <ul>
           <li
-            className={styles.activePage === "dashboard" ? styles.active : ""}
+            className={activePage === "DashboardAdmin" ? "active" : ""}
             onClick={handleDashboardClick}
           >
             Dashboard
           </li>
           <li
-            className={styles.activePage === "manageUsers" ? styles.active : ""}
+            className={activePage === "manageUsers" ? "active" : ""}
             onClick={handleManageUsersClick}
           >
             Quản lý người dùng
           </li>
           <li
-            className={styles.activePage === "vehicleApproval" ? styles.active : ""}
+            className={activePage === "vehicleApproval" ? "active" : ""}
             onClick={handleVehicleApprovalClick}
           >
             Kiểm duyệt xe
           </li>
-          <li className={styles.activePage === "bookingApproval" ? styles.active : ""}>
+          <li className={activePage === "bookingApproval" ? "active" : ""}>
             Kiểm duyệt Booking
           </li>
-          <li className={styles.activePage === "customerFeedback" ? styles.active : ""}>
+          <li className={activePage === "customerFeedback" ? "active" : ""}>
             Phản hồi của khách hàng
           </li>
-          <li className={styles.activePage === "settings" ? styles.active : ""}>
-            Cài đặt
+          <li
+            className={activePage === "ownerReports" ? "active" : ""}
+            onClick={handleOwnerReportsClick}
+          >
+            Báo cáo của chủ xe
           </li>
+          <li
+            className={activePage === "reportHistory" ? "active" : ""}
+            onClick={handleReportHistoryClick}
+          >
+            Lịch sử báo cáo
+          </li>
+          <li className={activePage === "settings" ? "active" : ""}>Cài đặt</li>
         </ul>
       </div>
 
@@ -161,7 +189,9 @@ const UserList = () => {
                 {filteredUsers.map((user) => (
                   <tr key={user.customerID} className={styles.userListTbodyTr}>
                     <td>{user.customerID}</td>
-                    <td>{user.firstName} {user.lastName}</td>
+                    <td>
+                      {user.firstName} {user.lastName}
+                    </td>
                     <td>{user.email}</td>
                     <td>{user.address}</td>
                     <td>{user.idCard}</td>

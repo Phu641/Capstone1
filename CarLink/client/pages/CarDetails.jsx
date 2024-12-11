@@ -207,7 +207,7 @@ const CarDetails = () => {
     }
 
     if (!isAcceptedTerms) {
-      setErrorMessage("Bạn cần chấp nhận điều khoản sử dụng trước khi đặt xe.");
+      setErrorMessage("Bạn cần chấp nhận chú ý khi sử dụng trước khi đặt xe.");
       return;
     }
 
@@ -517,7 +517,7 @@ const CarDetails = () => {
 
         <Row>
           <Col lg="12">
-            <h3 className="mt-5">Điều khoản sử dụng</h3>
+            <h3 className="mt-5">Chú ý sử dụng</h3>
             <ul>
               <li>Sử dụng xe đúng mục đích.</li>
               <li>Không sử dụng xe thuê vào mục đích phi pháp, trái pháp luật.</li>
@@ -549,7 +549,7 @@ const CarDetails = () => {
 
         <Row>
           <Col lg="12" style={{ display: "flex", alignItems: "center" }} className="mt-4">
-            <label htmlFor="acceptTerms">Tôi đã đọc và đồng ý với điều khoản sử dụng</label>
+            <label htmlFor="acceptTerms">Tôi đã đọc và đồng ý với chú ý sử dụng</label>
             <input
               type="checkbox"
               id="acceptTerms"

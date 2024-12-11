@@ -95,7 +95,9 @@ const VehicleApprovalPage = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ reason: rejectionReason[id] || "Không có lý do cụ thể" }),
+        body: JSON.stringify({
+          reason: rejectionReason[id] || "Không có lý do cụ thể",
+        }),
       });
 
       if (!response.ok) {
@@ -128,7 +130,17 @@ const VehicleApprovalPage = () => {
   };
 
   const handleVehicleApprovalClick = () => {
-    setActivePage("vehicle-approval");
+    setActivePage("vehicleApproval");
+  };
+
+  const handleOwnerReportsClick = () => {
+    navigate("/owner-reports");
+    setActivePage("ownerReports");
+  };
+
+  const handleReportHistoryClick = () => {
+    navigate("/report-history");
+    setActivePage("reportHistory");
   };
 
   const handleRejectionReasonChange = (id, value) => {
@@ -143,7 +155,7 @@ const VehicleApprovalPage = () => {
       <div className="sidebar">
         <ul>
           <li
-            className={activePage === "dashboard" ? "active" : ""}
+            className={activePage === "dashboardAdmin" ? "active" : ""}
             onClick={handleDashboardClick}
           >
             Dashboard
@@ -166,9 +178,19 @@ const VehicleApprovalPage = () => {
           <li className={activePage === "customerFeedback" ? "active" : ""}>
             Phản hồi của khách hàng
           </li>
-          <li className={activePage === "settings" ? "active" : ""}>
-            Cài đặt
+          <li
+            className={activePage === "ownerReports" ? "active" : ""}
+            onClick={handleOwnerReportsClick}
+          >
+            Báo cáo của chủ xe
           </li>
+          <li
+            className={activePage === "reportHistory" ? "active" : ""}
+            onClick={handleReportHistoryClick}
+          >
+            Lịch sử báo cáo
+          </li>
+          <li className={activePage === "settings" ? "active" : ""}>Cài đặt</li>
         </ul>
       </div>
 
@@ -185,11 +207,15 @@ const VehicleApprovalPage = () => {
                 <p>Loại xe: {vehicle.overview?.type || "Không có"}</p>
                 <p>Số ghế: {vehicle.overview?.seats || "Không có"}</p>
                 <p>Địa chỉ: {vehicle.overview?.address || "Không có"}</p>
-                <p>Trạng thái: {vehicle.isAvailable ? "Đã duyệt" : "Chưa duyệt"}</p>
+                <p>
+                  Trạng thái: {vehicle.isAvailable ? "Đã duyệt" : "Chưa duyệt"}
+                </p>
                 <textarea
                   placeholder="Nhập lý do từ chối"
                   value={rejectionReason[vehicle.carID] || ""}
-                  onChange={(e) => handleRejectionReasonChange(vehicle.carID, e.target.value)}
+                  onChange={(e) =>
+                    handleRejectionReasonChange(vehicle.carID, e.target.value)
+                  }
                 />
                 <div className="vehicle-actions">
                   <button

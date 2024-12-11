@@ -1,9 +1,10 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import HomePage from "../pages/HomePage";
-import Contact from '../pages/Contact';
+import Contact from "../pages/Contact";
 import AboutUs from "../pages/AboutUs";
-import Blog from "../pages/Blog"
+import Blog from "../pages/Blog";
+import BlogDetail from "../pages/BlogDetail";
 import Carlistting from "../pages/CarListing";
 import CarDetails from "../pages/CarDetails";
 import SignupForm from "./components/Signup/SignupForm";
@@ -16,7 +17,6 @@ import DashboardAdmin from "../pages/DashboardAdmin";
 import DashboardOwner from "../pages/DashboardOwner";
 import VehicleDetailsPage from "../pages/VehicleDetailsPage";
 import VehicleApprovalPage from "../pages/VehicleApprovalPage";
-import BookingApprovalPage from "../pages/BookingApprovalPage";
 import UserList from "../pages/UserList";
 import BookingForm from "./components/UI/BookingForm.jsx";
 import Payment from "./components/UI/PaymentMethod.jsx";
@@ -25,11 +25,15 @@ import UserProfile from "./components/UserProfile/UserProfile.jsx";
 import EditProfile from "./components/UserProfile/EditProfile.jsx";
 import Privacy from "../pages/Privacy";
 import Terms from "../pages/Terms";
+import OwnerReportsPage from "../pages/OwnerReportsPage";
+import ReportHistoryPage from "../pages/ReportHistoryPage";
 //owner
 import ManageVehiclesPage from "../pages/ManageVehiclesPage";
 import UpdateVehiclePage from "../pages/UpdateVehiclePage";
 import Report from "../pages/Report";
 import { ToastContainer } from "react-toastify";
+import Chatbot from "./components/Chatbot/chatbot.jsx";
+//import Chatbot from "./components/Chatbot/chatbot.jsx";
 
 function App() {
   return (
@@ -42,6 +46,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/blogs" element={<Blog />} />
+        <Route path="/blog/:id" element={<BlogDetail />} />
         <Route path="/Cars" element={<Carlistting />} />
         <Route path="/cars/:carID" element={<CarDetails />} />
         <Route path="/login" element={<LoginForm />} />
@@ -54,7 +59,6 @@ function App() {
         <Route path="/dashboardAdmin" element={<DashboardAdmin />} />
         <Route path="/vehicle/:id" element={<VehicleDetailsPage />} />
         <Route path="/vehicle-approval" element={<VehicleApprovalPage />} />
-        <Route path="/booking-approval" element={<BookingApprovalPage />} />
         <Route path="/user-list" element={<UserList />} />
         <Route path="/booking-form" element={<BookingForm />} />
         <Route path="/payment" element={<Payment />} />
@@ -64,9 +68,12 @@ function App() {
         <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
+        <Route path="/owner-reports" element={<OwnerReportsPage />} />
+        <Route path="/report-history" element={<ReportHistoryPage />} />
       </Routes>
       <Footer />
       <ToastContainer />
+      <Chatbot/>
     </Router>
   );
 }

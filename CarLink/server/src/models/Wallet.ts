@@ -5,7 +5,7 @@ import { Customer } from './Customer';
     tableName: 'wallets',
     timestamps: true,
   })
-  export class Wallet extends Model {
+export class Wallet extends Model {
     @PrimaryKey
     @AutoIncrement
     @Column(DataType.INTEGER)
@@ -20,5 +20,5 @@ import { Customer } from './Customer';
   
     @BelongsTo(() => Customer)
     customer!: Customer;
-  }
+}
   
