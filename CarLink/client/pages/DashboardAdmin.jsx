@@ -10,7 +10,6 @@ const DashboardAdmin = () => {
   const [showVehicleApproval, setShowVehicleApproval] = useState(false);
   const [activePage, setActivePage] = useState("DashboardAdmin");
 
-  // State để lưu trữ dữ liệu từ API
   const [stats, setStats] = useState({
     totalUsers: 0,
     totalCars: 0,
@@ -18,11 +17,9 @@ const DashboardAdmin = () => {
     revenue: 0,
   });
 
-  // Sử dụng useEffect để gọi API khi component được render
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        // Lấy token admin từ localStorage (hoặc một nguồn khác)
         const token = localStorage.getItem("token");
 
         if (!token) {
@@ -30,14 +27,13 @@ const DashboardAdmin = () => {
           return;
         }
 
-        // Gọi API để lấy dữ liệu xe với header authorization
         const carsResponse = await fetch(
           "http://localhost:3000/admin/all-cars-availability",
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`, // Thêm token vào header
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -52,14 +48,13 @@ const DashboardAdmin = () => {
         const carsData = await carsResponse.json();
         const totalCars = carsData.length;
 
-        // Gọi API để lấy dữ liệu người dùng với header authorization
         const usersResponse = await fetch(
           "http://localhost:3000/admin/all-users",
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`, // Thêm token vào header
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -74,7 +69,6 @@ const DashboardAdmin = () => {
         const usersData = await usersResponse.json();
         const totalUsers = usersData.length;
 
-        // Cập nhật state stats với tổng số xe và tổng số người dùng
         setStats((prevStats) => ({
           ...prevStats,
           totalCars: totalCars,
@@ -113,11 +107,14 @@ const DashboardAdmin = () => {
     setActivePage("reportHistory");
   };
 
+  const handleWithdrawOwnerClick = () => {
+    navigate("/withdraw-approval");
+    setActivePage("WithdrawOwner");
+  };
+
   return (
     <div className="dashboard-container">
       <div className="sidebar">
-        {" "}
-        {/* Đã sửa className "sideb ar" thành "sidebar" */}
         <ul>
           <li
             className={activePage === "DashboardAdmin" ? "active" : ""}
@@ -135,13 +132,13 @@ const DashboardAdmin = () => {
             className={activePage === "vehicleApproval" ? "active" : ""}
             onClick={handleVehicleApprovalClick}
           >
-            Kiểm duyệt xe
+            Duyệt xe
           </li>
-          <li className={activePage === "bookingApproval" ? "active" : ""}>
-            Kiểm duyệt Booking
-          </li>
-          <li className={activePage === "customerFeedback" ? "active" : ""}>
-            Phản hồi của khách hàng
+          <li
+            className={activePage === "WithdrawOwner" ? "active" : ""}
+            onClick={handleWithdrawOwnerClick}
+          >
+            Yêu cầu rút tiền
           </li>
           <li
             className={activePage === "ownerReports" ? "active" : ""}
@@ -155,7 +152,7 @@ const DashboardAdmin = () => {
           >
             Lịch sử báo cáo
           </li>
-          <li className={activePage === "settings" ? "active" : ""}>Cài đặt</li>
+          {/* <li className={activePage === "settings" ? "active" : ""}>Cài đặt</li> */}
         </ul>
       </div>
 

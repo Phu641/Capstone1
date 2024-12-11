@@ -57,29 +57,30 @@ const ReportHistoryPage = () => {
   );
 
   // Các hàm xử lý chuyển trang khi chọn menu sidebar
-  const handleDashboardClick = () => {
-    navigate("/DashboardAdmin");
-    setActivePage("DashboardAdmin");
-  };
-
-  const handleManageUsersClick = () => {
-    navigate("/user-list");
-    setActivePage("manageUsers");
-  };
-
-  const handleVehicleApprovalClick = () => {
-    navigate("/vehicle-approval");
-    setActivePage("vehicleApproval");
-  };
-
-  const handleOwnerReportsClick = () => {
-    navigate("/owner-reports");
-    setActivePage("ownerReports");
-  };
-
-  const handleReportHistoryClick = () => {
-    navigate("/report-history");
-    setActivePage("reportHistory");
+  const handlePageClick = (page) => {
+    setActivePage(page);
+    switch (page) {
+      case "DashboardAdmin":
+        navigate("/DashboardAdmin");
+        break;
+      case "manageUsers":
+        navigate("/user-list");
+        break;
+      case "vehicleApproval":
+        navigate("/vehicle-approval");
+        break;
+      case "WithdrawOwner":
+        navigate("/withdraw-approval");
+        break;
+      case "ownerReports":
+        navigate("/owner-reports");
+        break;
+      case "reportHistory":
+        navigate("/report-history");
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -88,41 +89,40 @@ const ReportHistoryPage = () => {
         <ul>
           <li
             className={activePage === "DashboardAdmin" ? "active" : ""}
-            onClick={handleDashboardClick}
+            onClick={() => handlePageClick("DashboardAdmin")}
           >
             Dashboard
           </li>
           <li
             className={activePage === "manageUsers" ? "active" : ""}
-            onClick={handleManageUsersClick}
+            onClick={() => handlePageClick("manageUsers")}
           >
             Quản lý người dùng
           </li>
           <li
             className={activePage === "vehicleApproval" ? "active" : ""}
-            onClick={handleVehicleApprovalClick}
+            onClick={() => handlePageClick("vehicleApproval")}
           >
-            Kiểm duyệt xe
+            Duyệt xe
           </li>
-          <li className={activePage === "bookingApproval" ? "active" : ""}>
-            Kiểm duyệt Booking
-          </li>
-          <li className={activePage === "customerFeedback" ? "active" : ""}>
-            Phản hồi của khách hàng
+          <li
+            className={activePage === "WithdrawOwner" ? "active" : ""}
+            onClick={() => handlePageClick("WithdrawOwner")}
+          >
+            Yêu cầu rút tiền
           </li>
           <li
             className={activePage === "ownerReports" ? "active" : ""}
-            onClick={handleOwnerReportsClick}
+            onClick={() => handlePageClick("ownerReports")}
           >
             Báo cáo của chủ xe
           </li>
           <li
             className={activePage === "reportHistory" ? "active" : ""}
-            onClick={handleReportHistoryClick}
+            onClick={() => handlePageClick("reportHistory")}
           >
             Lịch sử báo cáo
           </li>
-          <li className={activePage === "settings" ? "active" : ""}>Cài đặt</li>
         </ul>
       </div>
 
@@ -131,7 +131,7 @@ const ReportHistoryPage = () => {
           <h1>Lịch sử báo cáo</h1>
           <input
             type="text"
-            placeholder="Tìm kiếm theo Report ID..."
+            placeholder="Tìm kiếm theo ID báo cáo..."
             value={searchQuery}
             onChange={handleSearchChange}
             className="search-input"
@@ -142,14 +142,13 @@ const ReportHistoryPage = () => {
           <table>
             <thead>
               <tr>
-                <th>Report ID</th>
-                <th>Booking ID</th>
-                <th>ID Card</th>
-                <th>Return Date</th>
-                <th>Description</th>
-                <th>Damage Video</th>
-                <th>Created At</th>
-                <th>Updated At</th>
+                <th>ID Báo cáo</th>
+                <th>ID Đặt xe</th>
+                <th>Số CCCD</th>
+                <th>Thời gian hoàn thành</th>
+                <th>Chi tiết</th>
+                <th>Video</th>
+                <th>Thời gian gửi báo cáo</th>
               </tr>
             </thead>
             <tbody>
@@ -175,7 +174,6 @@ const ReportHistoryPage = () => {
                       )}
                     </td>
                     <td>{new Date(report.createdAt).toLocaleString()}</td>
-                    <td>{new Date(report.updatedAt).toLocaleString()}</td>
                   </tr>
                 ))
               ) : (

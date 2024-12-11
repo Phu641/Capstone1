@@ -82,72 +82,37 @@ const VehicleApprovalPage = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    try {
-      if (!window.confirm("Bạn có chắc chắn muốn từ chối xe này không?")) {
-        return;
-      }
-
-      const token = localStorage.getItem("token");
-      const response = await fetch(`http://localhost:3000/admin/car/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          reason: rejectionReason[id] || "Không có lý do cụ thể",
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Lỗi khi từ chối xe! Trạng thái: ${response.status}`);
-      }
-
-      setVehicles((prevVehicles) =>
-        prevVehicles.filter((vehicle) => vehicle.carID !== id)
-      );
-
-      alert("Từ chối xe thành công!");
-    } catch (error) {
-      console.error("Lỗi khi từ chối xe:", error);
-      alert("Lỗi khi từ chối xe: " + error.message);
+  const handlePageClick = (page) => {
+    setActivePage(page);
+    switch (page) {
+      case "DashboardAdmin":
+        navigate("/dashboardAdmin");
+        break;
+      case "manageUsers":
+        navigate("/user-list");
+        break;
+      case "vehicleApproval":
+        navigate("/vehicle-approval");
+        break;
+      case "WithdrawOwner":
+        navigate("/withdraw-approval");
+        break;
+      case "ownerReports":
+        navigate("/owner-reports");
+        break;
+      case "reportHistory":
+        navigate("/report-history");
+        break;
+      default:
+        break;
     }
-  };
-
-  const handleShowDetails = (id) => {
-    navigate(`/vehicle/${id}`);
-  };
-
-  const handleDashboardClick = () => {
-    navigate("/dashboardAdmin");
-    setActivePage("dashboardAdmin");
-  };
-
-  const handleManageUsersClick = () => {
-    navigate("/user-list");
-    setActivePage("manageUsers");
-  };
-
-  const handleVehicleApprovalClick = () => {
-    setActivePage("vehicleApproval");
-  };
-
-  const handleOwnerReportsClick = () => {
-    navigate("/owner-reports");
-    setActivePage("ownerReports");
-  };
-
-  const handleReportHistoryClick = () => {
-    navigate("/report-history");
-    setActivePage("reportHistory");
   };
 
   const handleRejectionReasonChange = (id, value) => {
     setRejectionReason((prevReasons) => ({ ...prevReasons, [id]: value }));
   };
 
-  if (loading) return <p>Đang tải dữ liệu...</p>;
+  // if (loading) return <p>Đang tải dữ liệu...</p>;
   if (error) return <p>Có lỗi xảy ra: {error}</p>;
 
   return (
@@ -155,42 +120,41 @@ const VehicleApprovalPage = () => {
       <div className="sidebar">
         <ul>
           <li
-            className={activePage === "dashboardAdmin" ? "active" : ""}
-            onClick={handleDashboardClick}
+            className={activePage === "DashboardAdmin" ? "active" : ""}
+            onClick={() => handlePageClick("DashboardAdmin")}
           >
             Dashboard
           </li>
           <li
             className={activePage === "manageUsers" ? "active" : ""}
-            onClick={handleManageUsersClick}
+            onClick={() => handlePageClick("manageUsers")}
           >
             Quản lý người dùng
           </li>
           <li
             className={activePage === "vehicleApproval" ? "active" : ""}
-            onClick={handleVehicleApprovalClick}
+            onClick={() => handlePageClick("vehicleApproval")}
           >
-            Kiểm duyệt xe
+            Duyệt xe
           </li>
-          <li className={activePage === "bookingApproval" ? "active" : ""}>
-            Kiểm duyệt Booking
-          </li>
-          <li className={activePage === "customerFeedback" ? "active" : ""}>
-            Phản hồi của khách hàng
+          <li
+            className={activePage === "WithdrawOwner" ? "active" : ""}
+            onClick={() => handlePageClick("WithdrawOwner")}
+          >
+            Yêu cầu rút tiền
           </li>
           <li
             className={activePage === "ownerReports" ? "active" : ""}
-            onClick={handleOwnerReportsClick}
+            onClick={() => handlePageClick("ownerReports")}
           >
             Báo cáo của chủ xe
           </li>
           <li
             className={activePage === "reportHistory" ? "active" : ""}
-            onClick={handleReportHistoryClick}
+            onClick={() => handlePageClick("reportHistory")}
           >
             Lịch sử báo cáo
           </li>
-          <li className={activePage === "settings" ? "active" : ""}>Cài đặt</li>
         </ul>
       </div>
 
