@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import styles from './SignupForm.module.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faEnvelope, faLock, faArrowLeft, faIdCard, faPhone, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 import { toast, ToastContainer } from 'react-toastify';
@@ -148,7 +148,7 @@ const SignupForm = () => {
         
         <p className={styles.terms}>
           Bằng cách đăng ký hoặc đăng nhập, bạn hiểu và đồng ý với{' '}
-          <a href="#">Điều khoản sử dụng chung</a> và <a href="#">Chính sách bảo mật</a> của chúng tôi.
+          <Link to="/terms">Điều khoản</Link> và <Link to="/privacy">Chính sách</Link> của chúng tôi.
         </p>
       </form>
     </div>
