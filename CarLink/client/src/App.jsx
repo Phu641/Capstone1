@@ -23,6 +23,8 @@ import Payment from "./components/UI/PaymentMethod.jsx";
 import Favorites from "./components/Favorite/Favorite.jsx";
 import UserProfile from "./components/UserProfile/UserProfile.jsx";
 import EditProfile from "./components/UserProfile/EditProfile.jsx";
+import Privacy from "../pages/Privacy";
+import Terms from "../pages/Terms";
 import OwnerReportsPage from "../pages/OwnerReportsPage";
 import ReportHistoryPage from "../pages/ReportHistoryPage";
 //owner
@@ -65,6 +67,8 @@ function App() {
         <Route path="/report/:bookingID" element={<Report />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/edit-profile" element={<EditProfile />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
         <Route path="/owner-reports" element={<OwnerReportsPage />} />
         <Route path="/report-history" element={<ReportHistoryPage />} />
         <Route path="/withdraw-approval" element={<WithdrawApprovalPage />} />

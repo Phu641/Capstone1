@@ -1,0 +1,108 @@
+.privacyContainer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.privacyHeader {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.privacyHeader h1 {
+    color: #333;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.privacyContent {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.policySection {
+    margin-bottom: 3rem;
+}
+
+.policySection h2 {
+    color: #2c3e50;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #eee;
+}
+
+.responsibilityBlock {
+    margin-bottom: 2rem;
+}
+
+.responsibilityBlock h3 {
+    color: #34495e;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.responsibilityBlock ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+}
+
+.cancellationTable {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ddd;
+    margin: 1rem 0;
+}
+
+.cancellationTable th,
+.cancellationTable td {
+    padding: 1rem;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.cancellationTable th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.cancellationTable tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.policySection ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+    margin: 1rem 0;
+}
+
+.policySection li {
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+.policySection p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .privacyContainer {
+        padding: 1rem;
+    }
+
+    .privacyHeader h1 {
+        font-size: 2rem;
+    }
+
+    .cancellationTable {
+        font-size: 0.9rem;
+    }
+
+    .cancellationTable th,
+    .cancellationTable td {
+        padding: 0.5rem;
+    }
+}

@@ -41,6 +41,10 @@
     column-gap: 30px;
 }
 
+.exploreSection .footerList {
+    columns: 1;
+}
+
 .footerList li {
     margin-bottom: 12px;
     transition: transform 0.2s ease;

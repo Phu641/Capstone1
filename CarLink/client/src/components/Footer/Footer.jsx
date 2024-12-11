@@ -5,34 +5,33 @@ import styles from "./Footer.module.css";
 import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
 
 const carTypes = [
-  { path: "/classic-car-rental", label: "Xe cổ điển" },
-  { path: "/convertible-car-rental", label: "Xe mui trần" },
-  { path: "/electric-vehicle-rental", label: "Xe điện" },
-  { path: "/luxury-car-rental", label: "Xe sang trọng" },
-  { path: "/minivan-rental", label: "Xe minivan" },
-  { path: "/sports-car-rental", label: "Xe thể thao" },
-  { path: "/suv-rental", label: "Xe SUV" },
-  { path: "/truck-rental", label: "Xe tải" },
-  { path: "/van-rental", label: "Xe Van" },
+  { path: "/cars", label: "Xe cổ điển" },
+  { path: "/cars", label: "Xe mui trần" },
+  { path: "/cars", label: "Xe điện" },
+  { path: "/cars", label: "Xe sang trọng" },
+  { path: "/cars", label: "Xe minivan" },
+  { path: "/cars", label: "Xe thể thao" },
+  { path: "/cars", label: "Xe SUV" },
+  { path: "/cars", label: "Xe tải" },
+  { path: "/cars", label: "Xe Van" },
 ];
 
 const carBrands = [
-  { path: "/honda-rental", label: "Honda" },
-  { path: "/toyota-rental", label: "Toyota" },
-  { path: "/hyundai-rental", label: "Hyundai" },
-  { path: "/mitsubishi-rental", label: "Mitsubishi" },
-  { path: "/ford-rental", label: "Ford" },
-  { path: "/ferrari-rental", label: "Ferrari" },
-  { path: "/lamborghini-rental", label: "Lamborghini" },
-  { path: "/rolls-royce-rental", label: "Rolls-Royce" },
-  { path: "/aston-martin-rental", label: "Aston Martin" },
-  { path: "/nissan-rental", label: "Nissan" },
+  { path: "/cars", label: "Honda" },
+  { path: "/cars", label: "Toyota" },
+  { path: "/cars", label: "Hyundai" },
+  { path: "/cars", label: "Mitsubishi" },
+  { path: "/cars", label: "Ford" },
+  { path: "/cars", label: "Vinfast" },
+  { path: "/cars", label: "Kia" },
+  { path: "/cars", label: "BMW" },
+  { path: "/cars", label: "Mercedes-Benz" },
+  { path: "/cars", label: "Mazda" },
 ];
 
 const exploreLinks = [
-  { path: "/book-a-car", label: "Thuê xe" },
-  { path: "/trust", label: "Sự tin cậy và an toàn" },
-  { path: "/get-help", label: "Hỗ trợ" },
+  { path: "/cars", label: "Thuê xe" },
+  { path: "/contact", label: "Hỗ trợ" }
 ];
 
 const socialIcons = [
@@ -42,10 +41,10 @@ const socialIcons = [
   { Icon: FaYoutube, className: "youtubeIcon" },
 ];
 
-const FooterSection = ({ title, links }) => (
-  <div className={styles.footerSection}>
+const FooterSection = ({ title, links, className }) => (
+  <div className={`${styles.footerSection} ${className || ''}`}>
     <h3>{title}</h3>
-    <ul className={styles.footerList}>
+    <ul className={`${styles.footerList} ${className || ''}`}>
       {links.map(({ path, label }) => (
         <li key={path}>
           <Link to={path}>{label}</Link>
@@ -65,7 +64,7 @@ const Footer = () => {
         </div>
         
         <div className={styles.footerMain}>
-          <FooterSection title="Khám phá" links={exploreLinks} />
+          <FooterSection title="Khám phá" links={exploreLinks} className={styles.exploreSection} />
           <div className={`${styles.footerColumn} ${styles.social}`}>
             <div className={styles.socialIcons}>
               {socialIcons.map(({ Icon, className }) => (
@@ -80,8 +79,7 @@ const Footer = () => {
         <div className={styles.footerBottom}>
           <ul>
             <li><Link to="/terms">Điều khoản</Link></li>
-            <li><Link to="/privacy">Quyền riêng tư</Link></li>
-            <li><Link to="/cookie-preferences">Tùy chọn Cookie</Link></li>
+            <li><Link to="/privacy">Chính sách và quy định</Link></li>
           </ul>
         </div>
       </div>
@@ -97,6 +95,7 @@ FooterSection.propTypes = {
       label: PropTypes.string.isRequired,
     })
   ).isRequired,
+  className: PropTypes.string,
 };
 
 export default Footer;

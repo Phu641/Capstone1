@@ -111,6 +111,9 @@ const Header = () => {
 
     if (userRole === 'owner') {
       baseItems.splice(1, 0, { path: `/report/:bookingID`, icon: FaFileAlt, text: "Báo cáo" });
+      baseItems.splice(2, 0, { path: `/DashboardOwner`, icon: FaUserCircle, text: "Quản lý" });
+    } else if (userRole === 'admin') {
+      baseItems.splice(2, 0, { path: `/DashboardAdmin`, icon: FaUserCircle, text: "Quản lý" });
     }
 
     return baseItems;
