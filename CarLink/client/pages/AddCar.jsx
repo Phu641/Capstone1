@@ -58,8 +58,8 @@ const useCarForm = (initialValues) => {
 const AddCarForm = () => {
   const initialValues = {
     listingTitle: "BMW",
-    model: "X5",
-    type: "Crossover",
+    model: "",
+    type: "Sport",
     year: "2022",
     condition: "Used",
     transmission: "Manual Transmission",
@@ -69,7 +69,7 @@ const AddCarForm = () => {
     address: "",
     description: "",
     photos: [],
-    selfPickup: false, // Mặc định là false
+    selfPickUp: false, // Mặc định là false
     delivery: false, // Mặc định là false
     features: {
       acFront: false,
@@ -128,6 +128,8 @@ const AddCarForm = () => {
 
       if (!response.ok) throw new Error("Gửi thông tin thất bại!.");
       alert("Thông tin của bạn đã được gửi!!");
+      console.log("Loại xe gửi đi:", formData.type);
+
     } catch (error) {
       setError(error.message || "Gửi thông tin thất bại!.");
     } finally {
@@ -146,6 +148,7 @@ const AddCarForm = () => {
           type="text"
           value={formData.model}
           onChange={handleChange}
+           placeholder="Nhập tên xe + model ví dụ : BWM X5"
           required
         />
         <FormSelect
@@ -153,7 +156,7 @@ const AddCarForm = () => {
           name="type"
           value={formData.type}
           onChange={handleChange}
-          options={["Crossover", "Sedan", "SUV", "Truck"]}
+          options={["Sport", "Suv", "Mpv", "Sedan", "Coupe", "Hatchback"]}
         />
         <FormField
           label="Năm sản xuất (*)"
@@ -206,8 +209,8 @@ const AddCarForm = () => {
           <label>
             <input
               type="checkbox"
-              name="selfPickup"
-              checked={formData.selfPickup}
+              name="selfPickUp"
+              checked={formData.selfPickUp}
               onChange={handleChange}
             />
             Tự đến nhận xe

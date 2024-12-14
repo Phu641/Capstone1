@@ -3,6 +3,7 @@
   import Slider from '../src/components/Slider/Slider.jsx';
   import Property from '../src/components/Property/Property.jsx';
   //import Footer from '../src/components/Footer/Footer.jsx';
+  import Services from '../src/components/Servicess/Services.jsx';
 
   const HomePage = () => {
 
@@ -12,6 +13,7 @@
           <div className="white-gradient"/>
           <Slider/>
           {/* <PropertyCard/> */}
+          <Services />
           <Property/>
           {/* <Footer/> */}
         </div>
