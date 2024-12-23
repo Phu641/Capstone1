@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "reactstrap";
 import { toast } from "react-toastify";
+import "../styles/CarDetails.css";
 
 const CarDetails = () => {
   const { carID } = useParams();
@@ -15,16 +16,11 @@ const CarDetails = () => {
   const [totalDays, setTotalDays] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [userInfo, setUserInfo] = useState({
-    email: "",
-    phoneNumber: "",
-    note: "",
     bookingDate: "",
     untilDate: ""
   });
 
   const [errors, setErrors] = useState({
-    email: "",
-    phoneNumber: "",
     address: "",
     bookingDate: "",
     untilDate: ""
@@ -94,26 +90,6 @@ const CarDetails = () => {
     const newErrors = { ...errors };
     let isValid = true;
 
-    if (field === "email") {
-      if (!userInfo.email.trim()) {
-        newErrors.email = "Email không được để trống.";
-        isValid = false;
-      } else if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(userInfo.email)) {
-        newErrors.email = "Email không hợp lệ.";
-        isValid = false;
-      }
-    }
-
-    if (field === "phoneNumber") {
-      if (!userInfo.phoneNumber.trim()) {
-        newErrors.phoneNumber = "Số điện thoại không được để trống.";
-        isValid = false;
-      } else if (!/^[0-9]{10,15}$/.test(userInfo.phoneNumber)) {
-        newErrors.phoneNumber = "Số điện thoại không hợp lệ";
-        isValid = false;
-      }
-    }
-
     if (field === "address" && deliveryOption === "delivery") {
       if (!address.trim()) {
         newErrors.address = "Địa chỉ không được để trống.";
@@ -158,24 +134,6 @@ const CarDetails = () => {
   const validateAllFields = () => {
     const newErrors = {};
     let isValid = true;
-
-    // Kiểm tra email
-    if (!userInfo.email.trim()) {
-      newErrors.email = "Email không được để trống.";
-      isValid = false;
-    } else if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(userInfo.email)) {
-      newErrors.email = "Email không hợp lệ.";
-      isValid = false;
-    }
-
-    // Kiểm tra số điện thoại
-    if (!userInfo.phoneNumber.trim()) {
-      newErrors.phoneNumber = "Số điện thoại không được để trống.";
-      isValid = false;
-    } else if (!/^[0-9]{10,15}$/.test(userInfo.phoneNumber)) {
-      newErrors.phoneNumber = "Số điện thoại không hợp lệ.";
-      isValid = false;
-    }
 
     // Kiểm tra địa chỉ (nếu chọn giao hàng)
     if (deliveryOption === "delivery" && !address.trim()) {
@@ -379,46 +337,7 @@ const CarDetails = () => {
           </Col>
         </Row>
         <Row>
-          <h3 className="mt-5">Thông tin của bạn</h3>
-          <Col lg="12">
-            <div className="d-flex gap-3">
-              <Col lg="6">
-                <div className="mt-3">
-                  <label htmlFor="userEmail">
-                    Email: <span style={{ color: "red" }}>*</span>
-                  </label>
-                  <input
-                    type="email"
-                    id="userEmail"
-                    placeholder="Nhập email"
-                    value={userInfo.email}
-                    onInput={() => setErrors((prevErrors) => ({ ...prevErrors, email: "" }))}
-                    onBlur={() => validateField("email")}
-                    onChange={(e) => handleInputChange("email", e.target.value)}
-                    className="form-control"
-                  />
-                  {errors.email && <p style={{ color: "red", marginBottom: "0" }}>{errors.email}</p>}
-                </div>
-              </Col>
-              <Col lg="6">
-                <div className="mt-3">
-                  <label htmlFor="userPhoneNumber">
-                    Số điện thoại: <span style={{ color: "red" }}>*</span>
-                  </label>
-                  <input
-                    type="tel"
-                    id="userPhoneNumber"
-                    placeholder="Nhập số điện thoại"
-                    value={userInfo.phoneNumber}
-                    onBlur={() => validateField("phoneNumber")}
-                    onChange={(e) => handleInputChange("phoneNumber", e.target.value)}
-                    className="form-control"
-                  />
-                  {errors.phoneNumber && <p style={{ color: "red", marginBottom: "0" }}>{errors.phoneNumber}</p>}
-                </div>
-              </Col>
-            </div>
-          </Col>
+          <h3 className="mt-5">Thông tin ngày đặt xe</h3>
           <Col lg="12">
             <div className="d-flex gap-3">
               <Col lg="6">
@@ -502,11 +421,11 @@ const CarDetails = () => {
             <h3 className="mt-5">Giấy tờ thuê xe</h3>
             <p>
               Trước khi nhận xe, bạn cần cung cấp bằng lái xe và một trong những tài liệu sau:
-              <b> Chứng minh nhân dân hoặc hộ chiếu</b>.
+              <b> Căn cước công dân và VNeID</b>.
             </p>
             <div className="d-flex align-items-center mt-3">
-              <i className="ri-file-list-3-line" style={{ color: "#f9a826", fontSize: "2rem", marginRight: "10px" }}></i>
-              <span>Bằng lái xe</span>
+              <i className="ri-apps-line" style={{ color: "#f9a826", fontSize: "2rem", marginRight: "10px" }}></i>
+              <span>VNeID</span>
             </div>
             <div className="d-flex align-items-center mt-3">
               <i className="ri-file-list-3-line" style={{ color: "#f9a826", fontSize: "2rem", marginRight: "10px" }}></i>
@@ -516,20 +435,60 @@ const CarDetails = () => {
         </Row>
 
         <Row>
-          <Col lg="12">
-            <h3 className="mt-5">Chú ý sử dụng</h3>
-            <ul>
-              <li>Sử dụng xe đúng mục đích.</li>
-              <li>Không sử dụng xe thuê vào mục đích phi pháp, trái pháp luật.</li>
-              <li>Không sử dụng xe thuê để cầm cố, thế chấp.</li>
-              <li>Không hút thuốc, nhả kẹo cao su, xả rác trong xe.</li>
-              <li>Không chở hàng quốc cấm dễ cháy nổ.</li>
-              <li>Không chở thực phẩm nặng mùi trong xe.</li>
-              <li>
-                Khi trả xe, nếu xe bẩn hoặc có mùi trong xe, khách hàng vui lòng vệ sinh xe sạch sẽ
-                hoặc gửi phụ thu phí vệ sinh xe.
-              </li>
-            </ul>
+          <Col lg="12" className="attention-form">
+            <div>
+              <h3 className="mt-3 attention-title">Chú ý sử dụng</h3>
+              <ul>
+                <li style={{ marginTop: '30px' }}>Sử dụng xe đúng mục đích.</li>
+                <li>Không sử dụng xe thuê vào mục đích phi pháp, trái pháp luật.</li>
+                <li>Không sử dụng xe thuê để cầm cố, thế chấp.</li>
+                <li>Không hút thuốc, nhả kẹo cao su, xả rác trong xe.</li>
+                <li>Không chở hàng quốc cấm dễ cháy nổ.</li>
+                <li>Không chở thực phẩm nặng mùi trong xe.</li>
+                <li>
+                  Khi trả xe, nếu xe bẩn hoặc có mùi trong xe, khách hàng vui lòng vệ sinh xe sạch sẽ
+                  hoặc gửi phụ thu phí vệ sinh xe.
+                </li>
+                <li>
+                  <span style={{ color: 'red' }}>Chú ý:</span> Nếu vi phạm sẽ bị phụ thu
+                </li>
+              </ul>
+            </div>
+            <div>
+
+              <h3 className="fees-title mt-3">Phụ phí có thể phát sinh</h3>
+              <table className="fees-table">
+                <thead>
+                  <tr>
+                    <th>Loại Phí</th>
+                    <th>Phí</th>
+                    <th>Chú Thích</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Phí vượt giới hạn</td>
+                    <td>5,000đ/km</td>
+                    <td>Phụ phí phát sinh nếu lộ trình di chuyển vượt quá 350km khi thuê xe 1 ngày</td>
+                  </tr>
+                  <tr>
+                    <td>Phí quá giờ</td>
+                    <td>90,000đ/h</td>
+                    <td>Phụ phí phát sinh nếu hoàn trả xe trễ giờ. Trường hợp trễ quá 4 giờ, phụ phí thêm 1 ngày thuê</td>
+                  </tr>
+                  <tr>
+                    <td>Phí vệ sinh</td>
+                    <td>120,000đ</td>
+                    <td>Phụ phí phát sinh khi xe hoàn trả không đảm bảo vệ sinh (nhiều vết bẩn, bùn cát, sình lầy...)</td>
+                  </tr>
+                  <tr>
+                    <td>Phí khử mùi</td>
+                    <td>400,000đ</td>
+                    <td>Phụ phí phát sinh khi xe hoàn trả bị ám mùi khó chịu (mùi thuốc lá, thực phẩm nặng mùi...)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </Col>
         </Row>
 
@@ -570,7 +529,7 @@ const CarDetails = () => {
           Đặt ngay
         </button>
       </Container>
-    </section>
+    </section >
   );
 };
 
