@@ -188,12 +188,12 @@ const DashboardOwner = () => {
           >
             Quản lý xe
           </li>
-          <li
+          {/* <li
             className={activePage === "rentalRequests" ? "active" : ""}
             onClick={handleRentalRequestsClick}
           >
             Yêu cầu thuê xe
-          </li>
+          </li> */}
         </ul>
       </div>
 
