@@ -82,6 +82,38 @@ const VehicleApprovalPage = () => {
     }
   };
 
+  const handleDelete = async (id) => {
+    try {
+      if (!window.confirm("Bạn có chắc chắn muốn từ chối xe này không?")) {
+        return;
+      }
+      const token = localStorage.getItem("token");
+      const response = await fetch(`http://localhost:3000/admin/car/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          reason: rejectionReason[id] || "Không có lý do cụ thể",
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`Lỗi khi từ chối xe! Trạng thái: ${response.status}`);
+      }
+      setVehicles((prevVehicles) =>
+        prevVehicles.filter((vehicle) => vehicle.carID !== id)
+      );
+      alert("Từ chối xe thành công!");
+    } catch (error) {
+      console.error("Lỗi khi từ chối xe:", error);
+      alert("Lỗi khi từ chối xe: " + error.message);
+    }
+  };
+
+  const handleShowDetails = (id) => {
+    navigate(`/vehicle/${id}`);
+  };
   const handlePageClick = (page) => {
     setActivePage(page);
     switch (page) {

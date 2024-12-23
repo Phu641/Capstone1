@@ -81,7 +81,7 @@
 //             <th>Mô tả chi tiết xe</th>
 //             <th>Phương tiện</th>
 //             <th>Câp nhật</th>
-//             <th>Trạng thái</th> 
+//             <th>Trạng thái</th>
 //           </tr>
 //         </thead>
 //         <tbody>
@@ -147,7 +147,6 @@
 
 // export default ManageVehiclesPage;
 
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/ManageVehiclesPage.css";
@@ -172,17 +171,17 @@ const ManageVehiclesPage = () => {
       const response = await fetch("http://localhost:3000/owner/all-cars", {
         method: "GET",
         headers: {
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
       if (!response.ok) {
-        throw new Error('Không thể lấy dữ liệu từ server');
+        throw new Error("Không thể lấy dữ liệu từ server");
       }
 
       const carData = await response.json();
       if (Array.isArray(carData)) {
-        const availableCars = carData.filter(car => car.isAvailable);
+        const availableCars = carData.filter((car) => car.isAvailable);
         setCars(availableCars);
       } else {
         console.error("Dữ liệu trả về không phải là mảng:", carData);
@@ -206,14 +205,14 @@ const ManageVehiclesPage = () => {
       const response = await fetch(apiUrl, {
         method: "PUT",
         headers: {
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ carID }), // Gửi carID lên server
       });
 
       if (!response.ok) {
-        throw new Error('Không thể cập nhật trạng thái dịch vụ');
+        throw new Error("Không thể cập nhật trạng thái dịch vụ");
       }
 
       // Sau khi gọi API thành công, gọi lại API để lấy dữ liệu xe mới
@@ -251,12 +250,12 @@ const ManageVehiclesPage = () => {
           >
             Quản lý xe
           </li>
-          <li
+          {/* <li
             className={activePage === "rentalRequests" ? "active" : ""}
             onClick={handleRentalRequestsClick}
           >
             Yêu cầu thuê xe
-          </li>
+          </li> */}
         </ul>
       </div>
 
@@ -277,7 +276,7 @@ const ManageVehiclesPage = () => {
                 <th>Mô tả chi tiết xe</th>
                 <th>Phương tiện</th>
                 <th>Câp nhật</th>
-                <th>Trạng thái</th> 
+                <th>Trạng thái</th>
               </tr>
             </thead>
             <tbody>
@@ -292,17 +291,27 @@ const ManageVehiclesPage = () => {
                     <td>
                       {car.carImages && car.carImages.length > 0 ? (
                         // hiển thị ảnh nếu có
-                        car.carImages[0].imageUrl.toLowerCase().endsWith(".mp4") ? (
+                        car.carImages[0].imageUrl
+                          .toLowerCase()
+                          .endsWith(".mp4") ? (
                           <video
                             controls
                             src={`http://localhost:3000/videos/${car.carImages[0].imageUrl}`}
-                            style={{ width: '100px', height: '100px', marginRight: '10px' }}
+                            style={{
+                              width: "100px",
+                              height: "100px",
+                              marginRight: "10px",
+                            }}
                           />
                         ) : (
                           <img
                             src={`http://localhost:3000/images/${car.carImages[0].imageUrl}`}
                             alt="Car Media"
-                            style={{ width: '100px', height: '100px', marginRight: '10px' }}
+                            style={{
+                              width: "100px",
+                              height: "100px",
+                              marginRight: "10px",
+                            }}
                           />
                         )
                       ) : (
@@ -323,7 +332,9 @@ const ManageVehiclesPage = () => {
                         <input
                           type="checkbox"
                           checked={!car.booked} // chuyển trạng thái của booked từ true/false sang trạng thái switch
-                          onChange={() => handleToggleChange(car.carID, car.booked)} // gọi sự kiện thay đổi
+                          onChange={() =>
+                            handleToggleChange(car.carID, car.booked)
+                          } // gọi sự kiện thay đổi
                         />
                         <span className="slider"></span>
                       </label>
