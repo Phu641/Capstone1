@@ -13,7 +13,6 @@ const payOS = new PayOS("6b808926-685f-45a1-a532-908bccb31368", "da86690d-b052-4
 import express from 'express';
 import bodyParser from 'body-parser';
 import Decimal from 'decimal.js';
-import { AcceptBooking } from './AdminController';
 
 const app = express();
 app.use(bodyParser.json());
@@ -611,7 +610,7 @@ export const handlePayOSCallback = async (req: Request, res: Response) => {
             // Cập nhật số dư của ví tương ứng bằng hàm updateWallet
             updateWallet(transaction.walletID, amount, orderCode);
             
-            AcceptBooking(transaction.bookingID);
+            //AcceptBooking(transaction.bookingID);
 
             return res.status(200).send("OK"); // Phản hồi thành công về cho PayOS
 
