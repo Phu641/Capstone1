@@ -19,6 +19,8 @@ import {
 } from "../utility";
 import Decimal from "decimal.js";
 import { Op } from "sequelize";
+import { cursorTo } from "readline";
+const nodemailer = require('nodemailer');
 
 //ADD CAR
 export const AddCar = async (
@@ -160,8 +162,7 @@ export const GetCarsByOwner = async (req: Request, res: Response) => {
 // UPDATE CAR
 export const UpdateCar = async (
   req: Request,
-  res: Response,
-  next: NextFunction
+  res: Response
 ) => {
   const user = req.user;
 
@@ -268,8 +269,7 @@ export const UpdateCar = async (
 //STOP SERVICE
 export const StopService = async (
   req: Request,
-  res: Response,
-  next: NextFunction
+  res: Response
 ) => {
   try {
     const user = req.user;
@@ -288,6 +288,8 @@ export const StopService = async (
     if (!car)
       return res.status(404).json({ message: "Không tìm thấy xe với ID này." });
 
+    if(car.booked) return res.status(404).json('Không thể tạm dừng dịch vụ của xe này bởi vì xe của bạn đang trong quá trình cho thuê!');
+
     car.booked = true;
 
     await car.save();
@@ -302,8 +304,7 @@ export const StopService = async (
 //START SERVICE
 export const StartService = async (
   req: Request,
-  res: Response,
-  next: NextFunction
+  res: Response
 ) => {
   try {
     const user = req.user;
@@ -336,8 +337,7 @@ export const StartService = async (
 //SUBMIT REPORT
 export const SubmitReport = async (
   req: Request,
-  res: Response,
-  next: NextFunction
+  res: Response
 ) => {
   const user = req.user; // Lấy thông tin user từ middleware xác thực
   const { bookingID, validate, idCard, description, returnDate } = req.body;
@@ -543,3 +543,208 @@ export const CreateWithdrawalRequest = async (req: Request, res: Response) => {
 
 //AUTO DELETE WITHDRAW REQUEST
 deleteExpiredWithdrawRequests();
+
+//ALL BOOKING
+export const GetAllBookingsForOwner = async(req: Request, res: Response) => {
+
+  try {
+
+      const bookings = await Booking.findAll();
+
+      if(bookings) return res.status(200).json(bookings);
+
+      
+  } catch (error) {
+      console.log(error);
+  }
+
+}
+
+//ALL PENDING BOOKING
+export const GetAllPendingBookingsForOwner = async(req: Request, res: Response, next: NextFunction) => {
+
+  try {
+
+      const bookings = await Booking.findAll({where: {bookingStatus: 'pending'}});
+
+      if(bookings) return res.status(200).json(bookings);
+
+      
+  } catch (error) {
+      console.log(error);
+  }
+
+}
+
+//ALL PENDING BOOKING
+export const GetAllBookingBookingsForOwner = async(req: Request, res: Response) => {
+
+  try {
+
+      const bookings = await Booking.findAll({where: {bookingStatus: 'booking'}});
+
+      if(bookings) return res.status(200).json(bookings);
+
+      
+  } catch (error) {
+      console.log(error);
+  }
+
+}
+
+//ALL BOOKING COMPLETE
+export const GetAllCompleltedBookings = async(req: Request, res: Response, next: NextFunction) => {
+
+  try {
+
+      const bookings = await Booking.findAll({where: {bookingStatus: 'completed'}});
+
+      if(bookings) return res.status(200).json(bookings);
+
+      
+  } catch (error) {
+      console.log(error);
+  }
+
+}
+
+
+//ACCEPT BOOKING
+export const AcceptBookingForOwner = async(req: Request, res: Response) => {
+
+    const user = req.user;
+
+    if(user) {
+
+      try {
+        
+        const bookingID = req.body;
+        const booking = await Booking.findByPk(bookingID);
+
+        const carID = booking?.carID;
+        const car = await Car.findByPk(carID);
+
+        if(booking) booking.bookingStatus = 'booking';
+
+        await booking?.save();
+
+        if(car) car.booked = true;
+        console.log(car);
+
+        await car?.save();
+
+        return res.status(200).json('Quá trình thuê xe đã được duyệt!');
+
+      } catch (error) {
+
+          console.log(error);
+
+      }
+
+    } else return res.status(500).json('Bạn chưa đăng nhập!');
+
+}
+
+//USER SERVICE EMAIL
+export const sendEmailServiceThankYouUser = async (email: string, bookingID: number) => {
+
+  const profileBooking = await Booking.findByPk(bookingID);
+
+  const profileUser = await Customer.findByPk(profileBooking?.customerID); 
+
+  const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false, // true for port 465, false for other ports
+      auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASSWORD,
+      },
+  });
+
+
+  const info = await transporter.sendMail({
+    from: '"CAR LINK" <carlinkwebsite@gmail.com>', // sender address
+    to: email, // list of receivers
+    subject: "Cảm ơn bạn đã hoàn thành việc thuê xe tại CarLink 🚗", // Subject line
+    text: "Cảm ơn bạn đã sử dụng dịch vụ thuê xe của CarLink. Chúng tôi rất mong được phục vụ bạn lần sau.", // plain text body
+    html: `<div>Kính gửi ${profileUser?.firstName},<br><br>
+  
+            Cảm ơn bạn đã sử dụng dịch vụ thuê xe tại CarLink! Chúng tôi rất vui mừng thông báo rằng chuyến đi của bạn đã kết thúc thành công.<br><br/>
+  
+      
+  
+            <p>Chúng tôi hy vọng bạn có một trải nghiệm tuyệt vời cùng CarLink và rất mong được phục vụ bạn trong các chuyến đi tiếp theo!</p>
+            
+            <p>Để biết thêm chi tiết hoặc nếu có bất kỳ câu hỏi nào, vui lòng liên hệ với chúng tôi qua email: <strong>${process.env.EMAIL_USER}</strong> hoặc số điện thoại: <strong>${process.env.PHONE_ADMIN}</strong>.</p>
+  
+            <p>Trân trọng,<br/>
+            Đội ngũ CarLink</p>
+        </div>`, // html body
+  });
+  
+
+  return info;
+
+}
+
+//SEND MAIL TO USER TO NOTIFY
+export const MailThankYouUser = async (email: string, bookingID: number) => {
+    try {
+        const profile = await Customer.findOne({ where: { email } });
+        if (profile) {
+            await sendEmailServiceThankYouUser(profile.email, bookingID);
+            return 'Thông tin chấp nhận đã được gửi đến email của bạn!';
+        }
+        return 'Email không tồn tại trong hệ thống!';
+    } catch (error) {
+        console.log(error);
+        throw new Error('Có lỗi xảy ra khi gửi email!');
+    }
+}
+
+//COMPLETE BOOKING
+export const ConfirmCompletedBookingForOwner = async(req: Request, res: Response) => {
+
+  const user = req.user;
+
+  if(user) {
+
+    try {
+      
+      const bookingID = req.body;
+      const booking = await Booking.findByPk(bookingID);
+
+      const customer = await Customer.findByPk(booking?.customerID);
+
+      const carID = booking?.carID;
+      const car = await Car.findByPk(carID);
+
+      if(booking) booking.bookingStatus = 'completed';
+
+      await booking?.save();
+
+      if(car) car.booked = false;
+      console.log(car);
+
+      await car?.save();
+      
+      if (customer?.email) {
+        // Gửi email cảm ơn nếu email hợp lệ
+        MailThankYouUser(customer.email, bookingID);
+      } else {
+        console.log('Không có email hợp lệ của khách hàng');
+        // Xử lý trường hợp không có email hợp lệ nếu cần
+      }
+      
+      return res.status(200).json('Quá trình thuê xe đã hoàn thành!');
+
+    } catch (error) {
+
+        console.log(error);
+
+    }
+
+  } else return res.status(500).json('Bạn chưa đăng nhập!');
+
+}

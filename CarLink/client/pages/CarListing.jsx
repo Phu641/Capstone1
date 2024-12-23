@@ -109,7 +109,8 @@ const CarListing = () => {
 
             <Row>
               {filteredCars.length > 0 ? (
-                filteredCars.map((car) => (
+                 // Loại bỏ xe không được duyệt
+                filteredCars.filter((car) => car && car.carID).map((car) => (
                   // Kiểm tra nếu carID tồn tại
                   car.carID ? (
                     <Col lg="3" md="6" sm="6" key={car.carID}>

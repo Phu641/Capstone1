@@ -1,5 +1,5 @@
 import express from "express";
-import { AddCar, CreateWithdrawalRequest, GetActiveBookings, GetCarsByOwner, StartService, StopService, SubmitReport, UpdateCar, ViewBalance } from "../controllers";
+import { AcceptBookingForOwner, AddCar, ConfirmCompletedBookingForOwner, CreateWithdrawalRequest, GetActiveBookings, GetAllBookingBookingsForOwner, GetAllBookingsForOwner, GetAllCompleltedBookings, GetAllPendingBookingsForOwner, GetCarsByOwner, StartService, StopService, SubmitReport, UpdateCar, ViewBalance } from "../controllers";
 import multer from 'multer';
 import { Authenticate, uploadVideo } from "../middlewares";
 
@@ -53,5 +53,24 @@ router.get('/view-balance', ViewBalance as any);
 
 //SEND REQUEST WITHDRAW
 router.post('/request-withdraw', CreateWithdrawalRequest as any);
+
+//GET ALL BOOKINGS
+router.get('/all-bookings', GetAllBookingsForOwner as any);
+
+//GET ALL BOOKINGS
+router.get('/all-pending-bookings', GetAllPendingBookingsForOwner as any);
+
+//GET ALL BOOKINGS
+router.get('/all-booking-bookings', GetAllBookingBookingsForOwner as any);
+
+//GET ALL BOOKINGS
+router.get('/all-completed-bookings', GetAllCompleltedBookings as any);
+
+//ACCEPT BOOKING
+router.put('/accept-booking', AcceptBookingForOwner as any);
+
+//ACCEPT BOOKING
+router.put('/confirm-booking', ConfirmCompletedBookingForOwner as any);
+
 
 export { router as OwnerRoute }

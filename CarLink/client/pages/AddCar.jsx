@@ -50,7 +50,7 @@ const useCarForm = (initialValues) => {
     if (!formData.model.trim()) newErrors.model = "Mẫu xe không được để trống.";
     if (!formData.type.trim()) newErrors.type = "Loại xe không được để trống.";
     if (!formData.year.trim() || isNaN(formData.year) || parseInt(formData.year) <= 0)
-      newErrors.year = "Năm sản xuất không hợp lệ (không thể là số âm hoặc để trống).";
+      newErrors.year = "NămSX không hợp lệ (không là số âm hoặc để trống).";
     if (!formData.pricePerDay.trim() || isNaN(formData.pricePerDay) || parseInt(formData.pricePerDay) <= 0)
       newErrors.pricePerDay = "Giá cho thuê không hợp lệ (không thể là số âm hoặc để trống)";
     if (!formData.address.trim())
