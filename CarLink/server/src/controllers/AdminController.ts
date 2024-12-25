@@ -863,15 +863,39 @@ export const GetPendingWithdrawals = async (req: Request, res: Response) => {
   }
 };
 
+//GET ALL PENDING WITHDRAW
+export const GetAllApprovalWithdrawals = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const pendingWithdrawals = await Withdraw.findAll({
+      where: { status: "approved" },
+    });
+
+    if (pendingWithdrawals.length === 0)
+      return res.status(404).json({
+        message: "Không có yêu cầu rút tiền nào trong trạng thái chờ xác nhận.",
+      });
+
+    return res.status(200).json(pendingWithdrawals);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Đã có lỗi xảy ra khi lấy danh sách yêu cầu rút tiền.",
+    });
+  }
+};
+
 //GET ALL APPROVAL AND COMPLETED WITHDRAW
-export const GetApprovedOrCompletedWithdrawals = async (
+export const GetAllCompletedWithdrawals = async (
   req: Request,
   res: Response
 ) => {
   try {
     const approvedOrCompletedWithdrawals = await Withdraw.findAll({
       where: {
-        status: ["approved", "completed"],
+        status: "completed",
       },
     });
 

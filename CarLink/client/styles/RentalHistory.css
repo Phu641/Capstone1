@@ -1,0 +1,114 @@
+/* RentalHistory.css */
+
+.rental-history-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.rental-history-container h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.rental-history-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 auto;
+}
+
+.rental-history-table th,
+.rental-history-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.rental-history-table th {
+  background-color: #f4f4f4;
+  color: #333;
+  font-weight: bold;
+}
+
+.rental-history-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.rental-history-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.rental-history-table td {
+  color: #555;
+}
+
+.rental-history-table th {
+  font-size: 16px;
+}
+
+.rental-history-table td {
+  font-size: 14px;
+}
+
+.rental-history-container table {
+  margin-top: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.rental-history-container td {
+  white-space: nowrap;
+}
+
+.rental-history-container th {
+  white-space: nowrap;
+}
+
+/* Kiểu trạng thái trong bảng */
+.status.completed {
+  color: #28a745; /* Màu xanh lá */
+  font-weight: bold; /* Chữ đậm */
+}
+
+/* Kiểu trạng thái trong bảng */
+.status.completed {
+  color: #28a745; /* Màu xanh lá */
+  font-weight: bold; /* Chữ đậm */
+  animation: bounce 1.5s infinite; /* Thêm hiệu ứng nảy */
+}
+
+/* Định nghĩa hiệu ứng nảy */
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px); /* Nảy lên */
+  }
+  60% {
+    transform: translateY(-5px); /* Nảy nhỏ hơn */
+  }
+}
+
+/* Hiệu ứng hover cho dòng */
+.rental-history-table tr:hover {
+  background-color: #eef7ee; /* Màu nhẹ liên quan đến trạng thái "hoàn thành" */
+  cursor: pointer;
+}
+
+/* Tăng độ bóng mờ cho bảng */
+.rental-history-container table {
+  margin-top: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Bo góc cho các ô */
+.rental-history-table th,
+.rental-history-table td {
+  border-radius: 4px;
+}

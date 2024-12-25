@@ -32,6 +32,8 @@ import ManageVehiclesPage from "../pages/ManageVehiclesPage";
 import UpdateVehiclePage from "../pages/UpdateVehiclePage";
 import Report from "../pages/Report";
 import WithdrawApprovalPage from "../pages/WithdrawApprovalPage";
+import BrowseRentals from "../pages/BrowseRentals";
+import RentalHistory from "../pages/RentalHistory";
 import { ToastContainer } from "react-toastify";
 import Chatbot from "./components/Chatbot/chatbot.jsx";
 //import Chatbot from "./components/Chatbot/chatbot.jsx";
@@ -72,10 +74,12 @@ function App() {
         <Route path="/owner-reports" element={<OwnerReportsPage />} />
         <Route path="/report-history" element={<ReportHistoryPage />} />
         <Route path="/withdraw-approval" element={<WithdrawApprovalPage />} />
+        <Route path="/browse-rentals" element={<BrowseRentals />} />
+        <Route path="/rental-history" element={<RentalHistory />} />
       </Routes>
       <Footer />
       <ToastContainer />
-      <Chatbot/>
+      <Chatbot />
     </Router>
   );
 }

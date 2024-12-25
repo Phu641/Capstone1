@@ -645,7 +645,9 @@ export const handlePayOSCallback = async (req: Request, res: Response) => {
     if (transaction) {
       // Cập nhật số dư của ví tương ứng bằng hàm updateWallet
       updateWallet(transaction.walletID, amount, orderCode);
+      const booking = await Booking.findByPk(transaction.bookingID);
 
+      if (booking) booking.bookingStatus = "paied";
       //AcceptBooking(transaction.bookingID);
 
       return res.status(200).send("OK"); // Phản hồi thành công về cho PayOS
