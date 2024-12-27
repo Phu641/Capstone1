@@ -1,5 +1,5 @@
 import express from "express";
-import { AcceptBookingForOwner, AddCar, ConfirmCompletedBookingForOwner, CreateWithdrawalRequest, GetActiveBookings, GetAllBookingBookingsForOwner, GetAllBookingsForOwner, GetAllCompleltedBookings, GetAllPendingBookingsForOwner, GetCarsByOwner, StartService, StopService, SubmitReport, UpdateCar, ViewBalance } from "../controllers";
+import { AcceptBookingForOwner, AddCar, ConfirmCompletedBookingForOwner, createOwnerPayment, CreateWithdrawalRequest, GetActiveBookings, GetAllBookingBookingsForOwner, GetAllBookingsForOwner, GetAllCompleltedBookings, GetAllPendingBookingsForOwner, GetCarsByOwner, StartService, StopService, SubmitReport, UpdateCar, ViewBalance } from "../controllers";
 import multer from 'multer';
 import { Authenticate, uploadVideo } from "../middlewares";
 
@@ -71,6 +71,9 @@ router.put('/accept-booking', AcceptBookingForOwner as any);
 
 //ACCEPT BOOKING
 router.put('/confirm-booking', ConfirmCompletedBookingForOwner as any);
+
+//CREATE PAYMENT
+router.post('/create-payment', createOwnerPayment as any);
 
 
 export { router as OwnerRoute }

@@ -11,6 +11,7 @@ import {
   Wallet,
   Withdraw,
   Customer,
+  Transaction,
 } from "../models";
 import {
   deleteExpiredWithdrawRequests,
@@ -20,13 +21,18 @@ import {
 import Decimal from "decimal.js";
 import { Op } from "sequelize";
 import { cursorTo } from "readline";
+import PayOS from "@payos/node";
 const nodemailer = require('nodemailer');
+const payOS = new PayOS(
+  "6b808926-685f-45a1-a532-908bccb31368",
+  "da86690d-b052-4928-a51a-b9c52659062a",
+  "1fd42ecdf13c1c4cbf8aaebd0063c0bea084ddb6961809d3e02c7e207bcc7b3e"
+);
 
 //ADD CAR
 export const AddCar = async (
   req: Request,
-  res: Response,
-  next: NextFunction
+  res: Response
 ) => {
   const user = req.user;
 
@@ -41,8 +47,7 @@ export const AddCar = async (
       fuelType,
       seats,
       pricePerDay,
-      address,
-      description,
+      address
     } = <CreateCarInputs>req.body;
 
     const owner = await FindOwner(user.customerID);
@@ -54,8 +59,7 @@ export const AddCar = async (
         customerID: owner.customerID,
         delivery,
         selfPickUp,
-        booked: false,
-        isAvailable: false,
+        booked: false
       });
 
       const createdOverview = await Overview.create({
@@ -68,7 +72,7 @@ export const AddCar = async (
         seats,
         pricePerDay,
         address,
-        description,
+        description: 'pending payment'
       });
 
       const resultCar = await createdCar.save();
@@ -102,6 +106,16 @@ export const AddCar = async (
           message:
             "Đã xảy ra lỗi khi lấy tọa độ. Vui lòng kiểm tra địa chỉ nhập vào.",
         });
+      }
+
+      const wallet = await Wallet.findOne({ where: { customerID: owner.customerID } });
+      
+          if (!wallet) {
+            //CREATE WALLET FOR OWNER
+            await Wallet.create({
+              customerID: owner.customerID,
+              balance: 0,
+          });
       }
 
       return res.status(200).json(resultCar);
@@ -561,20 +575,35 @@ export const GetAllBookingsForOwner = async(req: Request, res: Response) => {
 }
 
 //ALL PENDING BOOKING
-export const GetAllPendingBookingsForOwner = async(req: Request, res: Response, next: NextFunction) => {
-
+export const GetAllPendingBookingsForOwner = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    // Lấy tất cả các booking có trạng thái "pending" và include thông tin liên quan
+    const bookings = await Booking.findAll({
+      where: { bookingStatus: 'pending' },
+      include: [
+        {
+          model: Car,
+          as: 'cars', // Tên alias theo model Booking
+          include: [
+            {
+              model: Overview,
+              as: 'overview', // Tên alias theo model Car
+            },
+          ],
+        },
+      ],
+    });
 
-      const bookings = await Booking.findAll({where: {bookingStatus: 'pending'}});
-
-      if(bookings) return res.status(200).json(bookings);
-
-      
+    if (bookings) {
+      return res.status(200).json(bookings);
+    } else {
+      return res.status(404).json({ message: 'No pending bookings found.' });
+    }
   } catch (error) {
-      console.log(error);
+    console.error('Error fetching bookings:', error);
+    return res.status(500).json({ error: 'Internal server error' });
   }
-
-}
+};
 
 //ALL PENDING BOOKING
 export const GetAllBookingBookingsForOwner = async(req: Request, res: Response) => {
@@ -704,47 +733,213 @@ export const MailThankYouUser = async (email: string, bookingID: number) => {
 }
 
 //COMPLETE BOOKING
-export const ConfirmCompletedBookingForOwner = async(req: Request, res: Response) => {
+// export const ConfirmCompletedBookingForOwner = async(req: Request, res: Response) => {
 
+//   const user = req.user;
+
+//   if(user) {
+
+//     try {
+      
+//       const bookingID = req.body;
+//       const booking = await Booking.findByPk(bookingID);
+
+//       const customer = await Customer.findByPk(booking?.customerID);
+
+//       const carID = booking?.carID;
+//       const car = await Car.findByPk(carID);
+
+//       if(booking) booking.bookingStatus = 'completed';
+
+//       await booking?.save();
+
+//       if(car) car.booked = false;
+//       console.log(car);
+
+//       await car?.save();
+      
+//       if (customer?.email) {
+//         // Gửi email cảm ơn nếu email hợp lệ
+//         MailThankYouUser(customer.email, bookingID);
+//       } else {
+//         console.log('Không có email hợp lệ của khách hàng');
+//         // Xử lý trường hợp không có email hợp lệ nếu cần
+//       }
+      
+//       return res.status(200).json('Quá trình thuê xe đã hoàn thành!');
+
+//     } catch (error) {
+
+//         console.log(error);
+
+//     }
+
+//   } else return res.status(500).json('Bạn chưa đăng nhập!');
+
+// }
+//COMPLETE BOOKING
+export const ConfirmCompletedBookingForOwner = async (req: Request, res: Response) => {
   const user = req.user;
 
-  if(user) {
+  if (!user) {
+    return res.status(401).json("Bạn chưa đăng nhập!");
+  }
 
-    try {
-      
-      const bookingID = req.body;
-      const booking = await Booking.findByPk(bookingID);
+  try {
+    // bookingID được gửi trong body
+    const { bookingID } = req.body;
+    // Tìm booking
+    const booking = await Booking.findByPk(bookingID);
 
-      const customer = await Customer.findByPk(booking?.customerID);
-
-      const carID = booking?.carID;
-      const car = await Car.findByPk(carID);
-
-      if(booking) booking.bookingStatus = 'completed';
-
-      await booking?.save();
-
-      if(car) car.booked = false;
-      console.log(car);
-
-      await car?.save();
-      
-      if (customer?.email) {
-        // Gửi email cảm ơn nếu email hợp lệ
-        MailThankYouUser(customer.email, bookingID);
-      } else {
-        console.log('Không có email hợp lệ của khách hàng');
-        // Xử lý trường hợp không có email hợp lệ nếu cần
-      }
-      
-      return res.status(200).json('Quá trình thuê xe đã hoàn thành!');
-
-    } catch (error) {
-
-        console.log(error);
-
+    if (!booking) {
+      return res.status(404).json("Booking không tồn tại!");
     }
 
-  } else return res.status(500).json('Bạn chưa đăng nhập!');
+    // Lấy thông tin customer
+    const customer = await Customer.findByPk(booking.customerID);
 
-}
+    // Lấy thông tin Car
+    const car = await Car.findByPk(booking.carID);
+
+    // Cập nhật trạng thái booking
+    booking.bookingStatus = "completed";
+    await booking.save();
+
+    // Thả xe về trạng thái sẵn sàng
+    if (car) {
+      car.booked = false;
+      await car.save();
+    }
+
+    // Tính điểm thưởng cho khách hàng (nếu có)
+    // Giả sử booking.amount = số tiền thuê, 
+    // ví dụ: 10,000 VND = 1 loyalPoint
+    if (customer) {
+      const amount = booking.totalAmount || 0; 
+      // hoặc bạn có thể tính theo "bookingDays * pricePerDay"
+
+      // Tính số điểm được thưởng
+      const pointsEarned = Math.floor(amount / 10000); 
+      // -> 1 point / 10k VND
+
+      // Cộng vào loyalPoint
+      customer.loyalPoint = (customer.loyalPoint || 0) + pointsEarned;
+      await customer.save();
+
+      // Gửi mail cảm ơn nếu có email
+      if (customer.email) {
+        MailThankYouUser(customer.email, bookingID);
+      } else {
+        console.log("Không có email hợp lệ của khách hàng");
+      }
+    }
+
+    return res.status(200).json("Quá trình thuê xe đã hoàn thành!");
+
+  } catch (error) {
+    console.error("Lỗi ConfirmCompletedBookingForOwner:", error);
+    return res.status(500).json("Đã xảy ra lỗi, vui lòng thử lại sau.");
+  }
+};
+
+
+/**-----------------------------------------------------payment----------------------------------------------------------------------- */
+export const createOwnerPayment = async (req: Request, res: Response) => {
+  const amount = 100000; // Fixed amount for car owner payment
+  const owner = req.user; // Assume this comes from authentication middleware
+
+  const ownerID = owner?.customerID; // Extract owner ID from authenticated user
+
+  // Find car with pending payment and isAvailable is NULL
+  // const car = await Car.findOne({
+  //   where: {
+  //     customerID: ownerID,
+  //     isAvailable: null // Add the condition for isAvailable being NULL
+  //   }
+  // });
+
+  // if (!car) {
+  //   return res.status(404).json({ message: "No car found requiring payment." });
+  // }
+
+  // const carID = car.carID;
+
+  const wallet = await Wallet.findOne({where: {customerID: ownerID}});
+
+  try {
+    // Call PayOS service to create payment link
+    let paymentUrl = await createPaymentPayosForOwner(amount, wallet?.walletID as any);
+
+    // Return payment URL directly without updating the database
+    return res.status(200).json({
+      payUrl: paymentUrl,
+    });
+  } catch (error) {
+    console.error("Error creating payment request:", error);
+
+    if (error instanceof Error) {
+      return res.status(500).json({ message: error.message });
+    } else {
+      return res.status(500).json({ message: "An unknown error occurred." });
+    }
+  }
+};
+
+
+//PAYMEMT FOR OWNER
+export const createPaymentPayosForOwner = async (
+  amount: number,
+  walletID: number
+) => {
+  try {
+    const orderCode = Number(String(new Date().getTime()).slice(-6)); // Generate order code as number
+
+    const paymentData = {
+      orderCode,
+      amount,
+      description: "Thanh toán phí đăng xe", // Rút ngắn để đảm bảo <= 25 ký tự
+      returnUrl: "http://localhost:5173/",
+      cancelUrl: "http://localhost:5173/",
+    };
+
+    console.log("Payment Data:", paymentData); // Debug payment data
+
+    // Send request to PayOS to create payment link
+    const response = await payOS.createPaymentLink(paymentData);
+
+    console.log("Full PayOS Response:", response); // Debug full response
+
+    if (response && (response as any).error) {
+      const error = (response as any).error as { message: string };
+      console.error("PayOS API Error:", error);
+      throw new Error(`PayOS API Error: ${error.message}`);
+    }
+
+    if (response && response.checkoutUrl) {
+      // Log transaction in the database (optional)
+      await Transaction.create({
+        walletID: walletID,
+        paycode: orderCode.toString(),
+        amount,
+        paymentMode: "Thẻ tín dụng",
+        paymentResponse: "Đang chờ",
+        status: "Phí dịch vụ ban đầu",
+        created_at: new Date(),
+        updated_at: new Date(),
+      });
+
+      // Return payment URL
+      return response.checkoutUrl;
+    }
+
+    throw new Error("Invalid PayOS response");
+  } catch (error) {
+    console.error("Error creating PayOS payment request:", error);
+
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    } else {
+      throw new Error("An unexpected error occurred.");
+    }
+  }
+};

@@ -1,5 +1,5 @@
 import express from 'express';
-import { CustomerLogIn, CustomerSignUp, CustomerVerify, EditCustomerProfile, GetCustomerProfile, onRequestOTP, GetCurrentRole, addToFavorite, getAllCarsFavorite, BookCar, createPayment, handlePayOSCallback } from '../controllers';
+import { CustomerLogIn, CustomerSignUp, CustomerVerify, EditCustomerProfile, GetCustomerProfile, onRequestOTP, GetCurrentRole, addToFavorite, getAllCarsFavorite, BookCar, createPayment, handlePayOSCallback, cancelPayment, ForgotPassword, ResetPassword} from '../controllers';
 import { Authenticate } from '../middlewares';
 
 const router = express.Router();
@@ -15,6 +15,13 @@ router.post('/login', CustomerLogIn as any);
 
 //UPDATE BALANCE
 router.post('/update-balance', handlePayOSCallback as any);
+
+//FORGOT PASSWORD
+router.post('/forgot-password', ForgotPassword as any);
+
+//RESET PASSWORD
+router.post('/reset-password', ResetPassword as any);
+
 
 //AUTHENTICATION
 router.use(Authenticate as any);
@@ -48,6 +55,7 @@ router.post('/create-payment', createPayment as any);
 
 //GET MONEY
 // router.get('/get-money', testMoney as any);
+
 
 
 

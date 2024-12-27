@@ -369,16 +369,6 @@ export const AcceptCar = async (req: Request, res: Response) => {
     if (owner) owner.type = "owner";
     await owner?.save();
 
-    const wallet = await Wallet.findOne({ where: { customerID: ownerID } });
-
-    if (!wallet) {
-      //CREATE WALLET FOR OWNER
-      await Wallet.create({
-        customerID: ownerID,
-        balance: 0,
-      });
-    }
-
     try {
       await onSendAccepted(profileOwner?.email ?? "");
     } catch (error) {
@@ -526,11 +516,9 @@ export const sendEmailServiceAcceptedBookingOwner = async (
 
                     <ul>
                         <strong>Yêu cầu xác nhận:</strong>
-                        <li>Chụp ảnh CCCD của khách thuê xe và lưu trữ cẩn thận để phục vụ việc xác nhận hoàn thành thuê xe hoặc xử lý các trường hợp phát sinh.</li>
-                        <li>Vui lòng chuẩn xác minh CCCD của người thuê xe so với ứng dụng VNeID tại thời điểm nhận xe.</li>
+                        <li>Vui lòng xác minh CCCD của người thuê xe so với ứng dụng VNeID tại thời điểm nhận xe.</li>
+                        <li>Chụp ảnh CCCD của khách thuê xe và lưu trữ cẩn thận để phục vụ xử lý các trường hợp phát sinh.</li>
                     </ul>
-
-                    Sau khi hoàn tất việc xác minh và bàn giao xe, vui lòng báo cáo lại cho hệ thống CarLink để xác nhận rằng xe đã được giao thành công.<br><br/>
 
                     Nếu bạn có bất kỳ thắc mắc hoặc cần hỗ trợ, vui lòng liên hệ với chúng tôi qua email: ${process.env.EMAIL_USER} hoặc số điện thoại: ${process.env.PHONE_ADMIN}.<br><br/>
 
@@ -584,7 +572,7 @@ export const sendEmailServiceAcceptedBookingUser = async (
                     Chúng tôi vui mừng thông báo rằng đơn thuê xe của bạn đã được xác nhận thành công bởi admin CarLink. Dưới đây là thông tin chi tiết về đơn thuê xe:<br><br/>
 
                     <ul>
-                        <li><strong>ID booking của bạn là:</strong> ${bookingID}</li><li> hãy dùng nó để báo cáo khi hoàn thành chuyến!</li>
+                        <li><strong>ID booking của bạn là:</strong> ${bookingID}</li><li> hãy dùng nó để báo cáo nếu có chuyện phát sinh sau này!</li>
                         <strong>Thông tin xe:</strong>
                         <li><strong>Tên xe:</strong> ${profileOverview?.model}</li>
                         <li><strong>Chủ xe:</strong> ${profileOwner?.firstName} ${profileOwner?.lastName}</li>
@@ -669,7 +657,7 @@ export const AcceptBooking = async (bookingID: number) => {
     const ownerID = car?.customerID;
     const owner = await Customer.findByPk(ownerID);
 
-    if (booking) booking.bookingStatus = "booking";
+    if (booking) booking.bookingStatus = "paied";
 
     await booking?.save();
 

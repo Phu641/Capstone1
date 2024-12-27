@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { plainToClass } from "class-transformer";
 import { validate } from "class-validator";
+import axios from "axios";
+import schedule from "node-schedule";
 import {
   CreateCustomerInputs,
   UserLoginInputs,
@@ -39,6 +41,7 @@ const payOS = new PayOS(
 import express from "express";
 import bodyParser from "body-parser";
 import Decimal from "decimal.js";
+import { AcceptBooking } from "./AdminController";
 
 const app = express();
 app.use(bodyParser.json());
@@ -162,6 +165,95 @@ export const CustomerLogIn = async (
   return res.status(404).json("Sai email hoặc mật khẩu!");
 };
 
+
+//FORGOT
+export const ForgotPassword = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: "Vui lòng nhập email." });
+    }
+
+    // Kiểm tra email có tồn tại không
+    const customer = await Customer.findOne({ where: { email } });
+    if (!customer) {
+      return res.status(404).json({ message: "Email không tồn tại trong hệ thống." });
+    }
+
+    // Tạo mã OTP
+    const { OTP, otpExpiry } = GenerateOtp();
+
+    // Lưu mã OTP và thời gian hết hạn vào cơ sở dữ liệu
+    customer.OTP = OTP;
+    customer.otpExpiry = otpExpiry;
+    await customer.save();
+
+    // Gửi mã OTP qua email (sử dụng hàm sendEmailService)
+    const emailInfo = await sendEmailService(email, OTP);
+
+    return res.status(200).json({
+      message: "Mã OTP đã được gửi tới email của bạn. Vui lòng kiểm tra hộp thư.",
+      emailInfo, // Dùng để debug nếu cần
+    });
+  } catch (error) {
+    console.error("Lỗi quên mật khẩu:", error);
+    return res.status(500).json({
+      message: "Đã xảy ra lỗi trong quá trình xử lý. Vui lòng thử lại sau.",
+      error: error, // Debug lỗi
+    });
+  }
+};
+
+
+//RESET PASSWORD
+export const ResetPassword = async (req: Request, res: Response) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+
+    // 1. Kiểm tra thông tin đầu vào
+    if (!email || !otp || !newPassword) {
+      return res.status(400).json({ message: "Thiếu thông tin đầu vào (email/otp/newPassword)." });
+    }
+    if (typeof newPassword !== "string" || !newPassword.trim()) {
+      return res.status(400).json({ message: "Mật khẩu mới không hợp lệ." });
+    }
+
+    // 2. Tìm user theo email
+    const customer = await Customer.findOne({ where: { email } });
+    if (!customer) {
+      return res.status(404).json({ message: "Email không tồn tại trong hệ thống." });
+    }
+
+    // 3. Kiểm tra OTP còn hiệu lực
+    if (customer.OTP !== otp || new Date() > new Date(customer.otpExpiry)) {
+      return res.status(400).json({ message: "Mã OTP không hợp lệ hoặc đã hết hạn." });
+    }
+
+    // 4. Tạo salt mới
+    const salt = await GenerateSalt(); 
+    // hoặc có thể truyền rounds: await bcrypt.genSalt(10);
+    // hoặc nếu bạn muốn xài lại salt cũ thì: const salt = customer.salt; (ít khuyến khích về bảo mật)
+
+    // 5. Băm (hash) mật khẩu mới
+    const hashedPassword = await GeneratePassword(newPassword, salt);
+
+    // 6. Lưu thông tin mới vào DB
+    customer.password = hashedPassword;
+    customer.salt = salt;
+    await customer.save();
+
+    // 7. Phản hồi về client
+    return res.status(200).json({ message: "Mật khẩu đã được đặt lại thành công." });
+  } catch (error) {
+    console.error("Lỗi đặt lại mật khẩu:", error);
+    return res.status(500).json({ message: "Đã xảy ra lỗi. Vui lòng thử lại sau." });
+  }
+};
+
 //SEND EMAIL
 export const sendEmailService = async (email: string, OTP: number) => {
   const transporter = nodemailer.createTransport({
@@ -179,7 +271,7 @@ export const sendEmailService = async (email: string, OTP: number) => {
     to: email, // list of receivers
     subject: "SEND EMAIL", // Subject line
     text: "Reply on your request", // plain text body
-    html: `<div>Your OTP is: <b>${OTP}</b></div>`, // html body
+    html: `<div>Mã OTP của bạn là: <b>${OTP}</b></div>`, // html body
   });
 
   return info;
@@ -447,25 +539,64 @@ export const getAllCarsFavorite = async (
 //BOOK CAR
 export const BookCar = async (
   req: Request,
-  res: Response,
-  next: NextFunction
+  res: Response
 ) => {
   const user = req.user;
-  const { carID, bookingDate, untilDate, pricePerDay, days } = req.body;
+  const { carID, bookingDate, untilDate, pricePerDay, days, usePoints } = req.body;
 
   try {
+
+    const booking = await Booking.findOne({
+      where: {
+        carID: carID,
+        bookingStatus: 'pending'
+      }
+    });
+    
+    if(booking) return res.status(400).json('Xe này hiện đã có người thanh toán cọc nhanh hơn bạn một chút, hãy thử lại sau 5 phút nhé!');
+
+    //Discount
+    const baseAmount = pricePerDay * days;
+
+    const pointValue = 1000;
+    let discount = 0; 
+    let finalAmount = baseAmount;
+
+    const customer = await Customer.findByPk(user?.customerID);
+    if (!customer) {
+      return res.status(404).json("Không tìm thấy thông tin khách hàng!");
+    }
+
+    const availablePoints = customer.loyalPoint || 0;
+
+    // Người dùng muốn dùng 1 lượng điểm (usePoints)
+    if (usePoints && usePoints > 0) {
+      const pointsToRedeem = Math.min(availablePoints, usePoints);
+      discount = pointsToRedeem * pointValue;
+
+      // Nếu discount lớn hơn giá thuê thì giới hạn lại
+      if (discount > baseAmount) {
+        discount = baseAmount;
+      }
+      finalAmount = baseAmount - discount;
+
+      // Trừ điểm đã dùng của khách
+      const actualPointsUsed = Math.floor(discount / pointValue);
+      customer.loyalPoint = availablePoints - actualPointsUsed;
+      await customer.save();
+    }
+
     const car = await Car.findByPk(carID);
 
     if (car) {
       if (!car.booked) {
-        const totalAmount = pricePerDay * days;
 
         const booking = await Booking.create({
           customerID: user?.customerID,
           carID,
           bookingDate,
           untilDate,
-          totalAmount,
+          totalAmount: finalAmount,
           bookingStatus: "pending",
         });
 
@@ -480,14 +611,74 @@ export const BookCar = async (
 
 /**------------------------------PAYMENT SECTION------------------------------------------ */
 
-//TẠO YÊU CẦU THANH TOÁN QUA PAY OS
+// //TẠO YÊU CẦU THANH TOÁN QUA PAY OS
+// export const createPaymentPayos = async (
+//   amount: number,
+//   walletID: number,
+//   bookingID: number
+// ) => {
+//   try {
+//     const orderCode = Number(String(new Date().getTime()).slice(-6)); // bởi vì payos yêu cầu mã đơn hàng phải là số
+
+//     const paymentData = {
+//       orderCode,
+//       amount,
+//       description: "Thanh toán qua PayOS",
+//       returnUrl: "http://localhost:5173/", // Đảm bảo returnUrl được đặt đúng
+//       cancelUrl: "http://localhost:5173/", // Đảm bảo cancelUrl được đặt đúng
+//     };
+
+//     console.log("Payment Data:", paymentData); // Kiểm tra giá trị của paymentData
+
+//     // Gửi yêu cầu tạo thanh toán đến payOS
+//     const response = await payOS.createPaymentLink(paymentData);
+
+//     console.log("Full PayOS Response:", response); // Kiểm tra toàn bộ phản hồi
+
+//     if (response && (response as any).error) {
+//       const error = (response as any).error as { message: string };
+//       console.error("PayOS API Error:", error);
+//       throw new Error(`PayOS API Error: ${error.message}`);
+//     }
+
+//     if (response && response.checkoutUrl) {
+//       // Lưu thông tin giao dịch vào DB
+//       await Transaction.create({
+//         walletID: walletID,
+//         bookingID: bookingID,
+//         paycode: orderCode.toString(),
+//         amount,
+//         paymentMode: "Thẻ tín dụng",
+//         paymentResponse: "Đang chờ",
+//         status: "Đang thanh toán bằng PayOS",
+//         created_at: new Date(),
+//         updated_at: new Date(),
+//       });
+
+//       // Trả về URL thanh toán từ payOS
+//       return response.checkoutUrl;
+//     }
+
+//     throw new Error("Invalid PayOS response");
+//   } catch (error) {
+//     console.error("Error creating PayOS payment request:", error);
+
+//     if (error instanceof Error) {
+//       throw new Error(error.message);
+//     } else {
+//       throw new Error("An unexpected error occurred.");
+//     }
+//   }
+// };
+
+// TẠO YÊU CẦU THANH TOÁN QUA PAY OS
 export const createPaymentPayos = async (
   amount: number,
   walletID: number,
   bookingID: number
 ) => {
   try {
-    const orderCode = Number(String(new Date().getTime()).slice(-6)); // bởi vì payos yêu cầu mã đơn hàng phải là số
+    const orderCode = Number(String(new Date().getTime()).slice(-6)); // Mã đơn hàng là số
 
     const paymentData = {
       orderCode,
@@ -524,6 +715,29 @@ export const createPaymentPayos = async (
         updated_at: new Date(),
       });
 
+      // Bắt đầu bộ đếm thời gian 5 phút
+      setTimeout(async () => {
+        try {
+          console.log("5 phút đã trôi qua, đang hủy liên kết thanh toán...");
+
+          // Gọi API hủy liên kết thanh toán
+          await payOS.cancelPaymentLink(orderCode);
+
+          console.log("Đã hủy liên kết thanh toán thành công.");
+
+          // Cập nhật trạng thái giao dịch trong DB
+          await Transaction.update(
+            { status: "Hủy do hết hạn" },
+            { where: { paycode: orderCode.toString() } }
+          );
+
+          // Gửi thông báo tới client qua WebSocket hoặc cơ chế khác
+          // Ví dụ: emit sự kiện hoặc sử dụng REST API
+        } catch (cancelError) {
+          console.error("Lỗi khi hủy liên kết thanh toán:", cancelError);
+        }
+      }, 5 * 60 * 1000); // 5 * 60 * 1000ms = 5 phút
+
       // Trả về URL thanh toán từ payOS
       return response.checkoutUrl;
     }
@@ -539,6 +753,9 @@ export const createPaymentPayos = async (
     }
   }
 };
+
+
+
 
 //CREATE PAYMENT
 export const createPayment = async (req: Request, res: Response) => {
@@ -595,6 +812,8 @@ export const createPayment = async (req: Request, res: Response) => {
   }
 };
 
+
+
 // Cập nhật số dư của ví sau khi giao dịch thành công
 export const updateWallet = async (
   walletID: number,
@@ -643,12 +862,36 @@ export const handlePayOSCallback = async (req: Request, res: Response) => {
     });
 
     if (transaction) {
-      // Cập nhật số dư của ví tương ứng bằng hàm updateWallet
-      updateWallet(transaction.walletID, amount, orderCode);
 
-      //AcceptBooking(transaction.bookingID);
+      if(transaction.status === 'Phí dịch vụ ban đầu')  {
+
+        const wallet = await Wallet.findByPk(transaction.walletID);
+
+        const owner = await Customer.findOne({where: {customerID: wallet?.customerID}});
+
+        // Find car with pending payment and isAvailable is NULL
+        const car = await Car.findOne({
+          where: {
+            customerID: owner?.customerID,
+            isAvailable: null // Add the condition for isAvailable being NULL
+          }
+        });
+
+        if(car) car.isAvailable = false;
+
+        await car?.save();
+
+      } 
+      else if(transaction.status === 'Đang thanh toán bằng PayOS') {
+
+        await updateWallet(transaction.walletID, amount, orderCode);
+
+        await AcceptBooking(transaction.bookingID);
+
+      }
 
       return res.status(200).send("OK"); // Phản hồi thành công về cho PayOS
+
     } else {
       console.log("Transaction not found in database.");
       return res
@@ -665,4 +908,31 @@ export const handlePayOSCallback = async (req: Request, res: Response) => {
   }
 
   res.json();
+};
+
+
+//CANCEL
+export const cancelPayment = async (req: Request, res: Response) => {
+  const { paymentRequestId } = req.params;
+
+  if (!paymentRequestId) {
+    return res.status(400).json({ message: "Payment Request ID is required" });
+  }
+
+  try {
+    // Gọi hàm từ thư viện PayOS
+    const response = await payOS.cancelPaymentLink(paymentRequestId, 'Quá hạn thanh toán, vui lòng tạo gioa dịch mới!');
+
+    return res.status(200).json({
+      message: "Payment link successfully canceled",
+      data: response,
+    });
+  } catch (error) {
+    console.error("Error canceling payment link:", error);
+
+    // Xử lý lỗi từ PayOS
+    return res.status(500).json({
+      message: error|| "An error occurred",
+    });
+  }
 };
