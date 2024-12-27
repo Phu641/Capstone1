@@ -1,113 +1,95 @@
-.withdraw-approval-container {
+.withdraw-tables-container {
+  display: flex; /* Đặt các bảng trong cùng một hàng */
+  justify-content: space-between; /* Tạo khoảng cách đều giữa các bảng */
+  gap: 20px; /* Khoảng cách giữa hai bảng */
   padding: 20px;
   background-color: #f9f9f9;
-}
-
-.withdraw-approval-container h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.withdraw-tables-container {
-  display: flex;
-  gap: 20px;
-  justify-content: space-between;
+  border-radius: 8px;
 }
 
 .withdraw-table {
-  flex: 1;
-  background-color: #fff;
-  padding: 15px;
+  flex: 1; /* Đặt chiều rộng bảng linh hoạt */
+  min-width: 300px; /* Đặt chiều rộng tối thiểu để bảng không bị quá nhỏ */
+  background-color: white;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow-x: auto; /* Đảm bảo bảng không bị tràn màn hình */
 }
 
 .withdraw-table h3 {
-  margin-bottom: 15px;
-  color: #555;
+  text-align: center;
+  font-size: 1.2em;
+  margin: 10px 0;
+  color: #333;
 }
 
-.withdraw-requests-table {
+.withdraw-table table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.withdraw-requests-table th,
-.withdraw-requests-table td {
+.withdraw-table th,
+.withdraw-table td {
   border: 1px solid #ddd;
+  text-align: center;
   padding: 10px;
-  text-align: center;
 }
 
-.withdraw-requests-table th {
-  background-color: #f0f0f0;
-  color: #333;
+.withdraw-table th {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
 }
 
-.withdraw-requests-table tr:nth-child(even) {
-  background-color: #f9f9f9;
+.withdraw-table tr:nth-child(even) {
+  background-color: #f2f2f2;
 }
 
-.withdraw-requests-table tr:hover {
-  background-color: #f1f1f1;
+.withdraw-table tr:hover {
+  background-color: #d9edf7;
 }
 
-/* text OTP */
-.withdraw-requests-table input[type="text"] {
-  width: 100px; /* Tăng chiều rộng gấp đôi */
-  padding: 5px; /* Điều chỉnh kích thước padding */
-  text-align: center;
-  font-size: 0.9em; /* Giảm kích thước font */
+.withdraw-table td input[type="text"] {
+  padding: 5px;
+  width: 80%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
-/* button */
-.withdraw-requests-table button {
-  margin: 0 5px;
-  padding: 4px 6px;
+.withdraw-table td button {
+  padding: 5px 10px;
+  background-color: #28a745;
+  color: white;
   border: none;
   border-radius: 4px;
-  background-color: #007bff;
-  color: #fff;
   cursor: pointer;
-  font-size: 0.8em;
 }
 
-.withdraw-requests-table button:hover {
-  background-color: #0056b3;
+.withdraw-table td button:hover {
+  background-color: #218838;
 }
 
-.withdraw-requests-table button:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
+.withdraw-table th {
+  font-size: 12px; /* Giảm kích thước chữ */
+  font-weight: bold; /* Giữ chữ đậm */
+  text-align: center; /* Căn giữa văn bản */
+  padding: 8px; /* Điều chỉnh khoảng cách trong ô */
+  color: #333; /* Màu chữ */
+  background-color: #f4f4f4; /* Màu nền */
+  border-bottom: 2px solid #ddd; /* Đường viền dưới */
 }
 
-.pending-table {
-  flex-basis: 48%;
+.withdraw-table td button {
+  padding: 5px 8px; /* Giảm kích thước padding */
+  font-size: 12px; /* Kích thước chữ nhỏ hơn */
+  background-color: #28a745; /* Màu nền */
+  color: white; /* Màu chữ */
+  border: none; /* Bỏ viền mặc định */
+  border-radius: 4px; /* Bo góc */
+  cursor: pointer; /* Con trỏ khi hover */
 }
 
-.completed-table {
-  flex-basis: 48%;
-}
-
-.completed-table p {
-  text-align: center;
-  color: #777;
-}
-
-.completed-table .withdraw-requests-table {
-  background-color: #eef5ff;
-}
-
-.completed-table .withdraw-requests-table th {
-  background-color: #d7eaff;
-  color: #004080;
-}
-
-.completed-table .withdraw-requests-table tr:nth-child(even) {
-  background-color: #f0f8ff;
-}
-
-.completed-table .withdraw-requests-table tr:hover {
-  background-color: #d0e6ff;
+.withdraw-table td button:hover {
+  background-color: #218838; /* Màu nền khi hover */
 }

@@ -11,7 +11,7 @@ const Fieldset = ({ onImagesChange }) => {
       const updatedImages = [...images];
       updatedImages[index] = file;
       setImages(updatedImages);
-      
+
       const validImages = updatedImages.filter(img => img !== null);
       onImagesChange(validImages);
     }

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import "../styles/DashboardOwner.css";
-import { toast } from "react-toastify"; // Import React-Toastify
+import { toast } from "react-toastify";
 
 const DashboardOwner = () => {
   const [activePage, setActivePage] = useState("dashboard");
+  const navigate = useNavigate();
 
-  // Khai báo state để lưu dữ liệu từ API
   const [stats, setStats] = useState({
     totalCarOwner: 0,
     totalRentalsOwner: 0,
@@ -14,35 +14,16 @@ const DashboardOwner = () => {
     balanceOwner: 0,
   });
 
-  const [cars, setCars] = useState([]); // Thêm state cars để lưu dữ liệu xe
-  const [withdrawAmount, setWithdrawAmount] = useState(""); // Số tiền rút
-  const [withdrawRequests, setWithdrawRequests] = useState([]); // Danh sách yêu cầu rút tiền
-  const [lastWithdrawTime, setLastWithdrawTime] = useState(null); // Lưu thời gian yêu cầu rút tiền cuối cùng
-
-  const navigate = useNavigate(); // Khởi tạo navigate
-
-  const handleDashboardClick = () => {
-    setActivePage("dashboard");
-  };
-
-  const handleManageVehiclesClick = () => {
-    navigate("/manage-vehicles"); // Điều hướng đến trang Quản lý xe
-  };
-
-  const handleRentalRequestsClick = () => {
-    setActivePage("rentalRequests");
-  };
-
-  // Lấy token từ localStorage hoặc nơi bạn lưu trữ token
+  const [withdrawAmount, setWithdrawAmount] = useState("");
   const token = localStorage.getItem("token");
 
-  // Lấy dữ liệu xe từ API và tính tổng số xe đang cho thuê
+  // Lấy dữ liệu xe
   const fetchCarData = async () => {
     try {
       const response = await fetch("http://localhost:3000/owner/all-cars", {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${token}`, // Gửi token trong header
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -51,30 +32,47 @@ const DashboardOwner = () => {
       }
 
       const carData = await response.json();
-
-      if (Array.isArray(carData)) {
-        const totalCars = carData.filter((car) => car.isAvailable).length;
-        setStats((prevStats) => ({
-          ...prevStats,
-          totalCarOwner: totalCars,
-        }));
-
-        setCars(carData);
-      } else {
-        console.error("Dữ liệu trả về không phải là mảng:", carData);
-      }
+      setStats((prevStats) => ({
+        ...prevStats,
+        totalCarOwner: carData.filter((car) => car.isAvailable).length,
+      }));
     } catch (error) {
       console.error("Lỗi khi lấy dữ liệu Car:", error);
     }
   };
 
-  // Lấy số dư ví từ API và trích xuất số dư từ chuỗi
+  // Lấy doanh thu và số lượt thuê
+  const fetchStatistics = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/owner/statistics", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Không thể lấy dữ liệu thống kê từ server");
+      }
+
+      const data = await response.json();
+      setStats((prevStats) => ({
+        ...prevStats,
+        totalRentalsOwner: data.totalRentals,
+        revenueOwner: data.revenue,
+      }));
+    } catch (error) {
+      console.error("Lỗi khi lấy dữ liệu thống kê:", error);
+    }
+  };
+
+  // Lấy số dư
   const fetchBalance = async () => {
     try {
       const response = await fetch("http://localhost:3000/owner/view-balance", {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${token}`, // Gửi token trong header
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -82,17 +80,12 @@ const DashboardOwner = () => {
         throw new Error("Không thể lấy dữ liệu số dư từ server");
       }
 
-      const balanceData = await response.text(); // Lấy dữ liệu dưới dạng chuỗi
-
-      // Sử dụng biểu thức chính quy để trích xuất số dư từ chuỗi
+      const balanceData = await response.text();
       const balanceMatch = balanceData.match(/(\d+)\s*VND/);
-
       if (balanceMatch && balanceMatch[1]) {
-        // Nếu tìm thấy số dư trong chuỗi, cập nhật state
-        const balance = parseInt(balanceMatch[1], 10); // Chuyển đổi số dư sang kiểu number
         setStats((prevStats) => ({
           ...prevStats,
-          balanceOwner: balance, // Lưu giá trị số dư vào state
+          balanceOwner: parseInt(balanceMatch[1], 10),
         }));
       } else {
         console.error("Không thể trích xuất số dư từ chuỗi:", balanceData);
@@ -102,34 +95,10 @@ const DashboardOwner = () => {
     }
   };
 
-  // Lấy thời gian yêu cầu rút tiền cuối cùng từ API (nếu có)
-  const fetchLastWithdrawTime = async () => {
-    try {
-      const response = await fetch(
-        "http://localhost:3000/owner/last-withdraw-time",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`, // Gửi token trong header
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Không thể lấy thời gian yêu cầu rút tiền cuối cùng");
-      }
-
-      const data = await response.json();
-      setLastWithdrawTime(new Date(data.lastWithdrawTime)); // Lưu thời gian yêu cầu rút tiền cuối cùng
-    } catch (error) {
-      console.error("Lỗi khi lấy thời gian yêu cầu rút tiền:", error);
-    }
-  };
-
-  // Gửi yêu cầu rút tiền
+  // Xử lý rút tiền
   const handleWithdrawRequest = async () => {
     if (!withdrawAmount || withdrawAmount <= 0) {
-      alert("Vui lòng nhập số tiền hợp lệ");
+      toast.error("Vui lòng nhập số tiền hợp lệ");
       return;
     }
 
@@ -142,34 +111,28 @@ const DashboardOwner = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({
-            amount: withdrawAmount,
-          }),
+          body: JSON.stringify({ amount: withdrawAmount }),
         }
       );
 
       const data = await response.json();
 
       if (response.ok) {
-        toast.success(data.message); // Hiển thị toast thành công
-        setWithdrawRequests((prevRequests) => [
-          ...prevRequests,
-          data.newRequest,
-        ]);
-        setWithdrawAmount(""); // Reset số tiền sau khi gửi yêu cầu
+        toast.success(data.message);
+        setWithdrawAmount("");
       } else {
-        toast.error(data.message || "Đã xảy ra lỗi khi gửi yêu cầu rút tiền"); // Hiển thị toast thất bại
+        toast.error(data.message || "Đã xảy ra lỗi khi gửi yêu cầu rút tiền");
       }
     } catch (error) {
       console.error("Lỗi khi gửi yêu cầu rút tiền:", error);
-      toast.error("Đã xảy ra lỗi khi gửi yêu cầu rút tiền"); // Hiển thị toast thất bại
+      toast.error("Đã xảy ra lỗi khi gửi yêu cầu rút tiền");
     }
   };
 
   useEffect(() => {
     fetchCarData();
-    fetchBalance(); // Gọi hàm lấy số dư khi component mount
-    fetchLastWithdrawTime(); // Lấy thời gian yêu cầu rút tiền cuối cùng khi component mount
+    fetchStatistics();
+    fetchBalance();
   }, []);
 
   return (
@@ -178,30 +141,35 @@ const DashboardOwner = () => {
         <ul>
           <li
             className={activePage === "dashboard" ? "active" : ""}
-            onClick={handleDashboardClick}
+            onClick={() => navigate("/DashboardOwner")}
           >
             Dashboard
           </li>
           <li
             className={activePage === "manageVehicles" ? "active" : ""}
-            onClick={handleManageVehiclesClick}
+            onClick={() => navigate("/manage-vehicles")}
           >
             Quản lý xe
           </li>
-          {/* <li
-            className={activePage === "rentalRequests" ? "active" : ""}
-            onClick={handleRentalRequestsClick}
+          <li
+            className={activePage === "browseRentals" ? "active" : ""}
+            onClick={() => navigate("/browse-rentals")}
           >
-            Yêu cầu thuê xe
-          </li> */}
+            Duyệt thuê xe
+          </li>
+          <li
+            className={activePage === "rentalHistory" ? "active" : ""}
+            onClick={() => navigate("/rental-history")}
+          >
+            Lịch sử thuê xe
+          </li>
         </ul>
       </div>
-
       <div className="main-content">
         {activePage === "dashboard" && (
           <div className="dashboard-stats">
             <div className="stat-card">
-              <h3>Tổng số xe đang cho thuê trên CarLink</h3>
+              <h3>Tổng số xe đang cho thuê</h3>
               <p>{stats.totalCarOwner}</p>
             </div>
             <div className="stat-card">
@@ -210,31 +178,16 @@ const DashboardOwner = () => {
             </div>
             <div className="stat-card">
               <h3>Doanh thu tháng</h3>
-              <p>{stats.revenueOwner.toLocaleString("vi-VN")} VND</p>{" "}
-              {/* Định dạng doanh thu */}
+              <p>{stats.revenueOwner.toLocaleString("vi-VN")} VND</p>
             </div>
             <div className="stat-card">
               <h3>Số dư trong ví</h3>
-              <p>{stats.balanceOwner.toLocaleString("vi-VN")} VND</p>{" "}
-              {/* Định dạng số dư */}
+              <p>{stats.balanceOwner.toLocaleString("vi-VN")} VND</p>
             </div>
           </div>
         )}
 
-        {activePage === "manageVehicles" && (
-          <div className="manage-vehicles">
-            <h3>Quản lý xe (Chức năng này hiện tại không có nội dung)</h3>
-          </div>
-        )}
-
-        {activePage === "rentalRequests" && (
-          <div className="rental-requests">
-            <h3>Danh sách yêu cầu thuê xe</h3>
-            {/* Hiển thị danh sách yêu cầu thuê xe tại đây */}
-          </div>
-        )}
-
-        {/* Thêm phần rút tiền */}
+        {/* Phần Rút Tiền */}
         <div className="withdraw-section">
           <h3>Yêu cầu rút tiền</h3>
           <div>

@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUpload } from "@fortawesome/free-solid-svg-icons"; // Import biểu tượng
+import "react-toastify/dist/ReactToastify.css";
 import "../styles/UpdateVehiclePage.css";
 
 const UpdateVehiclePage = () => {
-  const { carID } = useParams(); // Lấy carID từ URL
+  const { carID } = useParams();
   const navigate = useNavigate();
   const [car, setCar] = useState(null);
   const [updatedCar, setUpdatedCar] = useState({});
-  const [selectedFiles, setSelectedFiles] = useState([]); // State cho ảnh và video được chọn
-  const [previewMedia, setPreviewMedia] = useState([]); // State để lưu trữ các ảnh và video đã chọn
-
-  // Lấy token từ localStorage
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [previewMedia, setPreviewMedia] = useState([]);
   const token = localStorage.getItem("token");
 
-  // Lấy dữ liệu xe từ API để chỉnh sửa
   useEffect(() => {
     const fetchCarData = async () => {
       try {
@@ -42,37 +43,66 @@ const UpdateVehiclePage = () => {
           description: carToEdit?.overview.description,
         });
       } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu xe:", error);
+        toast.error("Lỗi khi lấy dữ liệu xe: " + error.message);
       }
     };
 
     fetchCarData();
   }, [carID, token]);
 
-  // Hàm xử lý thay đổi thông tin trong form
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
+    if (name === "pricePerDay") {
+      const newPrice = parseFloat(value);
+      const originalPrice = car?.overview?.pricePerDay;
+
+      if (newPrice > originalPrice * 1.3) {
+        toast.error("Giá thuê không được tăng quá 30% so với giá ban đầu!");
+        return;
+      }
+
+      if (newPrice < 0) {
+        toast.error("Giá thuê mỗi ngày không được phép là số âm!");
+        return;
+      }
+    }
+
     setUpdatedCar((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
 
-  // Hàm xử lý khi chọn ảnh và video
   const handleFileChange = (e) => {
-    const files = e.target.files;
-    setSelectedFiles(files);
+    const files = Array.from(e.target.files);
 
-    // Tạo các URL xem trước cho ảnh và video
-    const fileArray = Array.from(files).map((file) => ({
+    const images = files.filter((file) => file.type.startsWith("image"));
+    const videos = files.filter((file) => file.type.startsWith("video"));
+
+    if (images.length !== 4 || videos.length !== 1) {
+      toast.error("Vui lòng tải lên đủ 4 ảnh và 1 video!");
+      return;
+    }
+
+    const sortedFiles = [...images, ...videos];
+    setSelectedFiles(sortedFiles);
+
+    const fileArray = sortedFiles.map((file) => ({
       url: URL.createObjectURL(file),
       type: file.type.startsWith("video") ? "video" : "image",
     }));
+
     setPreviewMedia(fileArray);
+    toast.success("Đã tải lên thành công!");
   };
 
-  // Hàm gửi yêu cầu cập nhật thông tin xe
   const handleSaveChanges = async () => {
+    if (selectedFiles.length !== 5) {
+      toast.error("Ảnh và video xe yêu cầu 4 ảnh và 1 video!");
+      return;
+    }
+
     try {
       const formData = new FormData();
       formData.append("carID", car.carID);
@@ -80,11 +110,8 @@ const UpdateVehiclePage = () => {
       formData.append("pricePerDay", updatedCar.pricePerDay);
       formData.append("address", updatedCar.address);
       formData.append("description", updatedCar.description);
-      if (selectedFiles) {
-        for (let i = 0; i < selectedFiles.length; i++) {
-          formData.append("images", selectedFiles[i]);
-        }
-      }
+
+      selectedFiles.forEach((file) => formData.append("images", file));
 
       const response = await fetch(`http://localhost:3000/owner/update-car`, {
         method: "PUT",
@@ -95,13 +122,18 @@ const UpdateVehiclePage = () => {
       });
 
       if (response.ok) {
-        navigate("/manage-vehicles"); // Điều hướng quay lại trang danh sách xe
+        toast.success("Cập nhật xe thành công, tự động trở về sau 2 giây!");
+        setTimeout(() => navigate("/manage-vehicles"), 2000);
       } else {
-        console.error("Cập nhật xe không thành công");
+        toast.error("Cập nhật xe không thành công");
       }
     } catch (error) {
-      console.error("Lỗi khi cập nhật thông tin xe:", error);
+      toast.error("Lỗi khi cập nhật thông tin xe: " + error.message);
     }
+  };
+
+  const handleCancel = () => {
+    navigate("/manage-vehicles"); // Điều hướng về trang quản lý xe
   };
 
   if (!car) {
@@ -110,7 +142,12 @@ const UpdateVehiclePage = () => {
 
   return (
     <div className="edit-form-container">
-      <h3>Chỉnh sửa thông tin xe</h3>
+      <ToastContainer
+        closeButton={false}
+        position="top-right"
+        autoClose={3000}
+      />
+      <h3>Cập nhật thông tin xe của bạn</h3>
       <form>
         <div>
           <label>Tên xe:</label>
@@ -122,12 +159,13 @@ const UpdateVehiclePage = () => {
           />
         </div>
         <div>
-          <label>Giá thuê mỗi ngày (VND):</label>
+          <label>Giá thuê một ngày (VND):</label>
           <input
             type="number"
             name="pricePerDay"
             value={updatedCar.pricePerDay}
             onChange={handleInputChange}
+            min="0"
           />
         </div>
         <div>
@@ -149,12 +187,23 @@ const UpdateVehiclePage = () => {
         </div>
         <div>
           <label>Ảnh và video xe:</label>
-          <input
-            type="file"
-            multiple
-            accept="image/*,video/*"
-            onChange={handleFileChange}
-          />
+          <div>
+            <button
+              type="button"
+              onClick={() => document.getElementById("fileInput").click()}
+              className="upload-button"
+            >
+              <FontAwesomeIcon icon={faUpload} /> Tải lên ảnh và video
+            </button>
+            <input
+              type="file"
+              id="fileInput"
+              multiple
+              accept="image/*,video/*"
+              onChange={handleFileChange}
+              style={{ display: "none" }}
+            />
+          </div>
           <div className="preview-media">
             {previewMedia.map((media, index) =>
               media.type === "image" ? (
@@ -175,9 +224,26 @@ const UpdateVehiclePage = () => {
             )}
           </div>
         </div>
-        <button type="button" onClick={handleSaveChanges}>
-          Lưu thay đổi
-        </button>
+        <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
+          <button type="button" onClick={handleSaveChanges}>
+            Lưu thay đổi
+          </button>
+          <button
+            type="button"
+            onClick={handleCancel}
+            style={{
+              backgroundColor: "#dc3545",
+              color: "#fff",
+              padding: "10px",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+              fontSize: "16px",
+            }}
+          >
+            Hủy bỏ
+          </button>
+        </div>
       </form>
     </div>
   );

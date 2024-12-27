@@ -174,10 +174,7 @@ export const GetCarsByOwner = async (req: Request, res: Response) => {
 };
 
 // UPDATE CAR
-export const UpdateCar = async (
-  req: Request,
-  res: Response
-) => {
+export const UpdateCar = async (req: Request, res: Response) => {
   const user = req.user;
 
   if (user) {
@@ -281,10 +278,7 @@ export const UpdateCar = async (
 };
 
 //STOP SERVICE
-export const StopService = async (
-  req: Request,
-  res: Response
-) => {
+export const StopService = async (req: Request, res: Response) => {
   try {
     const user = req.user;
 
@@ -302,7 +296,12 @@ export const StopService = async (
     if (!car)
       return res.status(404).json({ message: "Không tìm thấy xe với ID này." });
 
-    if(car.booked) return res.status(404).json('Không thể tạm dừng dịch vụ của xe này bởi vì xe của bạn đang trong quá trình cho thuê!');
+    if (car.booked)
+      return res
+        .status(404)
+        .json(
+          "Không thể tạm dừng dịch vụ của xe này bởi vì xe của bạn đang trong quá trình cho thuê!"
+        );
 
     car.booked = true;
 
@@ -316,10 +315,7 @@ export const StopService = async (
 };
 
 //START SERVICE
-export const StartService = async (
-  req: Request,
-  res: Response
-) => {
+export const StartService = async (req: Request, res: Response) => {
   try {
     const user = req.user;
 
@@ -349,10 +345,7 @@ export const StartService = async (
 };
 
 //SUBMIT REPORT
-export const SubmitReport = async (
-  req: Request,
-  res: Response
-) => {
+export const SubmitReport = async (req: Request, res: Response) => {
   const user = req.user; // Lấy thông tin user từ middleware xác thực
   const { bookingID, validate, idCard, description, returnDate } = req.body;
 
@@ -559,35 +552,67 @@ export const CreateWithdrawalRequest = async (req: Request, res: Response) => {
 deleteExpiredWithdrawRequests();
 
 //ALL BOOKING
-export const GetAllBookingsForOwner = async(req: Request, res: Response) => {
-
+export const GetAllBookingsForOwner = async (req: Request, res: Response) => {
   try {
+    const bookings = await Booking.findAll();
 
-      const bookings = await Booking.findAll();
-
-      if(bookings) return res.status(200).json(bookings);
-
-      
+    if (bookings) return res.status(200).json(bookings);
   } catch (error) {
-      console.log(error);
+    console.log(error);
   }
+};
 
-}
-
-//ALL PENDING BOOKING
-export const GetAllPendingBookingsForOwner = async (req: Request, res: Response, next: NextFunction) => {
+export const GetAllPendingBookingsForOwner = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    // Lấy tất cả các booking có trạng thái "pending" và include thông tin liên quan
+    // Lấy tất cả các booking có trạng thái "paied" và include thông tin liên quan
     const bookings = await Booking.findAll({
-      where: { bookingStatus: 'pending' },
+      where: { bookingStatus: "paied" },
       include: [
         {
           model: Car,
-          as: 'cars', // Tên alias theo model Booking
+          as: "cars", // Tên alias theo model Booking
           include: [
             {
               model: Overview,
-              as: 'overview', // Tên alias theo model Car
+              as: "overview", // Tên alias theo model Car
+            },
+          ],
+        },
+      ],
+    });
+
+    if (bookings) {
+      return res.status(200).json(bookings);
+    } else {
+      return res.status(404).json({ message: "No pending bookings found." });
+    }
+  } catch (error) {
+    console.error("Error fetching bookings:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+//ALL PENDING BOOKING
+export const GetAllBookingBookingsForOwner = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    // Lấy tất cả các booking có trạng thái "booking" và include thông tin liên quan
+    const bookings = await Booking.findAll({
+      where: { bookingStatus: "booking" },
+      include: [
+        {
+          model: Car,
+          as: "cars", // Tên alias theo model Booking
+          include: [
+            {
+              model: Overview,
+              as: "overview", // Tên alias theo model Car
             },
           ],
         },
@@ -605,92 +630,86 @@ export const GetAllPendingBookingsForOwner = async (req: Request, res: Response,
   }
 };
 
-//ALL PENDING BOOKING
-export const GetAllBookingBookingsForOwner = async(req: Request, res: Response) => {
-
-  try {
-
-      const bookings = await Booking.findAll({where: {bookingStatus: 'booking'}});
-
-      if(bookings) return res.status(200).json(bookings);
-
-      
-  } catch (error) {
-      console.log(error);
-  }
-
-}
-
 //ALL BOOKING COMPLETE
-export const GetAllCompleltedBookings = async(req: Request, res: Response, next: NextFunction) => {
-
+export const GetAllCompleltedBookings = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
+    // Lấy tất cả các booking có trạng thái "completed" và include thông tin liên quan
+    const bookings = await Booking.findAll({
+      where: { bookingStatus: "completed" },
+      include: [
+        {
+          model: Car,
+          as: "cars", // Tên alias theo model Booking
+          include: [
+            {
+              model: Overview,
+              as: "overview", // Tên alias theo model Car
+            },
+          ],
+        },
+      ],
+    });
 
-      const bookings = await Booking.findAll({where: {bookingStatus: 'completed'}});
-
-      if(bookings) return res.status(200).json(bookings);
-
-      
+    if (bookings) {
+      return res.status(200).json(bookings);
+    } else {
+      return res.status(404).json({ message: "No completed bookings found." });
+    }
   } catch (error) {
-      console.log(error);
+    console.error("Error fetching bookings:", error);
+    return res.status(500).json({ error: "Internal server error" });
   }
-
-}
-
+};
 
 //ACCEPT BOOKING
-export const AcceptBookingForOwner = async(req: Request, res: Response) => {
+export const AcceptBookingForOwner = async (req: Request, res: Response) => {
+  const user = req.user;
 
-    const user = req.user;
+  if (user) {
+    try {
+      const { bookingID } = req.body;
+      const booking = await Booking.findByPk(bookingID);
 
-    if(user) {
+      const car = await Car.findByPk(booking?.carID);
 
-      try {
-        
-        const bookingID = req.body;
-        const booking = await Booking.findByPk(bookingID);
+      if (booking) booking.bookingStatus = "booking";
 
-        const carID = booking?.carID;
-        const car = await Car.findByPk(carID);
+      await booking?.save();
 
-        if(booking) booking.bookingStatus = 'booking';
+      if (car) car.booked = true;
+      console.log(car);
 
-        await booking?.save();
+      await car?.save();
 
-        if(car) car.booked = true;
-        console.log(car);
-
-        await car?.save();
-
-        return res.status(200).json('Quá trình thuê xe đã được duyệt!');
-
-      } catch (error) {
-
-          console.log(error);
-
-      }
-
-    } else return res.status(500).json('Bạn chưa đăng nhập!');
-
-}
+      return res.status(200).json("Quá trình thuê xe đã được duyệt!");
+    } catch (error) {
+      console.log(error);
+    }
+  } else return res.status(500).json("Bạn chưa đăng nhập!");
+};
 
 //USER SERVICE EMAIL
-export const sendEmailServiceThankYouUser = async (email: string, bookingID: number) => {
-
+export const sendEmailServiceThankYouUser = async (
+  email: string,
+  bookingID: number
+) => {
   const profileBooking = await Booking.findByPk(bookingID);
 
-  const profileUser = await Customer.findByPk(profileBooking?.customerID); 
+  const profileUser = await Customer.findByPk(profileBooking?.customerID);
 
   const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false, // true for port 465, false for other ports
-      auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASSWORD,
-      },
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false, // true for port 465, false for other ports
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD,
+    },
   });
-
 
   const info = await transporter.sendMail({
     from: '"CAR LINK" <carlinkwebsite@gmail.com>', // sender address
@@ -711,26 +730,24 @@ export const sendEmailServiceThankYouUser = async (email: string, bookingID: num
             Đội ngũ CarLink</p>
         </div>`, // html body
   });
-  
 
   return info;
-
-}
+};
 
 //SEND MAIL TO USER TO NOTIFY
 export const MailThankYouUser = async (email: string, bookingID: number) => {
-    try {
-        const profile = await Customer.findOne({ where: { email } });
-        if (profile) {
-            await sendEmailServiceThankYouUser(profile.email, bookingID);
-            return 'Thông tin chấp nhận đã được gửi đến email của bạn!';
-        }
-        return 'Email không tồn tại trong hệ thống!';
-    } catch (error) {
-        console.log(error);
-        throw new Error('Có lỗi xảy ra khi gửi email!');
+  try {
+    const profile = await Customer.findOne({ where: { email } });
+    if (profile) {
+      await sendEmailServiceThankYouUser(profile.email, bookingID);
+      return "Thông tin chấp nhận đã được gửi đến email của bạn!";
     }
-}
+    return "Email không tồn tại trong hệ thống!";
+  } catch (error) {
+    console.log(error);
+    throw new Error("Có lỗi xảy ra khi gửi email!");
+  }
+};
 
 //COMPLETE BOOKING
 // export const ConfirmCompletedBookingForOwner = async(req: Request, res: Response) => {
@@ -942,4 +959,4 @@ export const createPaymentPayosForOwner = async (
       throw new Error("An unexpected error occurred.");
     }
   }
-};
+}

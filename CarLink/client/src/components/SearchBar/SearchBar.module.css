@@ -1,4 +1,3 @@
-
 /* Các phần đã có của SearchBar */
 .searchBar {
   z-index: 50;
@@ -10,7 +9,8 @@
   box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.08);
   max-width: 1100px;
   margin: auto;
-  position: relative; /* Để danh sách gợi ý nằm trong khối này */
+  position: relative;
+  /* Để danh sách gợi ý nằm trong khối này */
 }
 
 .inputContainer {
@@ -25,11 +25,12 @@
 
 .inputContainer:first-child {
   width: 50%;
-  position: relative; /* Để danh sách gợi ý nằm trong khối này */
+  position: relative;
+  /* Để danh sách gợi ý nằm trong khối này */
 }
 
-.inputContainer:first-child >input{
- width: 100%;
+.inputContainer:first-child>input {
+  width: 100%;
 }
 
 .inputContainer:nth-child(2) {
@@ -101,10 +102,11 @@
 }
 
 .suggestions .locationIcon {
-  width: 16px; /* Đặt kích thước cố định */
+  width: 16px;
+  /* Đặt kích thước cố định */
   height: 16px;
   color: #1877f2;
   margin-right: 8px;
-  flex-shrink: 0; /* Ngăn icon bị thu nhỏ */
+  flex-shrink: 0;
+  /* Ngăn icon bị thu nhỏ */
 }
-
