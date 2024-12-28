@@ -121,8 +121,7 @@ export const CustomerSignUp = async (
 //CUSTOMER LOG IN
 export const CustomerLogIn = async (
   req: Request,
-  res: Response,
-  next: NextFunction
+  res: Response
 ) => {
   const loginInputs = plainToClass(UserLoginInputs, req.body);
 
@@ -535,6 +534,23 @@ export const getAllCarsFavorite = async (
 };
 
 /**------------------------------BOOKING SECTION------------------------------------------ */
+
+//GET LOYAL POINT
+export const GetLoyalPoints = async(req: Request, res: Response) => {
+
+  const user = req.user;
+
+  if(user) {
+
+    const customer = await Customer.findByPk(user.customerID);
+
+    const result = customer?.loyalPoint;
+
+    return res.status(200).json(result);
+
+  } else return res.status(500).json('Người dùng chưa đăng nhập!');
+
+}
 
 //BOOK CAR
 export const BookCar = async (

@@ -1,5 +1,5 @@
 import express from 'express';
-import { CustomerLogIn, CustomerSignUp, CustomerVerify, EditCustomerProfile, GetCustomerProfile, onRequestOTP, GetCurrentRole, addToFavorite, getAllCarsFavorite, BookCar, createPayment, handlePayOSCallback, cancelPayment, ForgotPassword, ResetPassword} from '../controllers';
+import { CustomerLogIn, CustomerSignUp, CustomerVerify, EditCustomerProfile, GetCustomerProfile, onRequestOTP, GetCurrentRole, addToFavorite, getAllCarsFavorite, BookCar, createPayment, handlePayOSCallback, cancelPayment, ForgotPassword, ResetPassword, GetLoyalPoints} from '../controllers';
 import { Authenticate } from '../middlewares';
 
 const router = express.Router();
@@ -25,6 +25,9 @@ router.post('/reset-password', ResetPassword as any);
 
 //AUTHENTICATION
 router.use(Authenticate as any);
+
+//GET LOYAL POINT
+router.get('/loyal-points', GetLoyalPoints as any);
 
 //GET OTP
 router.get('/otp', onRequestOTP as any);
