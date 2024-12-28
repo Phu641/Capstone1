@@ -127,6 +127,7 @@ const AddCarForm = () => {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Người dùng chưa được uỷ quyền");
 
+      // Gửi thông tin đăng xe
       const formDataToSend = new FormData();
       Object.keys(formData).forEach((key) => {
         if (key === "photos") {
@@ -149,8 +150,24 @@ const AddCarForm = () => {
       if (!response.ok) throw new Error("Gửi thông tin thất bại.");
       toast.success("Thông tin của bạn đã được gửi");
 
+      // Sau khi đăng xe thành công, gọi API tạo thanh toán
+      const paymentResponse = await fetch("http://localhost:3000/owner/create-payment", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!paymentResponse.ok) throw new Error("Tạo thanh toán thất bại.");
+
+      const paymentData = await paymentResponse.json();
+      if (paymentData.payUrl) {
+        toast.success("Đang chuyển hướng tới trang thanh toán...");
+        window.location.href = paymentData.payUrl; // Chuyển hướng tới trang thanh toán
+      } else {
+        throw new Error("Không nhận được URL thanh toán.");
+      }
+
     } catch (error) {
-      toast.error(data.message || "Gửi thông tin thất bại.");
+      toast.error(error.message || "Gửi thông tin thất bại.");
     } finally {
       setIsSubmitting(false);
     }
