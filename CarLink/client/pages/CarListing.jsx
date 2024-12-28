@@ -4,6 +4,7 @@ import Sidebar from "../src/components/UI/siderBar";
 import CarItem from "../src/components/UI/CarItem";
 import SearchBar from "../src/components/SearchBar/SearchBar";
 import { useLocation } from "react-router-dom";
+import "../styles/CarListing.css";
 
 const CarListing = () => {
   const [cars, setCars] = useState([]);
@@ -11,25 +12,27 @@ const CarListing = () => {
   const [filters, setFilters] = useState({ type: "", capacity: 0, priceRange: [0, 10000000] });
   const [sortOrder, setSortOrder] = useState("");
   const location = useLocation();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
-    const place = queryParams.get("location");  
+    const place = queryParams.get("location");
     const startDate = queryParams.get("startDate");
     const endDate = queryParams.get("endDate");
-    
+
     const fetchCars = async () => {
       try {
         const url = place
-          ? "http://localhost:3000/searching/cars-by-location"
-          : "http://localhost:3000/searching/cars";
+          ? `http://localhost:3000/searching/cars-by-location`
+          : `http://localhost:3000/searching/cars?page=${currentPage}&limit=8`;
 
         const options = place
           ? {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ address: place, startDate, endDate }),
-            }
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ address: place, startDate, endDate }),
+          }
           : { method: "GET" };
 
         const response = await fetch(url, options);
@@ -39,21 +42,21 @@ const CarListing = () => {
         }
 
         const data = await response.json();
-
-        // Nếu dữ liệu trả về trực tiếp là mảng
         const carsData = Array.isArray(data) ? data : data.data || [];
         const validCars = carsData.filter((car) => car && car.carID && car.overview);
 
+        // Cập nhật totalPages nếu API trả về
+        setTotalPages(data.totalPages || 1);
         setCars(validCars);
         setFilteredCars(validCars);
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu xe:", error);
-        setFilteredCars([]); // Xóa danh sách xe nếu lỗi
+        setFilteredCars([]);
       }
     };
 
     fetchCars();
-  }, [location.search])
+  }, [location.search, currentPage]);
 
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
@@ -87,7 +90,7 @@ const CarListing = () => {
       const priceA = parseFloat(a.overview.pricePerDay);
       const priceB = parseFloat(b.overview.pricePerDay);
 
-      if (isNaN(priceA) || isNaN(priceB)) return 0;  
+      if (isNaN(priceA) || isNaN(priceB)) return 0;
 
       return order === "low"
         ? priceA - priceB
@@ -95,6 +98,11 @@ const CarListing = () => {
     });
 
     setFilteredCars(sorted);
+  };
+
+  const handlePageChange = (page) => {
+    if (page < 1 || page > totalPages) return;
+    setCurrentPage(page);
   };
 
   return (
@@ -154,6 +162,17 @@ const CarListing = () => {
                 <p style={{ textAlign: "center", width: "100%" }}>Không có xe được tìm thấy</p>
               )}
             </Row>
+            <div className="pagination">
+              <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+                Trước
+              </button>
+              <span className="pagination__number-page">
+                Trang {currentPage} / {totalPages}
+              </span>
+              <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+                Sau
+              </button>
+            </div>
           </Col>
         </Row>
       </Container>
