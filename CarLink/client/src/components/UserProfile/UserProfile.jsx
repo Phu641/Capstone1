@@ -4,7 +4,8 @@ import "./UserProfile.css";
 
 const UserProfile = () => {
   const [userInfo, setUserInfo] = useState(null);
-  const navigate = useNavigate(); 
+  const [loyalPoints, setLoyalPoints] = useState(null); // Thêm state cho loyal points
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -27,10 +28,34 @@ const UserProfile = () => {
       }
     };
 
+    const fetchLoyalPoints = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(
+          "http://localhost:3000/customer/loyal-points",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setLoyalPoints(data); // Lưu số loyal points vào state
+        } else {
+          throw new Error("Failed to fetch loyal points");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     fetchUserProfile();
+    fetchLoyalPoints(); // Gọi thêm API để lấy loyal points
   }, []);
 
-  if (!userInfo) {
+  if (!userInfo || loyalPoints === null) {
     return <div className="loading">Đang tải...</div>;
   }
 
@@ -40,7 +65,7 @@ const UserProfile = () => {
       : "******";
 
   const handleEditClick = () => {
-    navigate("/edit-profile"); 
+    navigate("/edit-profile");
   };
 
   return (
@@ -62,6 +87,9 @@ const UserProfile = () => {
         <p>
           <strong>Mật khẩu:</strong> {maskedPassword}
         </p>
+        <p>
+          <strong>Điểm thưởng:</strong> {loyalPoints}
+        </p>
         <button className="edit-button" onClick={handleEditClick}>
           Chỉnh sửa
         </button>
@@ -70,4 +98,4 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default UserProfile
