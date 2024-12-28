@@ -175,7 +175,7 @@ const AddCarForm = () => {
           name="type"
           value={formData.type}
           onChange={handleChange}
-          options={["Sport", "SUV", "MPV", "Sedan", "Coupe", "Hatchback"]}
+          options={["Sport", "Suv", "Mpv", "Sedan", "Coupe", "Hatchback"]}
         />
         <FormField
           label="Năm sản xuất (*)"

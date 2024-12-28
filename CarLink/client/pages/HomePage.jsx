@@ -17,7 +17,7 @@ const HomePage = () => {
       try {
         const response = await axios.get("http://localhost:3000/searching/cars");
         if (response.status === 200) {
-          const data = response.data.map((car) => ({
+          const data = response.data.data.map((car) => ({
             id: car.carID,
             carName: car.overview.model || "Unknown Model",
             price: car.overview.pricePerDay || "N/A",
@@ -41,6 +41,7 @@ const HomePage = () => {
 
     fetchCars();
   }, []);
+
   return (
     <div className="App">
       <div>
@@ -52,19 +53,19 @@ const HomePage = () => {
           <Container>
             <h2 style={{ color: '#333' }} className="section-title text-center mb-1">Danh sách xe nổi bật</h2>
             <Row>
-            <a
-              href="/Cars"
-              style={{
-                cursor: 'pointer',
-                textAlign: 'end',
-                marginTop: '10px',
-                textDecoration: 'underline',
-                color: '#007bff', 
-                fontWeight: 'bold'
-              }}
-            >
-              Xem thêm
-            </a>
+              <a
+                href="/Cars"
+                style={{
+                  cursor: 'pointer',
+                  textAlign: 'end',
+                  marginTop: '10px',
+                  textDecoration: 'underline',
+                  color: '#007bff', 
+                  fontWeight: 'bold'
+                }}
+              >
+                Xem thêm
+              </a>
             </Row>
             <Row className="mt-3">
               {filteredCars.length > 0 ? (
@@ -88,9 +89,8 @@ const HomePage = () => {
         <Contact/>
         <GetStarted/> */}
       {/* <Footer/> */}
-    </div >
+    </div>
   );
-
-}
+};
 
 export default HomePage;

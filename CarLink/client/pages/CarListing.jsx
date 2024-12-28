@@ -14,70 +14,85 @@ const CarListing = () => {
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
-    const place = queryParams.get("location");
-    const startDate = new Date(queryParams.get("startDate"));
-    const endDate = new Date(queryParams.get("endDate"));
-
+    const place = queryParams.get("location");  
+    const startDate = queryParams.get("startDate");
+    const endDate = queryParams.get("endDate");
+    
     const fetchCars = async () => {
       try {
-        let url = "http://localhost:3000/searching/cars";
-        if (place) {
-          url = "http://localhost:3000/searching/cars-by-location";
-        }
+        const url = place
+          ? "http://localhost:3000/searching/cars-by-location"
+          : "http://localhost:3000/searching/cars";
 
-        const response = await fetch(url, {
-          method: place ? "POST" : "GET",
-          headers: { "Content-Type": "application/json" },
-          body: place ? JSON.stringify({ address: place }) : undefined,
-        });
+        const options = place
+          ? {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ address: place, startDate, endDate }),
+            }
+          : { method: "GET" };
+
+        const response = await fetch(url, options);
 
         if (!response.ok) {
-          setFilteredCars([]);
-          return;
+          throw new Error("Failed to fetch cars");
         }
 
         const data = await response.json();
-        setCars(data);
-        setFilteredCars(data);
+
+        // Nếu dữ liệu trả về trực tiếp là mảng
+        const carsData = Array.isArray(data) ? data : data.data || [];
+        const validCars = carsData.filter((car) => car && car.carID && car.overview);
+
+        setCars(validCars);
+        setFilteredCars(validCars);
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu xe:", error);
+        setFilteredCars([]); // Xóa danh sách xe nếu lỗi
       }
     };
 
     fetchCars();
-  }, [location.search]);  // Chạy lại khi có thay đổi ở location.search (tìm kiếm)
+  }, [location.search])
 
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
 
-    let filtered = [...cars];  // Sử dụng danh sách tất cả các xe để lọc
+    let filtered = [...cars];
+
     if (newFilters.type) {
-      filtered = filtered.filter((car) => car.overview.type === newFilters.type);
+      filtered = filtered.filter(car => car.overview.type === newFilters.type);
     }
 
     if (newFilters.capacity) {
-      filtered = filtered.filter((car) => car.overview.seats >= newFilters.capacity);
+      filtered = filtered.filter(car => car.overview.seats >= newFilters.capacity);
     }
 
     if (newFilters.priceRange) {
       const [min, max] = newFilters.priceRange;
       filtered = filtered.filter(
-        (car) => car.overview.pricePerDay >= min && car.overview.pricePerDay <= max
+        (car) => parseFloat(car.overview.pricePerDay) >= min && parseFloat(car.overview.pricePerDay) <= max
       );
     }
 
     setFilteredCars(filtered);
   };
 
+
   const handleSortChange = (event) => {
     const order = event.target.value;
     setSortOrder(order);
 
-    const sorted = [...filteredCars].sort((a, b) =>
-      order === "low"
-        ? a.overview.pricePerDay - b.overview.pricePerDay
-        : b.overview.pricePerDay - a.overview.pricePerDay
-    );
+    const sorted = [...filteredCars].sort((a, b) => {
+      const priceA = parseFloat(a.overview.pricePerDay);
+      const priceB = parseFloat(b.overview.pricePerDay);
+
+      if (isNaN(priceA) || isNaN(priceB)) return 0;  
+
+      return order === "low"
+        ? priceA - priceB
+        : priceB - priceA;
+    });
 
     setFilteredCars(sorted);
   };
@@ -102,23 +117,21 @@ const CarListing = () => {
               </span>
               <select onChange={handleSortChange} value={sortOrder}>
                 <option value="">Chọn</option>
-                <option value="low">Thấp đến cao</option>
-                <option value="high">Cao đến thấp</option>
+                <option value="low">Giá: Từ thấp đến cao</option>
+                <option value="high">Giá: Từ cao đến thấp</option>
               </select>
             </div>
 
             <Row>
               {filteredCars.length > 0 ? (
-                 // Loại bỏ xe không được duyệt
-                filteredCars.filter((car) => car && car.carID).map((car) => (
-                  // Kiểm tra nếu carID tồn tại
+                filteredCars.map((car) => (
                   car.carID ? (
                     <Col lg="3" md="6" sm="6" key={car.carID}>
                       <CarItem
                         item={{
                           id: car.carID,
                           carName: car.overview.model,
-                          price: car.overview.pricePerDay,
+                          price: parseFloat(car.overview.pricePerDay),
                           description: car.overview.description,
                           images: car.carImages.map((img) => img.imageUrl),
                           seats: car.overview.seats,
@@ -132,17 +145,15 @@ const CarListing = () => {
                       />
                     </Col>
                   ) : (
-                    // Xử lý trường hợp không có carID
                     <p key={Math.random()} style={{ textAlign: "center", width: "100%" }}>
-                      Không tìm thấy thông tin xe.
+                      Không tìm thấy thông tin xe
                     </p>
                   )
                 ))
               ) : (
-                <p style={{ textAlign: "center", width: "100%" }}>Không tìm thấy xe phù hợp.</p>
+                <p style={{ textAlign: "center", width: "100%" }}>Không có xe được tìm thấy</p>
               )}
             </Row>
-
           </Col>
         </Row>
       </Container>
