@@ -625,6 +625,52 @@ export const BookCar = async (
   }
 };
 
+//BOOKING HISTORY
+export const GetAllHistoryBookings = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // Lấy customerID từ thông tin người dùng, ví dụ từ req.user (nếu có)
+    const customerID = req.user?.customerID;
+
+    if (!customerID) {
+      return res.status(400).json({ message: "Customer ID is required." });
+    }
+
+    // Lấy tất cả các booking có trạng thái "completed" và customerID phù hợp, bao gồm thông tin liên quan
+    const bookings = await Booking.findAll({
+      where: { 
+        bookingStatus: "completed",
+        customerID: customerID, // Thêm điều kiện customerID vào
+      },
+      include: [
+        {
+          model: Car,
+          as: "cars", // Tên alias theo model Booking
+          include: [
+            {
+              model: Overview,
+              as: "overview", // Tên alias theo model Car
+            },
+          ],
+        },
+      ],
+    });
+
+    if (bookings) {
+      return res.status(200).json(bookings);
+    } else {
+      return res.status(404).json({ message: "No completed bookings found." });
+    }
+  } catch (error) {
+    console.error("Error fetching bookings:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
 /**------------------------------PAYMENT SECTION------------------------------------------ */
 
 // //TẠO YÊU CẦU THANH TOÁN QUA PAY OS

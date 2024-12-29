@@ -1,5 +1,5 @@
 import express from 'express';
-import { CustomerLogIn, CustomerSignUp, CustomerVerify, EditCustomerProfile, GetCustomerProfile, onRequestOTP, GetCurrentRole, addToFavorite, getAllCarsFavorite, BookCar, createPayment, handlePayOSCallback, cancelPayment, ForgotPassword, ResetPassword, GetLoyalPoints} from '../controllers';
+import { CustomerLogIn, CustomerSignUp, CustomerVerify, EditCustomerProfile, GetCustomerProfile, onRequestOTP, GetCurrentRole, addToFavorite, getAllCarsFavorite, BookCar, createPayment, handlePayOSCallback, cancelPayment, ForgotPassword, ResetPassword, GetLoyalPoints, GetAllCompleltedBookings, GetAllHistoryBookings} from '../controllers';
 import { Authenticate } from '../middlewares';
 
 const router = express.Router();
@@ -55,6 +55,9 @@ router.post('/book-car', BookCar as any);
 
 //CREATE PAYMENT
 router.post('/create-payment', createPayment as any);
+
+//BOOKING HISTORY
+router.get('/booking-history', GetAllHistoryBookings as any)
 
 //GET MONEY
 // router.get('/get-money', testMoney as any);

@@ -452,6 +452,83 @@ export const GetAllPendingBookings = async (
 };
 
 //OWNER SERVICE EMAIL
+// export const sendEmailServiceAcceptedBookingOwner = async (
+//   email: string,
+//   bookingID: number
+// ) => {
+//   const profileOwner = await Customer.findOne({ where: { email: email } });
+
+//   const profileBooking = await Booking.findByPk(bookingID);
+
+//   const carID = profileBooking?.carID;
+//   const profileOverview = await Overview.findOne({ where: { carID: carID } });
+
+//   const profileUser = await Customer.findOne({
+//     where: { customerID: profileBooking?.customerID },
+//   });
+
+//   const deposit = profileBooking?.totalAmount
+//     ? profileBooking.totalAmount * 0.3
+//     : 0;
+//   const resting = profileBooking?.totalAmount
+//     ? profileBooking.totalAmount * 0.7
+//     : 0;
+
+//   const transporter = nodemailer.createTransport({
+//     host: "smtp.gmail.com",
+//     port: 587,
+//     secure: false, // true for port 465, false for other ports
+//     auth: {
+//       user: process.env.EMAIL_USER,
+//       pass: process.env.EMAIL_PASSWORD,
+//     },
+//   });
+
+//   const info = await transporter.sendMail({
+//     from: '"CAR LINK" <carlinkwebsite@gmail.com>', // sender address
+//     to: email, // list of receivers
+//     subject: "Thông báo: Xe của bạn đã được đặt thuê trên CarLink", // Subject line
+//     text: "Phản hồi dựa trên yêu cầu của bạn", // plain text body
+//     html: `<div>Kính gửi ${profileOwner?.firstName},
+
+//                     Chúng tôi xin thông báo rằng xe của bạn đã được một khách hàng đặt thuê thông qua CarLink. Dưới đây là thông tin chi tiết về đơn thuê xe:<br><br/>
+
+//                     <ul>
+//                         <strong>Thông tin khách thuê:</strong>
+//                         <li><strong>Tên người thuê:</strong> ${profileUser?.firstName} ${profileUser?.lastName}</li>
+//                         <li><strong>Số điện thoại:</strong> ${profileUser?.phone}</li>
+//                     </ul>
+
+//                     <ul>
+//                         <strong>Thông tin đặt xe:</strong>
+//                         <li><strong>Tên xe:</strong> ${profileOverview?.model}</li>
+//                         <li><strong>Ngày thuê xe:</strong> ${profileBooking?.bookingDate}</li>
+//                         <li><strong>Đến ngày:</strong> ${profileBooking?.untilDate}</li>
+//                         <li><strong>Thời gian nhận xe: </strong>30 phút trước giờ nhận xe</li>
+//                     </ul>
+                    
+//                     <ul>
+//                         <strong>Chi phí thuê xe:</strong>
+//                         <li><strong>Tổng số tiền:</strong> ${profileBooking?.totalAmount} VND</li>
+//                         <li><strong>Số tiền người thuê đã đặt cọc:</strong> ${deposit} VND</li>
+//                         <li><strong>Số tiền người thuê cần phải thanh toán cho bạn:</strong> ${resting} VND</li>
+//                     </ul>
+
+//                     <ul>
+//                         <strong>Yêu cầu xác nhận:</strong>
+//                         <li>Vui lòng xác minh CCCD của người thuê xe so với ứng dụng VNeID tại thời điểm nhận xe.</li>
+//                         <li>Chụp ảnh CCCD của khách thuê xe và lưu trữ cẩn thận để phục vụ xử lý các trường hợp phát sinh.</li>
+//                     </ul>
+
+//                     Nếu bạn có bất kỳ thắc mắc hoặc cần hỗ trợ, vui lòng liên hệ với chúng tôi qua email: ${process.env.EMAIL_USER} hoặc số điện thoại: ${process.env.PHONE_ADMIN}.<br><br/>
+
+//                     Trân trọng,<br><br/>
+//                     Đội ngũ CarLink</div>`, // html body
+//   });
+
+//   return info;
+// };
+
 export const sendEmailServiceAcceptedBookingOwner = async (
   email: string,
   bookingID: number
@@ -483,6 +560,9 @@ export const sendEmailServiceAcceptedBookingOwner = async (
       pass: process.env.EMAIL_PASSWORD,
     },
   });
+
+  // Đường dẫn tới file hợp đồng PDF (giả sử bạn có file hợp đồng sẵn)
+  const contractPDFPath = path.join(__dirname, '..', 'images', 'hopdongthuexe.pdf'); // Cập nhật với đường dẫn thực tế
 
   const info = await transporter.sendMail({
     from: '"CAR LINK" <carlinkwebsite@gmail.com>', // sender address
@@ -520,10 +600,22 @@ export const sendEmailServiceAcceptedBookingOwner = async (
                         <li>Chụp ảnh CCCD của khách thuê xe và lưu trữ cẩn thận để phục vụ xử lý các trường hợp phát sinh.</li>
                     </ul>
 
+                    <strong>Hợp đồng thuê xe:</strong>
+                    <p>Vui lòng photo hợp đồng dưới đây và yêu cầu khách thuê điền thông tin và ký tên vào hợp đồng khi nhận xe.</p>
+                    <ul>
+                        <li>Đính kèm hợp đồng thuê xe PDF.</li>
+                    </ul>
+
                     Nếu bạn có bất kỳ thắc mắc hoặc cần hỗ trợ, vui lòng liên hệ với chúng tôi qua email: ${process.env.EMAIL_USER} hoặc số điện thoại: ${process.env.PHONE_ADMIN}.<br><br/>
 
                     Trân trọng,<br><br/>
                     Đội ngũ CarLink</div>`, // html body
+    attachments: [
+      {
+        filename: 'contract.pdf', // Tên file khi gửi
+        path: contractPDFPath, // Đường dẫn tới file hợp đồng PDF
+      },
+    ],
   });
 
   return info;
