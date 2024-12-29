@@ -1,3 +1,25 @@
+.collateral-info {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.collateral-info h4 {
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.collateral-info p {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.collateral-info p b {
+    font-weight: bold;
+}
+
+
 .attention-form {
     display: flex;
     gap: 20px;
