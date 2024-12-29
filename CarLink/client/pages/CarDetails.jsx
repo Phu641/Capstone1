@@ -17,9 +17,10 @@ const CarDetails = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [userInfo, setUserInfo] = useState({
     bookingDate: "",
-    untilDate: ""
+    untilDate: "",
+    usePoints: 0,
   });
-
+  const [loyaltyPoints, setLoyaltyPoints] = useState(0);
   const [errors, setErrors] = useState({
     address: "",
     bookingDate: "",
@@ -55,12 +56,36 @@ const CarDetails = () => {
       }
     };
 
+    const fetchLoyaltyPoints = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(
+          "http://localhost:3000/customer/loyal-points",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setLoyaltyPoints(data);
+        } else {
+          throw new Error("Failed to fetch loyal points");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     fetchCarDetails();
+    fetchLoyaltyPoints();
   }, [carID]);
 
   useEffect(() => {
     calculatePrice();
-  }, [singleCarItem, userInfo.bookingDate, userInfo.untilDate]);
+  }, [singleCarItem, userInfo.bookingDate, userInfo.untilDate, userInfo.usePoints]);
 
   const handleMediaClick = (media) => {
     const newMedia = `http://localhost:3000/images/${media || "./default-image.jpg"}`;
@@ -76,15 +101,36 @@ const CarDetails = () => {
         const days = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
         setTotalDays(days);
 
-        // Kiểm tra xem giá mỗi ngày có hợp lệ không
         const pricePerDay = singleCarItem.overview?.pricePerDay || 0;
-        setTotalPrice(days * pricePerDay);
+        let newTotalPrice = days * pricePerDay;
+
+        const pointsDiscount = userInfo.usePoints * 1000;
+        newTotalPrice -= pointsDiscount;
+
+        if (newTotalPrice < 0) {
+          newTotalPrice = 0;
+        }
+
+        setTotalPrice(newTotalPrice);
       } else {
         setTotalDays(0);
         setTotalPrice(0);
       }
     }
   };
+
+  const handlePointsChange = (e) => {
+    const points = Math.min(e.target.value, loyaltyPoints);
+    if (points > 50) {
+      points = 50;
+    }
+    setUserInfo((prev) => ({
+      ...prev,
+      usePoints: points,
+    }));
+  };
+
+
 
   const validateField = (field) => {
     const newErrors = { ...errors };
@@ -119,7 +165,7 @@ const CarDetails = () => {
     setUserInfo((prev) => ({ ...prev, [field]: value }));
     setErrors((prevErrors) => ({
       ...prevErrors,
-      [field]: "", // Xóa lỗi khi người dùng nhập
+      [field]: "",
     }));
   };
 
@@ -127,7 +173,7 @@ const CarDetails = () => {
     setAddress(value);
     setErrors((prevErrors) => ({
       ...prevErrors,
-      address: "", // Xóa lỗi khi người dùng nhập
+      address: "",
     }));
   };
 
@@ -181,6 +227,7 @@ const CarDetails = () => {
       address: deliveryOption === "delivery" ? address : "",
       pricePerDay: singleCarItem?.overview?.pricePerDay || 0,
       days: totalDays,
+      usePoints: userInfo.usePoints,
     };
 
     try {
@@ -195,7 +242,7 @@ const CarDetails = () => {
 
       if (!bookingResponse.ok) {
         const data = await bookingResponse.json();
-        toast.error(data.message || "Đặt xe không thành công, vui lòng thử lại.");
+        toast.error(data.message || "Rất tiếc, xe này đã được đặt trước. Hãy thử chọn xe khác");
         return;
       }
 
@@ -433,7 +480,19 @@ const CarDetails = () => {
             </div>
           </Col>
         </Row>
-
+        <Row>
+          <Col lg="12">
+        <div className="collateral-info mt-4">
+          <h4>Tài khoản thế chấp</h4>
+          <p>
+            Bạn sẽ để lại tài sản thế chấp <b>(tiền mặt/chuyển khoản hoặc xe máy kém cà vẹt gốc)</b> cho chủ xe khi làm thủ tục nhận xe.
+          </p>
+          <p>
+            Chủ xe sẽ gửi lại tài sản thế chấp khi bạn hoàn trả xe theo như nguyên trạng ban đầu lúc nhận xe.
+          </p>
+        </div>
+        </Col>
+        </Row>
         <Row>
           <Col lg="12" className="attention-form">
             <div>
@@ -497,6 +556,21 @@ const CarDetails = () => {
           <div className="mt-4">
             <h3>Chi tiết giá thuê:</h3>
             <p style={{ margin: '0 0 2px' }}>Số ngày thuê: <strong>{totalDays}</strong></p>
+            <div className="mt-3">
+              <label htmlFor="usePoints">Sử dụng điểm thưởng: (<span style={{color:'red'}}>*Lưu ý</span>: số điểm thưởng không được nhập lớn hơn 50)</label>
+              <input
+                type="number"
+                id="usePoints"
+                value={userInfo.usePoints}
+                onChange={handlePointsChange}
+                className="form-control"
+                min={0}
+                max={50}
+                placeholder="Nhập số điểm sử dụng"
+              />
+
+              <p>Số điểm bạn có: {loyaltyPoints}</p>
+            </div>
             <p style={{ margin: '0 0 2px' }}>Tổng chi phí: <strong>{totalPrice.toLocaleString("vi-VN")} VND</strong></p>
             <p style={{ margin: '0 0 2px' }}>
               Số tiền cần cọc <span style={{ color: '#f00' }}>(30%)</span> : <strong>{(totalPrice * 0.3).toLocaleString("vi-VN")} VND</strong>
