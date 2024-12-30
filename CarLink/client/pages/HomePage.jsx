@@ -80,6 +80,7 @@ const HomePage = () => {
             </Row>
           </Container>
         </section>
+        <Property />
         {/* <Footer/> */}
       </div>
       {/* <Companies/>
