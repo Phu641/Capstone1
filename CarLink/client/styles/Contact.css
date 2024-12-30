@@ -1,9 +1,9 @@
 .contactContainer {
     max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
+    margin: 20px auto;
+    padding: 12px 20px;
     text-align: center;
-    background: #f9f9f9;
+    background: #f4f4f4;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -11,13 +11,15 @@
 .heading {
     font-size: 2rem;
     margin-bottom: 10px;
-    font-weight: bold;
+    font-weight: 700;
+    color: #333;
 }
 
-.description {
+.description1 {
     font-size: 1.2rem;
     color: #333;
     margin-bottom: 20px;
+
 }
 
 .contactForm {
@@ -60,15 +62,15 @@
     border-radius: 6px;
     cursor: pointer;
     transition: background 0.3s ease;
-    background-color: #000d6b;
+    background-color: #1E90FF;
 }
 
 .submitButton:hover {
-    opacity: 0.6;
+    background-color: #0e72f5;
 }
 
 .contactDetails {
-    margin-top: 30px;
+    margin-top: 12px;
     font-size: 1rem;
     color: #555;
     line-height: 1.6;

@@ -202,11 +202,11 @@ const ReportForm = () => {
                             required: 'Vui lòng nhập CMND/CCCD',
                             pattern: {
                                 value: /^\d{12}$/,
-                                message: 'Sai định dạng CCCD'
+                                message: 'Sai định dạng CMND/CCCD'
                             }
                         })}
                         className={styles.input}
-                        placeholder="Nhập CCCD/CMND"
+                        placeholder="Nhập CMND/CCCD"
                     />
                     {errors.idCard && <p className={styles.errorMessage}>{errors.idCard.message}</p>}
                 </div>

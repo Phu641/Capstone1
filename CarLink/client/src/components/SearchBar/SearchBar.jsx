@@ -81,7 +81,7 @@ const SearchBar = ({ onSearch }) => {
         </div>
 
         <button className={styles.searchButton} onClick={handleSearch}>
-          Tìm kiếm
+          Tìm Kiếm
         </button>
       </div>
     </section>

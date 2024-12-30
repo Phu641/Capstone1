@@ -105,7 +105,7 @@ const UserList = () => {
                 <td>{user.idCard}</td>
                 <td>{user.phone}</td>
                 <td>
-                  <button onClick={() => deleteUser(user.customerID)} style={{ padding: "5px 10px", backgroundColor: "#dc3545", color: "#fff", border: "none", borderRadius: "3px", cursor: "pointer" }}>
+                  <button onClick={() => deleteUser(user.customerID)} style={{ padding: "5px 10px", backgroundColor: "#dc3545", color: "#fff", border: "none", borderRadius: "3px" }}>
                     Xóa
                   </button>
                 </td>

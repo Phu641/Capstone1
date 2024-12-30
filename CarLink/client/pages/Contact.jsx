@@ -1,6 +1,18 @@
 import React, { useRef } from "react";
 import emailjs from "emailjs-com";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import "../styles/Contact.css";
+
+const TOAST_CONFIG = {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  }; 
 
 const Contact = () => {
     const formRef = useRef();
@@ -10,18 +22,18 @@ const Contact = () => {
 
         emailjs
             .sendForm(
-                "service_0v1l5na",
-                "template_49sji9x",
+                "service_imf3avt",
+                "template_ipcd8mi",
                 formRef.current,
-                "v-1EKWmhCYYyHgQ2y"
+                "xHQp6Hajb2cutV_uO"
             )
             .then(
                 (result) => {
-                    alert("Email đã được gửi thành công!");
+                    toast.success("🎉 Email đã được gửi thành công!", TOAST_CONFIG);
                     console.log(result.text);
                 },
                 (error) => {
-                    alert("Đã xảy ra lỗi khi gửi email.");
+                    toast.error("Đã xảy ra lỗi khi gửi email.", TOAST_CONFIG);
                     console.log(error.text);
                 }
             );
@@ -31,8 +43,9 @@ const Contact = () => {
 
     return (
         <div className="contactContainer">
+            <ToastContainer />
             <h1 className="heading">Liên hệ với chúng tôi</h1>
-            <p className="description">
+            <p className="description1">
                 Nếu bạn có câu hỏi hoặc góp ý về website, hãy liên hệ với chúng tôi. Chúng tôi luôn sẵn sàng lắng nghe!
             </p>
             <form ref={formRef} onSubmit={sendEmail} className="contactForm">

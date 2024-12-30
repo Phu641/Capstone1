@@ -27,15 +27,14 @@
 /* Điều chỉnh kích thước nút gửi yêu cầu */
 .withdraw-section button {
   width: auto; /* Điều chỉnh để không chiếm hết chiều rộng */
-  padding: 8px 15px; /* Giảm padding */
+  padding: 8px 16px; /* Giảm padding */
   font-size: 14px; /* Giảm kích thước font chữ */
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 4px;
-  cursor: pointer;
   transition: background-color 0.3s;
-  margin-top: 10px; /* Khoảng cách với input */
+  margin: 8px 12px; /* Khoảng cách với input */
 }
 
 .withdraw-section button:hover {

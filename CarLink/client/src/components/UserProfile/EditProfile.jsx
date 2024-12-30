@@ -1,5 +1,18 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import "./EditProfile.css";
+
+const TOAST_CONFIG = {
+    position: "top-right",
+    autoClose: 2500,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  }; 
 
 const EditProfile = () => {
   const [thongTinUser, setThongTinUser] = useState({
@@ -9,6 +22,8 @@ const EditProfile = () => {
     phone: "",
     address: "",
   });
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const layThongTinUser = async () => {
@@ -45,7 +60,7 @@ const EditProfile = () => {
     const { customerID, idCard, salt, isVerified, OTP, otpExpiry, loyalPoint, createdAt, updatedAt, password, ...userToUpdate } = thongTinUser;
     
     if (!userToUpdate.firstName || !userToUpdate.lastName || !userToUpdate.email) {
-        alert("Vui lòng điền đầy đủ thông tin quan trọng!");
+        toast.warning("Vui lòng điền đầy đủ thông tin quan trọng!", TOAST_CONFIG);
         return;
     }
     
@@ -68,11 +83,13 @@ const EditProfile = () => {
             throw new Error(`Lỗi HTTP! Mã trạng thái: ${response.status}`);
         }
   
-        alert("Cập nhật thông tin thành công!");
-        window.location.href = "/profile";
+        toast.success("🎉 Cập nhật thông tin thành công!", TOAST_CONFIG);
+        setTimeout(() => {
+            navigate('/profile');
+        }, 3000);
     } catch (error) {
         console.error("Lỗi khi gọi API:", error);
-        alert("Có lỗi xảy ra: " + error.message);
+        toast.error(`😢 Có lỗi xảy ra: ${error.message}`, TOAST_CONFIG);
     }
   };
   
@@ -80,6 +97,7 @@ const EditProfile = () => {
 
   return (
     <div className="edit-profile-container">
+      <ToastContainer />
       <h1 className="edit-profile-title">Chỉnh sửa thông tin cá nhân</h1>
       <form className="edit-profile-form" onSubmit={handleSave}>
         <div className="form-group">
