@@ -28,6 +28,7 @@ import Terms from "../pages/Terms";
 import OwnerReportsPage from "../pages/OwnerReportsPage";
 import ReportHistoryPage from "../pages/ReportHistoryPage";
 import ResetPasswordForm from "./components/ForgotPassword/ResetPasswordForm";
+import BookingHistory from "./components/BookingHistoryUser/BookingHistory.jsx";
 //owner
 import ManageVehiclesPage from "../pages/ManageVehiclesPage";
 import UpdateVehiclePage from "../pages/UpdateVehiclePage";
@@ -78,6 +79,7 @@ function App() {
         <Route path="/browse-rentals" element={<BrowseRentals />} />
         <Route path="/rental-history" element={<RentalHistory />} />
         <Route path="/reset-password" element={<ResetPasswordForm />} />
+        <Route path="/booking-history" element={<BookingHistory />} />
       </Routes>
       <Footer />
       <ToastContainer />
