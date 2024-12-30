@@ -6,7 +6,6 @@ import { Container, Row, Col } from "reactstrap";
 import PropTypes from "prop-types";
 import { ToastContainer, toast } from "react-toastify";
 
-
 const useCarForm = (initialValues) => {
   const [formData, setFormData] = useState(initialValues);
   const [errors, setErrors] = useState({});
@@ -235,7 +234,7 @@ const AddCarForm = () => {
           type="text"
           value={formData.seats}
           onChange={handleChange}
-          options={[2, 4, 6, 8, 10, 12]}
+          options={[2, 4, 5, 7, 16]}
         />
         <FormField
           label="Giá cho thuê (*)"

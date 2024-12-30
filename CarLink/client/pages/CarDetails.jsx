@@ -62,7 +62,7 @@ const CarDetails = () => {
         toast.error("Vui lòng đăng nhập để lấy điểm thưởng.");
         return;  // Nếu không có token, dừng lại không gửi yêu cầu API
       }
-    
+
       try {
         const response = await fetch(
           "http://localhost:3000/customer/loyal-points",
@@ -72,7 +72,7 @@ const CarDetails = () => {
             },
           }
         );
-    
+
         if (response.ok) {
           const data = await response.json();
           setLoyaltyPoints(data);
@@ -83,7 +83,7 @@ const CarDetails = () => {
         console.error(error);
       }
     };
-    
+
     fetchCarDetails();
     fetchLoyaltyPoints();
   }, [carID]);
@@ -487,16 +487,16 @@ const CarDetails = () => {
         </Row>
         <Row>
           <Col lg="12">
-        <div className="collateral-info mt-4">
-          <h4>Tài khoản thế chấp</h4>
-          <p>
-            Bạn sẽ để lại tài sản thế chấp <b>(tiền mặt/chuyển khoản hoặc xe máy kém cà vẹt gốc)</b> cho chủ xe khi làm thủ tục nhận xe.
-          </p>
-          <p>
-            Chủ xe sẽ gửi lại tài sản thế chấp khi bạn hoàn trả xe theo như nguyên trạng ban đầu lúc nhận xe.
-          </p>
-        </div>
-        </Col>
+            <div className="collateral-info mt-4">
+              <h4>Tài khoản thế chấp</h4>
+              <p>
+                Bạn sẽ để lại tài sản thế chấp <b>15 triệu (tiền mặt/chuyển khoản hoặc xe máy kèm cà vẹt gốc)</b> cho chủ xe khi làm thủ tục nhận xe.
+              </p>
+              <p>
+                Chủ xe sẽ gửi lại tài sản thế chấp khi bạn hoàn trả xe theo như nguyên trạng ban đầu lúc nhận xe.
+              </p>
+            </div>
+          </Col>
         </Row>
         <Row>
           <Col lg="12" className="attention-form">
@@ -532,12 +532,12 @@ const CarDetails = () => {
                 <tbody>
                   <tr>
                     <td>Phí vượt giới hạn</td>
-                    <td>5,000đ/km</td>
+                    <td>10,000đ/km</td>
                     <td>Phụ phí phát sinh nếu lộ trình di chuyển vượt quá 350km khi thuê xe 1 ngày</td>
                   </tr>
                   <tr>
                     <td>Phí quá giờ</td>
-                    <td>90,000đ/h</td>
+                    <td>100,000đ/h</td>
                     <td>Phụ phí phát sinh nếu hoàn trả xe trễ giờ. Trường hợp trễ quá 4 giờ, phụ phí thêm 1 ngày thuê</td>
                   </tr>
                   <tr>
@@ -562,7 +562,7 @@ const CarDetails = () => {
             <h3>Chi tiết giá thuê:</h3>
             <p style={{ margin: '0 0 2px' }}>Số ngày thuê: <strong>{totalDays}</strong></p>
             <div className="mt-3">
-              <label htmlFor="usePoints">Sử dụng điểm thưởng: (<span style={{color:'red'}}>*Lưu ý</span>: số điểm thưởng không được nhập lớn hơn 50)</label>
+              <label htmlFor="usePoints">Sử dụng điểm thưởng: (<span style={{ color: 'red' }}>*Lưu ý</span>: số điểm thưởng không được nhập lớn hơn 50)</label>
               <input
                 type="number"
                 id="usePoints"
