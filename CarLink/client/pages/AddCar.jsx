@@ -45,32 +45,45 @@ const useCarForm = (initialValues) => {
 
   const validateForm = () => {
     const newErrors = {};
-
+  
     // Kiểm tra các trường còn lại
     if (!formData.model.trim()) newErrors.model = "Mẫu xe không được để trống.";
     if (!formData.type.trim()) newErrors.type = "Loại xe không được để trống.";
-    if (!formData.year.trim() || isNaN(formData.year) || parseInt(formData.year) <= 0)
-      newErrors.year = "NămSX không hợp lệ (không là số âm hoặc để trống).";
-    if (!formData.pricePerDay.trim() || isNaN(formData.pricePerDay) || parseInt(formData.pricePerDay) <= 0)
-      newErrors.pricePerDay = "Giá cho thuê không hợp lệ (không thể là số âm hoặc để trống)";
+    if (!formData.year.trim()) {
+      newErrors.year = "Năm SX không được để trống.";
+    } else if (isNaN(formData.year)) {
+      newErrors.year = "Năm SX phải là một số hợp lệ.";
+    } else if (parseInt(formData.year) <= 0) {
+      newErrors.year = "Năm SX không hợp lệ (không là số âm hoặc bằng 0).";
+    } else if (parseInt(formData.year) > 2025) {
+      newErrors.year = "Năm SX không thể lớn hơn 2025.";
+    }    
+    
+    if (!formData.pricePerDay.trim()) {
+      newErrors.pricePerDay = "Giá cho thuê không được để trống.";
+    } else if (isNaN(formData.pricePerDay)) {
+      newErrors.pricePerDay = "Giá cho thuê phải là một số hợp lệ.";
+    } else if (parseInt(formData.pricePerDay) <= 0) {
+      newErrors.pricePerDay = "Giá cho thuê không hợp lệ (không thể là số âm hoặc bằng 0).";
+    }
+  
     if (!formData.address.trim())
       newErrors.address = "Địa chỉ không được để trống.";
-
+  
     // Kiểm tra hình thức nhận xe
     if (!formData.selfPickUp && !formData.delivery) {
       newErrors.pickupMethod = "Bạn phải chọn ít nhất một hình thức nhận xe.";
     }
-
+  
     if (!formData.agreeTerms) {
       newErrors.agreeTerms = "Bạn phải đồng ý với các chú ý đăng xe";
     }
-
+  
     console.log(newErrors);
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
-
+  
   return {
     formData,
     errors,
@@ -84,7 +97,7 @@ const useCarForm = (initialValues) => {
 
 const AddCarForm = () => {
   const initialValues = {
-    model: "BWN x5",
+    model: "",
     type: "Sport",
     year: "2022",
     transmission: "Số sàn",
