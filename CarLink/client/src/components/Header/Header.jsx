@@ -11,9 +11,9 @@ import {
   FaGavel,
   FaShieldAlt,
   FaTools,
-  FaCalculator,
+  FaHistory,
   FaHeart,
-  FaFileAlt
+  FaFileAlt,
 } from "react-icons/fa";
 
 const NAV_LINKS = [
@@ -35,29 +35,32 @@ const Header = () => {
 
   const fetchUserProfile = async (token) => {
     try {
-      const response = await fetch('http://localhost:3000/customer/profile', {
-        headers: { 'Authorization': `Bearer ${token}` }
+      const response = await fetch("http://localhost:3000/customer/profile", {
+        headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
       setUserInfo(data);
-      localStorage.setItem('userInfo', JSON.stringify(data));
+      localStorage.setItem("userInfo", JSON.stringify(data));
 
-      const roleResponse = await fetch('http://localhost:3000/customer/check-role', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+      const roleResponse = await fetch(
+        "http://localhost:3000/customer/check-role",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       if (roleResponse.ok) {
         const roleData = await roleResponse.json();
         setUserRole(roleData.role);
       }
     } catch (error) {
-      console.error('Error fetching user info:', error);
+      console.error("Error fetching user info:", error);
       handleLogout();
     }
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
       fetchUserProfile(token);
     }
@@ -75,8 +78,8 @@ const Header = () => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isNavVisible]);
 
   const handleLogout = () => {
@@ -87,10 +90,10 @@ const Header = () => {
         setUserInfo(null);
         setUserRole(null);
         setIsNavVisible(false);
-        navigate('/login');
+        navigate("/login");
       }, 100);
     } catch (error) {
-      console.error('Lỗi khi đăng xuất:', error);
+      console.error("Lỗi khi đăng xuất:", error);
       localStorage.clear();
     }
   };
@@ -99,21 +102,41 @@ const Header = () => {
     const baseItems = [
       { path: "/profile", icon: FaCarAlt, text: "Thông tin của bạn" },
       { path: "/add-car", icon: FaCarAlt, text: "Đăng xe cho thuê" },
-      { path: "/favorites", icon: FaHeart, text: "Danh sách xe yêu thích của bạn" },
-      { path: "/how-it-works", icon: FaQuestionCircle, text: "CarLink hoạt động như thế nào?" },
-      { path: "/gift-cards", icon: FaGift, text: "Voucher" },
-      { path: "/contact-support", icon: FaPhone, text: "Liên hệ hỗ trợ" },
-      { path: "/legal", icon: FaGavel, text: "Chính sách" },
-      { path: "/insurance", icon: FaShieldAlt, text: "Bảo hiểm và bảo dưỡng" },
-      { path: "/host-tools", icon: FaTools, text: "Công cụ" },
-      { path: "/calculator", icon: FaCalculator, text: "Máy tính" },
+      {
+        path: "/favorites",
+        icon: FaHeart,
+        text: "Danh sách xe yêu thích của bạn",
+      },
+      // {
+      //   path: "/how-it-works",
+      //   icon: FaQuestionCircle,
+      //   text: "CarLink hoạt động như thế nào?",
+      // },
+      // { path: "/gift-cards", icon: FaGift, text: "Voucher" },
+      { path: "/booking-history", icon: FaHistory, text: "Lịch sử thuê xe" },
+      // { path: "/contact-support", icon: FaPhone, text: "Liên hệ hỗ trợ" },
+      // { path: "/legal", icon: FaGavel, text: "Chính sách" },
+      // { path: "/insurance", icon: FaShieldAlt, text: "Bảo hiểm và bảo dưỡng" },
+      // { path: "/host-tools", icon: FaTools, text: "Công cụ" },
     ];
 
-    if (userRole === 'owner') {
-      baseItems.splice(1, 0, { path: `/report/:bookingID`, icon: FaFileAlt, text: "Báo cáo" });
-      baseItems.splice(2, 0, { path: `/DashboardOwner`, icon: FaUserCircle, text: "Quản lý" });
-    } else if (userRole === 'admin') {
-      baseItems.splice(2, 0, { path: `/DashboardAdmin`, icon: FaUserCircle, text: "Quản lý" });
+    if (userRole === "owner") {
+      baseItems.splice(1, 0, {
+        path: `/report/:bookingID`,
+        icon: FaFileAlt,
+        text: "Báo cáo",
+      });
+      baseItems.splice(2, 0, {
+        path: `/DashboardOwner`,
+        icon: FaUserCircle,
+        text: "Quản lý",
+      });
+    } else if (userRole === "admin") {
+      baseItems.splice(2, 0, {
+        path: `/DashboardAdmin`,
+        icon: FaUserCircle,
+        text: "Quản lý",
+      });
     }
 
     return baseItems;
@@ -123,50 +146,59 @@ const Header = () => {
     <ul>
       {!userInfo && (
         <>
-          <li><Link to="/login">Đăng nhập</Link></li>
-          <li><Link to="/signup">Đăng ký</Link></li>
+          <li>
+            <Link to="/login">Đăng nhập</Link>
+          </li>
+          <li>
+            <Link to="/signup">Đăng ký</Link>
+          </li>
           <li>
             <Link to="/login">
-              <FaCarAlt />Trở thành đối tác
+              <FaCarAlt />
+              Trở thành đối tác
             </Link>
           </li>
         </>
       )}
-      {userInfo && getMenuItems().map(({ path, icon: Icon, text }) => (
-        <li key={path}>
-          <Link to={path}>
-            <Icon />{text}
-          </Link>
-        </li>
-      ))}
+      {userInfo &&
+        getMenuItems().map(({ path, icon: Icon, text }) => (
+          <li key={path}>
+            <Link to={path}>
+              <Icon />
+              {text}
+            </Link>
+          </li>
+        ))}
     </ul>
   );
 
   useEffect(() => {
     const checkUserRole = async () => {
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem("token");
         if (!token) {
           setUserRole(null);
           return;
         }
 
-        const response = await fetch('http://localhost:3000/customer/check-role', {
-          headers: {
-            'Authorization': `Bearer ${token}`
+        const response = await fetch(
+          "http://localhost:3000/customer/check-role",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        });
+        );
 
         if (!response.ok) {
-          throw new Error('Failed to fetch role');
+          throw new Error("Failed to fetch role");
         }
 
         const data = await response.json();
         setUserRole(data.role);
-
       } catch (error) {
-        console.error('Error checking role:', error);
-        localStorage.removeItem('token');
+        console.error("Error checking role:", error);
+        localStorage.removeItem("token");
         setUserRole(null);
       }
     };
@@ -192,12 +224,19 @@ const Header = () => {
 
       <div className={styles.actions}>
         {!userInfo && (
-          <button className={styles.becomeHost} onClick={() => navigate("/login")}>
+          <button
+            className={styles.becomeHost}
+            onClick={() => navigate("/login")}
+          >
             Trở thành đối tác
           </button>
         )}
 
-        <div className={styles.menuIcon} onClick={() => setIsNavVisible(!isNavVisible)} ref={menuIconRef}>
+        <div
+          className={styles.menuIcon}
+          onClick={() => setIsNavVisible(!isNavVisible)}
+          ref={menuIconRef}
+        >
           <FaBars className={styles.hamburgerIcon} />
         </div>
 
@@ -211,7 +250,10 @@ const Header = () => {
             </button>
           </>
         ) : (
-          <div className={styles.userSection} onClick={() => navigate("/login")}>
+          <div
+            className={styles.userSection}
+            onClick={() => navigate("/login")}
+          >
             <FaUserCircle className={styles.avatarIcon} />
           </div>
         )}

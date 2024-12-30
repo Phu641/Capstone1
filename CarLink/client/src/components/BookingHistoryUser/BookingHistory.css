@@ -1,0 +1,91 @@
+/* Container Styling */
+.booking-history-container {
+    font-family: "Arial", sans-serif;
+    margin: 20px;
+    color: #333;
+  }
+  
+  .booking-history-title {
+    text-align: center;
+    margin-top: 20px;
+    color: #444;
+    font-size: 24px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+  }
+  
+  /* Table Styling */
+  .booking-history-table {
+    width: 90%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Header Styling */
+  .booking-history-table th {
+    background: linear-gradient(to right, #1877f2, #1877f2);
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: left;
+    padding: 12px 15px;
+    text-transform: uppercase;
+  }
+  
+  /* Cell Styling */
+  .booking-history-table td {
+    padding: 12px 15px;
+    font-size: 14px;
+    color: #333;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  /* Row Styling */
+  .booking-history-table tr {
+    transition: background-color 0.3s ease;
+  }
+  
+  .booking-history-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .booking-history-table tr:nth-child(odd) {
+    background-color: #ffffff;
+  }
+  
+  /* Hover Effect */
+  .booking-history-table tr:hover {
+    background-color: #f1f1f1;
+    transform: scale(1.01);
+    transition: background-color 0.3s, transform 0.2s ease;
+  }
+  
+  /* Highlighted Status Row */
+  .booking-history-table td.status {
+    font-weight: bold;
+    text-transform: capitalize;
+    text-align: center;
+  }
+  
+  .booking-history-table td.status.completed {
+    color: #4a5bca; /* Green for completed */
+  }
+  
+  .booking-history-table td.status.pending {
+    color: #ff9800; /* Orange for pending */
+  }
+  
+  .booking-history-table td.status.canceled {
+    color: #f44336; /* Red for canceled */
+  }
+  
+  /* Rounded Corners for Table */
+  .booking-history-table {
+    border-radius: 8px;
+    overflow: hidden;
+  }
