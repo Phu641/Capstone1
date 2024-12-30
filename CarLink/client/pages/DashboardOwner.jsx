@@ -41,28 +41,41 @@ const DashboardOwner = () => {
     }
   };
 
-  // Lấy doanh thu và số lượt thuê
-  const fetchStatistics = async () => {
+  // Lấy doanh thu tháng và số lượt thuê
+  const fetchRevenueAndRentals = async () => {
     try {
-      const response = await fetch("http://localhost:3000/owner/statistics", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        "http://localhost:3000/owner/all-completed-bookings",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (!response.ok) {
-        throw new Error("Không thể lấy dữ liệu thống kê từ server");
+        throw new Error(
+          "Không thể lấy dữ liệu doanh thu và lượt thuê từ server"
+        );
       }
 
-      const data = await response.json();
+      const bookings = await response.json();
+      const totalRevenue = bookings
+        .filter((booking) => booking.bookingStatus === "completed")
+        .reduce((sum, booking) => sum + parseInt(booking.totalAmount, 10), 0);
+
+      const totalRentals = bookings.filter(
+        (booking) => booking.bookingStatus === "completed"
+      ).length;
+
       setStats((prevStats) => ({
         ...prevStats,
-        totalRentalsOwner: data.totalRentals,
-        revenueOwner: data.revenue,
+        revenueOwner: totalRevenue * 0.9, // Trừ 10% phí
+        totalRentalsOwner: totalRentals,
       }));
     } catch (error) {
-      console.error("Lỗi khi lấy dữ liệu thống kê:", error);
+      console.error("Lỗi khi lấy doanh thu và lượt thuê:", error);
     }
   };
 
@@ -131,7 +144,7 @@ const DashboardOwner = () => {
 
   useEffect(() => {
     fetchCarData();
-    fetchStatistics();
+    fetchRevenueAndRentals();
     fetchBalance();
   }, []);
 

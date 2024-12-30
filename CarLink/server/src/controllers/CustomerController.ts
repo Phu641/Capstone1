@@ -119,10 +119,7 @@ export const CustomerSignUp = async (
 };
 
 //CUSTOMER LOG IN
-export const CustomerLogIn = async (
-  req: Request,
-  res: Response
-) => {
+export const CustomerLogIn = async (req: Request, res: Response) => {
   const loginInputs = plainToClass(UserLoginInputs, req.body);
 
   const loginErrors = await validate(loginInputs, {
@@ -164,12 +161,8 @@ export const CustomerLogIn = async (
   return res.status(404).json("Sai email hoặc mật khẩu!");
 };
 
-
 //FORGOT
-export const ForgotPassword = async (
-  req: Request,
-  res: Response
-) => {
+export const ForgotPassword = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
 
@@ -180,7 +173,9 @@ export const ForgotPassword = async (
     // Kiểm tra email có tồn tại không
     const customer = await Customer.findOne({ where: { email } });
     if (!customer) {
-      return res.status(404).json({ message: "Email không tồn tại trong hệ thống." });
+      return res
+        .status(404)
+        .json({ message: "Email không tồn tại trong hệ thống." });
     }
 
     // Tạo mã OTP
@@ -195,7 +190,8 @@ export const ForgotPassword = async (
     const emailInfo = await sendEmailService(email, OTP);
 
     return res.status(200).json({
-      message: "Mã OTP đã được gửi tới email của bạn. Vui lòng kiểm tra hộp thư.",
+      message:
+        "Mã OTP đã được gửi tới email của bạn. Vui lòng kiểm tra hộp thư.",
       emailInfo, // Dùng để debug nếu cần
     });
   } catch (error) {
@@ -207,7 +203,6 @@ export const ForgotPassword = async (
   }
 };
 
-
 //RESET PASSWORD
 export const ResetPassword = async (req: Request, res: Response) => {
   try {
@@ -215,7 +210,9 @@ export const ResetPassword = async (req: Request, res: Response) => {
 
     // 1. Kiểm tra thông tin đầu vào
     if (!email || !otp || !newPassword) {
-      return res.status(400).json({ message: "Thiếu thông tin đầu vào (email/otp/newPassword)." });
+      return res
+        .status(400)
+        .json({ message: "Thiếu thông tin đầu vào (email/otp/newPassword)." });
     }
     if (typeof newPassword !== "string" || !newPassword.trim()) {
       return res.status(400).json({ message: "Mật khẩu mới không hợp lệ." });
@@ -224,16 +221,20 @@ export const ResetPassword = async (req: Request, res: Response) => {
     // 2. Tìm user theo email
     const customer = await Customer.findOne({ where: { email } });
     if (!customer) {
-      return res.status(404).json({ message: "Email không tồn tại trong hệ thống." });
+      return res
+        .status(404)
+        .json({ message: "Email không tồn tại trong hệ thống." });
     }
 
     // 3. Kiểm tra OTP còn hiệu lực
     if (customer.OTP !== otp || new Date() > new Date(customer.otpExpiry)) {
-      return res.status(400).json({ message: "Mã OTP không hợp lệ hoặc đã hết hạn." });
+      return res
+        .status(400)
+        .json({ message: "Mã OTP không hợp lệ hoặc đã hết hạn." });
     }
 
     // 4. Tạo salt mới
-    const salt = await GenerateSalt(); 
+    const salt = await GenerateSalt();
     // hoặc có thể truyền rounds: await bcrypt.genSalt(10);
     // hoặc nếu bạn muốn xài lại salt cũ thì: const salt = customer.salt; (ít khuyến khích về bảo mật)
 
@@ -246,10 +247,14 @@ export const ResetPassword = async (req: Request, res: Response) => {
     await customer.save();
 
     // 7. Phản hồi về client
-    return res.status(200).json({ message: "Mật khẩu đã được đặt lại thành công." });
+    return res
+      .status(200)
+      .json({ message: "Mật khẩu đã được đặt lại thành công." });
   } catch (error) {
     console.error("Lỗi đặt lại mật khẩu:", error);
-    return res.status(500).json({ message: "Đã xảy ra lỗi. Vui lòng thử lại sau." });
+    return res
+      .status(500)
+      .json({ message: "Đã xảy ra lỗi. Vui lòng thử lại sau." });
   }
 };
 
@@ -536,46 +541,44 @@ export const getAllCarsFavorite = async (
 /**------------------------------BOOKING SECTION------------------------------------------ */
 
 //GET LOYAL POINT
-export const GetLoyalPoints = async(req: Request, res: Response) => {
-
+export const GetLoyalPoints = async (req: Request, res: Response) => {
   const user = req.user;
 
-  if(user) {
-
+  if (user) {
     const customer = await Customer.findByPk(user.customerID);
 
     const result = customer?.loyalPoint;
 
     return res.status(200).json(result);
-
-  } else return res.status(500).json('Người dùng chưa đăng nhập!');
-
-}
+  } else return res.status(500).json("Người dùng chưa đăng nhập!");
+};
 
 //BOOK CAR
-export const BookCar = async (
-  req: Request,
-  res: Response
-) => {
+export const BookCar = async (req: Request, res: Response) => {
   const user = req.user;
-  const { carID, bookingDate, untilDate, pricePerDay, days, usePoints } = req.body;
+  const { carID, bookingDate, untilDate, pricePerDay, days, usePoints } =
+    req.body;
 
   try {
-
     const booking = await Booking.findOne({
       where: {
         carID: carID,
-        bookingStatus: 'pending'
-      }
+        bookingStatus: "pending",
+      },
     });
-    
-    if(booking) return res.status(400).json('Xe này hiện đã có người thanh toán cọc nhanh hơn bạn một chút, hãy thử lại sau 5 phút nhé!');
+
+    if (booking)
+      return res
+        .status(400)
+        .json(
+          "Xe này hiện đã có người thanh toán cọc nhanh hơn bạn một chút, hãy thử lại sau 5 phút nhé!"
+        );
 
     //Discount
     const baseAmount = pricePerDay * days;
 
     const pointValue = 1000;
-    let discount = 0; 
+    let discount = 0;
     let finalAmount = baseAmount;
 
     const customer = await Customer.findByPk(user?.customerID);
@@ -606,7 +609,6 @@ export const BookCar = async (
 
     if (car) {
       if (!car.booked) {
-
         const booking = await Booking.create({
           customerID: user?.customerID,
           carID,
@@ -641,7 +643,7 @@ export const GetAllHistoryBookings = async (
 
     // Lấy tất cả các booking có trạng thái "completed" và customerID phù hợp, bao gồm thông tin liên quan
     const bookings = await Booking.findAll({
-      where: { 
+      where: {
         bookingStatus: "completed",
         customerID: customerID, // Thêm điều kiện customerID vào
       },
@@ -669,7 +671,6 @@ export const GetAllHistoryBookings = async (
     return res.status(500).json({ error: "Internal server error" });
   }
 };
-
 
 /**------------------------------PAYMENT SECTION------------------------------------------ */
 
@@ -816,9 +817,6 @@ export const createPaymentPayos = async (
   }
 };
 
-
-
-
 //CREATE PAYMENT
 export const createPayment = async (req: Request, res: Response) => {
   const amount = req.body.amount;
@@ -874,8 +872,6 @@ export const createPayment = async (req: Request, res: Response) => {
   }
 };
 
-
-
 // Cập nhật số dư của ví sau khi giao dịch thành công
 export const updateWallet = async (
   walletID: number,
@@ -924,36 +920,31 @@ export const handlePayOSCallback = async (req: Request, res: Response) => {
     });
 
     if (transaction) {
-
-      if(transaction.status === 'Phí dịch vụ ban đầu')  {
-
+      if (transaction.status === "Phí dịch vụ ban đầu") {
         const wallet = await Wallet.findByPk(transaction.walletID);
 
-        const owner = await Customer.findOne({where: {customerID: wallet?.customerID}});
+        const owner = await Customer.findOne({
+          where: { customerID: wallet?.customerID },
+        });
 
         // Find car with pending payment and isAvailable is NULL
         const car = await Car.findOne({
           where: {
             customerID: owner?.customerID,
-            isAvailable: null // Add the condition for isAvailable being NULL
-          }
+            isAvailable: null, // Add the condition for isAvailable being NULL
+          },
         });
 
-        if(car) car.isAvailable = false;
+        if (car) car.isAvailable = false;
 
         await car?.save();
-
-      } 
-      else if(transaction.status === 'Đang thanh toán bằng PayOS') {
-
+      } else if (transaction.status === "Đang thanh toán bằng PayOS") {
         await updateWallet(transaction.walletID, amount, orderCode);
 
         await AcceptBooking(transaction.bookingID);
-
       }
 
       return res.status(200).send("OK"); // Phản hồi thành công về cho PayOS
-
     } else {
       console.log("Transaction not found in database.");
       return res
@@ -972,7 +963,6 @@ export const handlePayOSCallback = async (req: Request, res: Response) => {
   res.json();
 };
 
-
 //CANCEL
 export const cancelPayment = async (req: Request, res: Response) => {
   const { paymentRequestId } = req.params;
@@ -983,7 +973,10 @@ export const cancelPayment = async (req: Request, res: Response) => {
 
   try {
     // Gọi hàm từ thư viện PayOS
-    const response = await payOS.cancelPaymentLink(paymentRequestId, 'Quá hạn thanh toán, vui lòng tạo gioa dịch mới!');
+    const response = await payOS.cancelPaymentLink(
+      paymentRequestId,
+      "Quá hạn thanh toán, vui lòng tạo gioa dịch mới!"
+    );
 
     return res.status(200).json({
       message: "Payment link successfully canceled",
@@ -994,7 +987,7 @@ export const cancelPayment = async (req: Request, res: Response) => {
 
     // Xử lý lỗi từ PayOS
     return res.status(500).json({
-      message: error|| "An error occurred",
+      message: error || "An error occurred",
     });
   }
 };
