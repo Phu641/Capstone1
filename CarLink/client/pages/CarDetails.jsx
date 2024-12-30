@@ -57,8 +57,13 @@ const CarDetails = () => {
     };
 
     const fetchLoyaltyPoints = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("Vui lòng đăng nhập để lấy điểm thưởng.");
+        return;  // Nếu không có token, dừng lại không gửi yêu cầu API
+      }
+    
       try {
-        const token = localStorage.getItem("token");
         const response = await fetch(
           "http://localhost:3000/customer/loyal-points",
           {
@@ -67,7 +72,7 @@ const CarDetails = () => {
             },
           }
         );
-
+    
         if (response.ok) {
           const data = await response.json();
           setLoyaltyPoints(data);
@@ -78,7 +83,7 @@ const CarDetails = () => {
         console.error(error);
       }
     };
-
+    
     fetchCarDetails();
     fetchLoyaltyPoints();
   }, [carID]);
@@ -120,7 +125,7 @@ const CarDetails = () => {
   };
 
   const handlePointsChange = (e) => {
-    const points = Math.min(e.target.value, loyaltyPoints);
+    var points = Math.min(e.target.value, loyaltyPoints);
     if (points > 50) {
       points = 50;
     }
