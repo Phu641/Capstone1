@@ -60,29 +60,10 @@ const SearchBar = ({ onSearch }) => {
           )}
         </div>
 
-        <div className={styles.inputContainer}>
-          <FaCalendarAlt className={styles.icon} />
-          <DatePicker
-            selected={startDate}
-            onChange={(date) => setStartDate(date)}
-            showTimeSelect
-            dateFormat="Pp"
-          />
-        </div>
-
-        <div className={styles.inputContainer}>
-          <FaCalendarAlt className={styles.icon} />
-          <DatePicker
-            selected={endDate}
-            onChange={(date) => setEndDate(date)}
-            showTimeSelect
-            dateFormat="Pp"
-          />
-        </div>
-
         <button className={styles.searchButton} onClick={handleSearch}>
           Tìm Kiếm
         </button>
+
       </div>
     </section>
   );

@@ -1,15 +1,15 @@
 // import React, { useEffect, useState } from "react";
 // import { useNavigate } from "react-router-dom";
-// import "../styles/WithdrawApprovalPage.css";
 // import { toast } from "react-toastify";
+// import "../styles/WithdrawApprovalPage.css";
 
 // const WithdrawApprovalPage = () => {
 //   const navigate = useNavigate();
+//   const [activePage, setActivePage] = useState("WithdrawOwner");
 //   const [pendingWithdrawRequests, setPendingWithdrawRequests] = useState([]);
 //   const [completedWithdrawRequests, setCompletedWithdrawRequests] = useState(
 //     []
 //   );
-//   const [searchCustomerID, setSearchCustomerID] = useState("");
 //   const [otpInputs, setOtpInputs] = useState({});
 
 //   useEffect(() => {
@@ -61,7 +61,7 @@
 //         }
 
 //         const response = await fetch(
-//           "http://localhost:3000/admin/completed-withdraw",
+//           "http://localhost:3000/admin/approval-withdraw",
 //           {
 //             method: "GET",
 //             headers: {
@@ -124,11 +124,9 @@
 //       toast.success(
 //         data.message || "Yêu cầu rút tiền đã được duyệt thành công."
 //       );
-//       setPendingWithdrawRequests(
-//         pendingWithdrawRequests.filter(
-//           (request) => request.withdrawID !== withdrawID
-//         )
-//       );
+
+//       // Reload the page after approval
+//       window.location.reload();
 //     } catch (error) {
 //       console.error("Lỗi khi gọi API:", error);
 //       toast.error("Đã xảy ra lỗi khi duyệt yêu cầu. Vui lòng thử lại sau.");
@@ -138,7 +136,7 @@
 //   const handleConfirmOTP = async (withdrawID) => {
 //     try {
 //       const token = localStorage.getItem("token");
-//       const otp = otpInputs[withdrawID];
+//       const otp = otpInputs[withdrawID]; // Lấy OTP theo đúng withdrawID
 
 //       if (!token) {
 //         toast.error("Không tìm thấy token admin. Vui lòng đăng nhập lại.");
@@ -159,7 +157,7 @@
 //             "Content-Type": "application/json",
 //             Authorization: `Bearer ${token}`,
 //           },
-//           body: JSON.stringify({ withdrawID, OTP: otp }),
+//           body: JSON.stringify({ withdrawID, OTP: Number(otp) }), // Chuyển OTP thành số
 //         }
 //       );
 
@@ -186,96 +184,136 @@
 //     }
 //   };
 
-//   return (
-//     <div className="withdraw-approval-container">
-//       <h2>Duyệt yêu cầu rút tiền</h2>
-//       <div className="withdraw-tables-container">
-//         <div className="withdraw-table pending-table">
-//           <h3>Yêu cầu rút tiền đang chờ duyệt</h3>
-//           {pendingWithdrawRequests.length === 0 ? (
-//             <p>Không có yêu cầu rút tiền nào cần duyệt.</p>
-//           ) : (
-//             <table className="withdraw-requests-table">
-//               <thead>
-//                 <tr>
-//                   <th>Withdraw ID</th>
-//                   <th>Customer ID</th>
-//                   <th>Số tiền</th>
-//                   <th>Trạng thái</th>
-//                   <th>Ngày yêu cầu</th>
-//                   <th>Hành động</th>
-//                 </tr>
-//               </thead>
-//               <tbody>
-//                 {pendingWithdrawRequests.map((request) => (
-//                   <tr key={request.withdrawID}>
-//                     <td>{request.withdrawID}</td>
-//                     <td>{request.customerID}</td>
-//                     <td>{request.amount} VND</td>
-//                     <td>{request.status}</td>
-//                     <td>{new Date(request.createdAt).toLocaleDateString()}</td>
-//                     <td>
-//                       <button
-//                         onClick={() => handleApproveRequest(request.withdrawID)}
-//                       >
-//                         Duyệt
-//                       </button>
-//                     </td>
-//                   </tr>
-//                 ))}
-//               </tbody>
-//             </table>
-//           )}
-//         </div>
+//   const handlePageClick = (page) => {
+//     setActivePage(page);
+//     navigate(`/${page}`);
+//   };
 
-//         <div className="withdraw-table completed-table">
-//           <h3>Xác nhận hoàn thành</h3>
-//           {completedWithdrawRequests.length === 0 ? (
-//             <p>Không có yêu cầu nào đã hoàn thành.</p>
-//           ) : (
-//             <table className="withdraw-requests-table">
-//               <thead>
-//                 <tr>
-//                   <th>ID</th>
-//                   <th>ID KH</th>
-//                   <th>Số tiền</th>
-//                   <th>Ngày yêu cầu</th>
-//                   <th>Mã OTP</th>
-//                   <th>Hành động</th>
-//                 </tr>
-//               </thead>
-//               <tbody>
-//                 {completedWithdrawRequests.map((request) => (
-//                   <tr key={request.withdrawID}>
-//                     <td>{request.withdrawID}</td>
-//                     <td>{request.customerID}</td>
-//                     <td>{request.amount} VND</td>
-//                     <td>{new Date(request.createdAt).toLocaleDateString()}</td>
-//                     <td>
-//                       <input
-//                         type="text"
-//                         value={otpInputs[request.withdrawID] || ""}
-//                         onChange={(e) =>
-//                           setOtpInputs({
-//                             ...otpInputs,
-//                             [request.withdrawID]: e.target.value,
-//                           })
-//                         }
-//                         placeholder="Nhập mã OTP"
-//                       />
-//                     </td>
-//                     <td>
-//                       <button
-//                         onClick={() => handleConfirmOTP(request.withdrawID)}
-//                       >
-//                         Xác Nhận
-//                       </button>
-//                     </td>
+//   return (
+//     <div className="dashboard-container">
+//       <div className="sidebar">
+//         <ul>
+//           <li
+//             className={activePage === "DashboardAdmin" ? "active" : ""}
+//             onClick={() => handlePageClick("DashboardAdmin")}
+//           >
+//             Dashboard
+//           </li>
+//           <li
+//             className={activePage === "manageUsers" ? "active" : ""}
+//             onClick={() => handlePageClick("user-list")}
+//           >
+//             Quản lý người dùng
+//           </li>
+//           <li
+//             className={activePage === "vehicleApproval" ? "active" : ""}
+//             onClick={() => handlePageClick("vehicle-approval")}
+//           >
+//             Duyệt xe
+//           </li>
+//           <li
+//             className={activePage === "WithdrawOwner" ? "active" : ""}
+//             onClick={() => handlePageClick("withdraw-approval")}
+//           >
+//             Yêu cầu rút tiền
+//           </li>
+//         </ul>
+//       </div>
+
+//       <div className="main-content">
+//         <h2>Duyệt yêu cầu rút tiền</h2>
+//         <div className="withdraw-tables-container">
+//           <div className="withdraw-table pending-table">
+//             <h3>Yêu cầu rút tiền đang chờ duyệt</h3>
+//             {pendingWithdrawRequests.length === 0 ? (
+//               <p>Không có yêu cầu rút tiền nào cần duyệt.</p>
+//             ) : (
+//               <table>
+//                 <thead>
+//                   <tr>
+//                     <th>ID Rút tiền</th>
+//                     <th>ID Chủ xe</th>
+//                     <th>Số tiền</th>
+//                     <th>Thời gian yêu cầu</th>
+//                     <th>Hành động</th>
 //                   </tr>
-//                 ))}
-//               </tbody>
-//             </table>
-//           )}
+//                 </thead>
+//                 <tbody>
+//                   {pendingWithdrawRequests.map((request) => (
+//                     <tr key={request.withdrawID}>
+//                       <td>{request.withdrawID}</td>
+//                       <td>{request.customerID}</td>
+//                       <td>{request.amount}</td>
+//                       <td>
+//                         {new Date(request.createdAt).toLocaleDateString()}
+//                       </td>
+//                       <td>
+//                         <button
+//                           onClick={() =>
+//                             handleApproveRequest(request.withdrawID)
+//                           }
+//                         >
+//                           Duyệt
+//                         </button>
+//                       </td>
+//                     </tr>
+//                   ))}
+//                 </tbody>
+//               </table>
+//             )}
+//           </div>
+
+//           <div className="withdraw-table completed-table">
+//             <h3>Xác nhận hoàn thành</h3>
+//             {completedWithdrawRequests.length === 0 ? (
+//               <p>Không có yêu cầu nào đã hoàn thành.</p>
+//             ) : (
+//               <table>
+//                 <thead>
+//                   <tr>
+//                     <th>ID Rút tiền</th>
+//                     <th>ID Khách hàng</th>
+//                     <th>Số tiền</th>
+//                     <th>Thời gian yêu cầu</th>
+//                     <th>Mã OTP</th>
+//                     <th>Hành động</th>
+//                   </tr>
+//                 </thead>
+//                 <tbody>
+//                   {completedWithdrawRequests.map((request) => (
+//                     <tr key={request.withdrawID}>
+//                       <td>{request.withdrawID}</td>
+//                       <td>{request.customerID}</td>
+//                       <td>{request.amount}</td>
+//                       <td>
+//                         {new Date(request.createdAt).toLocaleDateString()}
+//                       </td>
+//                       <td>
+//                         <input
+//                           type="text"
+//                           value={otpInputs[request.withdrawID] || ""}
+//                           onChange={(e) =>
+//                             setOtpInputs({
+//                               ...otpInputs,
+//                               [request.withdrawID]: e.target.value,
+//                             })
+//                           }
+//                           placeholder="Nhập mã OTP"
+//                         />
+//                       </td>
+//                       <td>
+//                         <button
+//                           onClick={() => handleConfirmOTP(request.withdrawID)}
+//                         >
+//                           Xác Nhận
+//                         </button>
+//                       </td>
+//                     </tr>
+//                   ))}
+//                 </tbody>
+//               </table>
+//             )}
+//           </div>
 //         </div>
 //       </div>
 //     </div>
@@ -285,8 +323,8 @@
 // export default WithdrawApprovalPage;
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/WithdrawApprovalPage.css";
 import { toast } from "react-toastify";
+import "../styles/WithdrawApprovalPage.css";
 
 const WithdrawApprovalPage = () => {
   const navigate = useNavigate();
@@ -346,7 +384,7 @@ const WithdrawApprovalPage = () => {
         }
 
         const response = await fetch(
-          "http://localhost:3000/admin/completed-withdraw",
+          "http://localhost:3000/admin/approval-withdraw",
           {
             method: "GET",
             headers: {
@@ -409,11 +447,9 @@ const WithdrawApprovalPage = () => {
       toast.success(
         data.message || "Yêu cầu rút tiền đã được duyệt thành công."
       );
-      setPendingWithdrawRequests(
-        pendingWithdrawRequests.filter(
-          (request) => request.withdrawID !== withdrawID
-        )
-      );
+
+      // Reload the page after approval
+      window.location.reload();
     } catch (error) {
       console.error("Lỗi khi gọi API:", error);
       toast.error("Đã xảy ra lỗi khi duyệt yêu cầu. Vui lòng thử lại sau.");
@@ -423,7 +459,7 @@ const WithdrawApprovalPage = () => {
   const handleConfirmOTP = async (withdrawID) => {
     try {
       const token = localStorage.getItem("token");
-      const otp = otpInputs[withdrawID];
+      const otp = otpInputs[withdrawID]; // Lấy OTP theo đúng withdrawID
 
       if (!token) {
         toast.error("Không tìm thấy token admin. Vui lòng đăng nhập lại.");
@@ -444,7 +480,7 @@ const WithdrawApprovalPage = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ withdrawID, OTP: otp }),
+          body: JSON.stringify({ withdrawID, OTP: Number(otp) }), // Chuyển OTP thành số
         }
       );
 
@@ -471,69 +507,43 @@ const WithdrawApprovalPage = () => {
     }
   };
 
-  const handlePageClick = (page) => {
-    setActivePage(page);
-    switch (page) {
-      case "DashboardAdmin":
-        navigate("/DashboardAdmin");
-        break;
-      case "manageUsers":
-        navigate("/user-list");
-        break;
-      case "vehicleApproval":
-        navigate("/vehicle-approval");
-        break;
-      case "WithdrawOwner":
-        navigate("/withdraw-approval");
-        break;
-      case "ownerReports":
-        navigate("/owner-reports");
-        break;
-      case "reportHistory":
-        navigate("/report-history");
-        break;
-      default:
-        break;
-    }
-  };
-
   return (
     <div className="dashboard-container">
       <div className="sidebar">
         <ul>
           <li
             className={activePage === "DashboardAdmin" ? "active" : ""}
-            onClick={() => handlePageClick("DashboardAdmin")}
+            onClick={() => navigate("/DashboardAdmin")}
           >
             Dashboard
           </li>
           <li
             className={activePage === "manageUsers" ? "active" : ""}
-            onClick={() => handlePageClick("manageUsers")}
+            onClick={() => navigate("/user-list")}
           >
             Quản lý người dùng
           </li>
           <li
             className={activePage === "vehicleApproval" ? "active" : ""}
-            onClick={() => handlePageClick("vehicleApproval")}
+            onClick={() => navigate("/vehicle-approval")}
           >
             Duyệt xe
           </li>
           <li
             className={activePage === "WithdrawOwner" ? "active" : ""}
-            onClick={() => handlePageClick("WithdrawOwner")}
+            onClick={() => navigate("/withdraw-approval")}
           >
             Yêu cầu rút tiền
           </li>
           <li
             className={activePage === "ownerReports" ? "active" : ""}
-            onClick={() => handlePageClick("ownerReports")}
+            onClick={() => navigate("/owner-reports")}
           >
             Báo cáo của chủ xe
           </li>
           <li
             className={activePage === "reportHistory" ? "active" : ""}
-            onClick={() => handlePageClick("reportHistory")}
+            onClick={() => navigate("/report-history")}
           >
             Lịch sử báo cáo
           </li>
@@ -548,14 +558,13 @@ const WithdrawApprovalPage = () => {
             {pendingWithdrawRequests.length === 0 ? (
               <p>Không có yêu cầu rút tiền nào cần duyệt.</p>
             ) : (
-              <table className="withdraw-requests-table">
+              <table>
                 <thead>
                   <tr>
-                    <th>Withdraw ID</th>
-                    <th>Customer ID</th>
+                    <th>ID Rút tiền</th>
+                    <th>ID Chủ xe</th>
                     <th>Số tiền</th>
-                    <th>Trạng thái</th>
-                    <th>Ngày yêu cầu</th>
+                    <th>Thời gian yêu cầu</th>
                     <th>Hành động</th>
                   </tr>
                 </thead>
@@ -564,8 +573,7 @@ const WithdrawApprovalPage = () => {
                     <tr key={request.withdrawID}>
                       <td>{request.withdrawID}</td>
                       <td>{request.customerID}</td>
-                      <td>{request.amount} VND</td>
-                      <td>{request.status}</td>
+                      <td>{request.amount}</td>
                       <td>
                         {new Date(request.createdAt).toLocaleDateString()}
                       </td>
@@ -590,13 +598,13 @@ const WithdrawApprovalPage = () => {
             {completedWithdrawRequests.length === 0 ? (
               <p>Không có yêu cầu nào đã hoàn thành.</p>
             ) : (
-              <table className="withdraw-requests-table">
+              <table>
                 <thead>
                   <tr>
-                    <th>ID</th>
-                    <th>ID KH</th>
+                    <th>ID Rút tiền</th>
+                    <th>ID Khách hàng</th>
                     <th>Số tiền</th>
-                    <th>Ngày yêu cầu</th>
+                    <th>Thời gian yêu cầu</th>
                     <th>Mã OTP</th>
                     <th>Hành động</th>
                   </tr>
@@ -606,7 +614,7 @@ const WithdrawApprovalPage = () => {
                     <tr key={request.withdrawID}>
                       <td>{request.withdrawID}</td>
                       <td>{request.customerID}</td>
-                      <td>{request.amount} VND</td>
+                      <td>{request.amount}</td>
                       <td>
                         {new Date(request.createdAt).toLocaleDateString()}
                       </td>

@@ -80,3 +80,102 @@
 .withdraw-section table td:last-child {
   width: 150px;
 }
+
+/* Định dạng tổng thể cho phần yêu cầu rút tiền */
+.withdraw-section {
+  margin-top: 30px;
+  padding: 25px;
+  background-color: #ffffff; /* Màu nền trắng */
+  border-radius: 10px; /* Góc bo tròn */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+}
+
+/* Tiêu đề phần rút tiền */
+.withdraw-section h3 {
+  font-size: 22px;
+  font-weight: bold;
+  color: #495057; /* Màu chữ xám đậm */
+  margin-bottom: 20px; /* Khoảng cách dưới */
+  border-bottom: 2px solid #e9ecef; /* Đường kẻ phân cách */
+  padding-bottom: 10px;
+}
+
+/* Ô nhập số tiền */
+.withdraw-section input[type="number"] {
+  width: 300px; /* Rộng hơn để dễ nhập liệu */
+  padding: 10px; /* Padding thoải mái hơn */
+  font-size: 16px;
+  border: 1px solid #ced4da; /* Viền xám nhạt */
+  border-radius: 5px; /* Góc bo tròn nhẹ */
+  box-sizing: border-box; /* Gồm padding trong width */
+  transition: border-color 0.3s ease;
+}
+
+/* Hiệu ứng hover khi vào ô nhập */
+.withdraw-section input[type="number"]:hover,
+.withdraw-section input[type="number"]:focus {
+  border-color: #007bff; /* Đổi viền sang màu xanh */
+  outline: none; /* Loại bỏ outline mặc định */
+}
+
+/* Nút gửi yêu cầu */
+.withdraw-section button {
+  display: inline-block; /* Giữ kích thước vừa phải */
+  padding: 10px 20px; /* Padding thoải mái */
+  font-size: 16px;
+  background-color: #007bff; /* Màu nền xanh */
+  color: white; /* Màu chữ trắng */
+  border: none; /* Loại bỏ viền */
+  border-radius: 5px; /* Góc bo tròn */
+  cursor: pointer;
+  margin-left: 10px; /* Khoảng cách với ô nhập */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hiệu ứng hover nút */
+.withdraw-section button:hover {
+  background-color: #0056b3; /* Màu xanh đậm hơn */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Đổ bóng khi hover */
+}
+
+/* Thông báo thành công */
+.withdraw-section p {
+  color: #28a745; /* Màu xanh lá */
+  font-size: 16px;
+  margin-top: 15px;
+}
+
+/* Bảng lịch sử yêu cầu rút tiền */
+.withdraw-section table {
+  width: 100%;
+  margin-top: 25px;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+/* Header của bảng */
+.withdraw-section table th {
+  padding: 12px;
+  background-color: #f8f9fa; /* Màu nền nhạt */
+  font-size: 15px;
+  color: #343a40; /* Màu chữ đậm */
+  border-bottom: 2px solid #dee2e6;
+}
+
+/* Ô dữ liệu của bảng */
+.withdraw-section table td {
+  padding: 10px;
+  font-size: 14px;
+  color: #495057; /* Màu chữ xám */
+  border-bottom: 1px solid #e9ecef;
+}
+
+/* Màu nền xen kẽ */
+.withdraw-section table tr:nth-child(even) td {
+  background-color: #f8f9fa;
+}
+
+/* Căn chỉnh cột cuối cùng */
+.withdraw-section table td:last-child {
+  text-align: center;
+}

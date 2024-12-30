@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "reactstrap";
 import { toast } from "react-toastify";
+import "../styles/CarDetails.css";
 
 const CarDetails = () => {
   const { carID } = useParams();
@@ -15,16 +16,12 @@ const CarDetails = () => {
   const [totalDays, setTotalDays] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [userInfo, setUserInfo] = useState({
-    email: "",
-    phoneNumber: "",
-    note: "",
     bookingDate: "",
-    untilDate: ""
+    untilDate: "",
+    usePoints: 0,
   });
-
+  const [loyaltyPoints, setLoyaltyPoints] = useState(0);
   const [errors, setErrors] = useState({
-    email: "",
-    phoneNumber: "",
     address: "",
     bookingDate: "",
     untilDate: ""
@@ -59,12 +56,36 @@ const CarDetails = () => {
       }
     };
 
+    const fetchLoyaltyPoints = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(
+          "http://localhost:3000/customer/loyal-points",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setLoyaltyPoints(data);
+        } else {
+          throw new Error("Failed to fetch loyal points");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     fetchCarDetails();
+    fetchLoyaltyPoints();
   }, [carID]);
 
   useEffect(() => {
     calculatePrice();
-  }, [singleCarItem, userInfo.bookingDate, userInfo.untilDate]);
+  }, [singleCarItem, userInfo.bookingDate, userInfo.untilDate, userInfo.usePoints]);
 
   const handleMediaClick = (media) => {
     const newMedia = `http://localhost:3000/images/${media || "./default-image.jpg"}`;
@@ -80,9 +101,17 @@ const CarDetails = () => {
         const days = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
         setTotalDays(days);
 
-        // Kiểm tra xem giá mỗi ngày có hợp lệ không
         const pricePerDay = singleCarItem.overview?.pricePerDay || 0;
-        setTotalPrice(days * pricePerDay);
+        let newTotalPrice = days * pricePerDay;
+
+        const pointsDiscount = userInfo.usePoints * 1000;
+        newTotalPrice -= pointsDiscount;
+
+        if (newTotalPrice < 0) {
+          newTotalPrice = 0;
+        }
+
+        setTotalPrice(newTotalPrice);
       } else {
         setTotalDays(0);
         setTotalPrice(0);
@@ -90,29 +119,22 @@ const CarDetails = () => {
     }
   };
 
+  const handlePointsChange = (e) => {
+    const points = Math.min(e.target.value, loyaltyPoints);
+    if (points > 50) {
+      points = 50;
+    }
+    setUserInfo((prev) => ({
+      ...prev,
+      usePoints: points,
+    }));
+  };
+
+
+
   const validateField = (field) => {
     const newErrors = { ...errors };
     let isValid = true;
-
-    if (field === "email") {
-      if (!userInfo.email.trim()) {
-        newErrors.email = "Email không được để trống.";
-        isValid = false;
-      } else if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(userInfo.email)) {
-        newErrors.email = "Email không hợp lệ.";
-        isValid = false;
-      }
-    }
-
-    if (field === "phoneNumber") {
-      if (!userInfo.phoneNumber.trim()) {
-        newErrors.phoneNumber = "Số điện thoại không được để trống.";
-        isValid = false;
-      } else if (!/^[0-9]{10,15}$/.test(userInfo.phoneNumber)) {
-        newErrors.phoneNumber = "Số điện thoại không hợp lệ";
-        isValid = false;
-      }
-    }
 
     if (field === "address" && deliveryOption === "delivery") {
       if (!address.trim()) {
@@ -143,7 +165,7 @@ const CarDetails = () => {
     setUserInfo((prev) => ({ ...prev, [field]: value }));
     setErrors((prevErrors) => ({
       ...prevErrors,
-      [field]: "", // Xóa lỗi khi người dùng nhập
+      [field]: "",
     }));
   };
 
@@ -151,31 +173,13 @@ const CarDetails = () => {
     setAddress(value);
     setErrors((prevErrors) => ({
       ...prevErrors,
-      address: "", // Xóa lỗi khi người dùng nhập
+      address: "",
     }));
   };
 
   const validateAllFields = () => {
     const newErrors = {};
     let isValid = true;
-
-    // Kiểm tra email
-    if (!userInfo.email.trim()) {
-      newErrors.email = "Email không được để trống.";
-      isValid = false;
-    } else if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(userInfo.email)) {
-      newErrors.email = "Email không hợp lệ.";
-      isValid = false;
-    }
-
-    // Kiểm tra số điện thoại
-    if (!userInfo.phoneNumber.trim()) {
-      newErrors.phoneNumber = "Số điện thoại không được để trống.";
-      isValid = false;
-    } else if (!/^[0-9]{10,15}$/.test(userInfo.phoneNumber)) {
-      newErrors.phoneNumber = "Số điện thoại không hợp lệ.";
-      isValid = false;
-    }
 
     // Kiểm tra địa chỉ (nếu chọn giao hàng)
     if (deliveryOption === "delivery" && !address.trim()) {
@@ -223,6 +227,7 @@ const CarDetails = () => {
       address: deliveryOption === "delivery" ? address : "",
       pricePerDay: singleCarItem?.overview?.pricePerDay || 0,
       days: totalDays,
+      usePoints: userInfo.usePoints,
     };
 
     try {
@@ -237,7 +242,7 @@ const CarDetails = () => {
 
       if (!bookingResponse.ok) {
         const data = await bookingResponse.json();
-        toast.error(data.message || "Đặt xe không thành công, vui lòng thử lại.");
+        toast.error(data.message || "Rất tiếc, xe này đã được đặt trước. Hãy thử chọn xe khác");
         return;
       }
 
@@ -379,46 +384,7 @@ const CarDetails = () => {
           </Col>
         </Row>
         <Row>
-          <h3 className="mt-5">Thông tin của bạn</h3>
-          <Col lg="12">
-            <div className="d-flex gap-3">
-              <Col lg="6">
-                <div className="mt-3">
-                  <label htmlFor="userEmail">
-                    Email: <span style={{ color: "red" }}>*</span>
-                  </label>
-                  <input
-                    type="email"
-                    id="userEmail"
-                    placeholder="Nhập email"
-                    value={userInfo.email}
-                    onInput={() => setErrors((prevErrors) => ({ ...prevErrors, email: "" }))}
-                    onBlur={() => validateField("email")}
-                    onChange={(e) => handleInputChange("email", e.target.value)}
-                    className="form-control"
-                  />
-                  {errors.email && <p style={{ color: "red", marginBottom: "0" }}>{errors.email}</p>}
-                </div>
-              </Col>
-              <Col lg="6">
-                <div className="mt-3">
-                  <label htmlFor="userPhoneNumber">
-                    Số điện thoại: <span style={{ color: "red" }}>*</span>
-                  </label>
-                  <input
-                    type="tel"
-                    id="userPhoneNumber"
-                    placeholder="Nhập số điện thoại"
-                    value={userInfo.phoneNumber}
-                    onBlur={() => validateField("phoneNumber")}
-                    onChange={(e) => handleInputChange("phoneNumber", e.target.value)}
-                    className="form-control"
-                  />
-                  {errors.phoneNumber && <p style={{ color: "red", marginBottom: "0" }}>{errors.phoneNumber}</p>}
-                </div>
-              </Col>
-            </div>
-          </Col>
+          <h3 className="mt-5">Thông tin ngày đặt xe</h3>
           <Col lg="12">
             <div className="d-flex gap-3">
               <Col lg="6">
@@ -502,11 +468,11 @@ const CarDetails = () => {
             <h3 className="mt-5">Giấy tờ thuê xe</h3>
             <p>
               Trước khi nhận xe, bạn cần cung cấp bằng lái xe và một trong những tài liệu sau:
-              <b> Chứng minh nhân dân hoặc hộ chiếu</b>.
+              <b> Căn cước công dân và VNeID</b>.
             </p>
             <div className="d-flex align-items-center mt-3">
-              <i className="ri-file-list-3-line" style={{ color: "#f9a826", fontSize: "2rem", marginRight: "10px" }}></i>
-              <span>Bằng lái xe</span>
+              <i className="ri-apps-line" style={{ color: "#f9a826", fontSize: "2rem", marginRight: "10px" }}></i>
+              <span>VNeID</span>
             </div>
             <div className="d-flex align-items-center mt-3">
               <i className="ri-file-list-3-line" style={{ color: "#f9a826", fontSize: "2rem", marginRight: "10px" }}></i>
@@ -514,22 +480,74 @@ const CarDetails = () => {
             </div>
           </Col>
         </Row>
-
         <Row>
           <Col lg="12">
-            <h3 className="mt-5">Chú ý sử dụng</h3>
-            <ul>
-              <li>Sử dụng xe đúng mục đích.</li>
-              <li>Không sử dụng xe thuê vào mục đích phi pháp, trái pháp luật.</li>
-              <li>Không sử dụng xe thuê để cầm cố, thế chấp.</li>
-              <li>Không hút thuốc, nhả kẹo cao su, xả rác trong xe.</li>
-              <li>Không chở hàng quốc cấm dễ cháy nổ.</li>
-              <li>Không chở thực phẩm nặng mùi trong xe.</li>
-              <li>
-                Khi trả xe, nếu xe bẩn hoặc có mùi trong xe, khách hàng vui lòng vệ sinh xe sạch sẽ
-                hoặc gửi phụ thu phí vệ sinh xe.
-              </li>
-            </ul>
+        <div className="collateral-info mt-4">
+          <h4>Tài khoản thế chấp</h4>
+          <p>
+            Bạn sẽ để lại tài sản thế chấp <b>(tiền mặt/chuyển khoản hoặc xe máy kém cà vẹt gốc)</b> cho chủ xe khi làm thủ tục nhận xe.
+          </p>
+          <p>
+            Chủ xe sẽ gửi lại tài sản thế chấp khi bạn hoàn trả xe theo như nguyên trạng ban đầu lúc nhận xe.
+          </p>
+        </div>
+        </Col>
+        </Row>
+        <Row>
+          <Col lg="12" className="attention-form">
+            <div>
+              <h3 className="mt-3 attention-title">Chú ý sử dụng</h3>
+              <ul>
+                <li style={{ marginTop: '30px' }}>Sử dụng xe đúng mục đích.</li>
+                <li>Không sử dụng xe thuê vào mục đích phi pháp, trái pháp luật.</li>
+                <li>Không sử dụng xe thuê để cầm cố, thế chấp.</li>
+                <li>Không hút thuốc, nhả kẹo cao su, xả rác trong xe.</li>
+                <li>Không chở hàng quốc cấm dễ cháy nổ.</li>
+                <li>Không chở thực phẩm nặng mùi trong xe.</li>
+                <li>
+                  Khi trả xe, nếu xe bẩn hoặc có mùi trong xe, khách hàng vui lòng vệ sinh xe sạch sẽ
+                  hoặc gửi phụ thu phí vệ sinh xe.
+                </li>
+                <li>
+                  <span style={{ color: 'red' }}>Chú ý:</span> Nếu vi phạm sẽ bị phụ thu
+                </li>
+              </ul>
+            </div>
+            <div>
+
+              <h3 className="fees-title mt-3">Phụ phí có thể phát sinh</h3>
+              <table className="fees-table">
+                <thead>
+                  <tr>
+                    <th>Loại Phí</th>
+                    <th>Phí</th>
+                    <th>Chú Thích</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Phí vượt giới hạn</td>
+                    <td>5,000đ/km</td>
+                    <td>Phụ phí phát sinh nếu lộ trình di chuyển vượt quá 350km khi thuê xe 1 ngày</td>
+                  </tr>
+                  <tr>
+                    <td>Phí quá giờ</td>
+                    <td>90,000đ/h</td>
+                    <td>Phụ phí phát sinh nếu hoàn trả xe trễ giờ. Trường hợp trễ quá 4 giờ, phụ phí thêm 1 ngày thuê</td>
+                  </tr>
+                  <tr>
+                    <td>Phí vệ sinh</td>
+                    <td>120,000đ</td>
+                    <td>Phụ phí phát sinh khi xe hoàn trả không đảm bảo vệ sinh (nhiều vết bẩn, bùn cát, sình lầy...)</td>
+                  </tr>
+                  <tr>
+                    <td>Phí khử mùi</td>
+                    <td>400,000đ</td>
+                    <td>Phụ phí phát sinh khi xe hoàn trả bị ám mùi khó chịu (mùi thuốc lá, thực phẩm nặng mùi...)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </Col>
         </Row>
 
@@ -538,6 +556,21 @@ const CarDetails = () => {
           <div className="mt-4">
             <h3>Chi tiết giá thuê:</h3>
             <p style={{ margin: '0 0 2px' }}>Số ngày thuê: <strong>{totalDays}</strong></p>
+            <div className="mt-3">
+              <label htmlFor="usePoints">Sử dụng điểm thưởng: (<span style={{color:'red'}}>*Lưu ý</span>: số điểm thưởng không được nhập lớn hơn 50)</label>
+              <input
+                type="number"
+                id="usePoints"
+                value={userInfo.usePoints}
+                onChange={handlePointsChange}
+                className="form-control"
+                min={0}
+                max={50}
+                placeholder="Nhập số điểm sử dụng"
+              />
+
+              <p>Số điểm bạn có: {loyaltyPoints}</p>
+            </div>
             <p style={{ margin: '0 0 2px' }}>Tổng chi phí: <strong>{totalPrice.toLocaleString("vi-VN")} VND</strong></p>
             <p style={{ margin: '0 0 2px' }}>
               Số tiền cần cọc <span style={{ color: '#f00' }}>(30%)</span> : <strong>{(totalPrice * 0.3).toLocaleString("vi-VN")} VND</strong>
@@ -570,7 +603,7 @@ const CarDetails = () => {
           Đặt ngay
         </button>
       </Container>
-    </section>
+    </section >
   );
 };
 

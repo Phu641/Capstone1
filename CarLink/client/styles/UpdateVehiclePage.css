@@ -1,96 +1,123 @@
 /* Container cho form chỉnh sửa thông tin xe */
 .edit-form-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Tiêu đề của form chỉnh sửa */
-  .edit-form-container h3 {
-    text-align: center;
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-  
-  /* Các trường đầu vào của form */
-  .edit-form-container input[type="text"],
-  .edit-form-container input[type="number"],
-  .edit-form-container textarea,
-  .edit-form-container input[type="file"] {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
-  
-  /* Nút lưu thay đổi */
-  .edit-form-container button {
-    width: 100%;
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    font-size: 16px;
-    margin-top: 20px;
-  }
-  
-  /* Hiệu ứng khi hover qua nút lưu */
-  .edit-form-container button:hover {
-    background-color: #45a049;
-  }
-  
-  /* Label cho các trường của form */
-  .edit-form-container label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 5px;
-  }
-  
-  /* Điều chỉnh textarea để nó cao hơn */
-  .edit-form-container textarea {
-    height: 100px;
-    resize: vertical;
-  }
-  
-  /* Định dạng cho file input để trông gọn gàng hơn */
-  .edit-form-container input[type="file"] {
-    padding: 5px;
-    border: none;
-  }
-  
-  /* Phần hiển thị trạng thái đang tải dữ liệu */
-  .edit-form-container .loading {
-    text-align: center;
-    font-size: 18px;
-    color: #555;
-    margin-top: 20px;
-  }
-  
-  /* CSS cho hiển thị ảnh và video xem trước */
-  .preview-media {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 20px;
-  }
-  
-  .preview-image, .preview-video {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .preview-video {
-    background-color: #000;
-  }
-  
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Tiêu đề của form chỉnh sửa */
+.edit-form-container h3 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Các trường đầu vào của form */
+.edit-form-container input[type="text"],
+.edit-form-container input[type="number"],
+.edit-form-container textarea,
+.edit-form-container input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* Nút lưu thay đổi */
+.edit-form-container button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+/* Hiệu ứng khi hover qua nút lưu */
+.edit-form-container button:hover {
+  background-color: #45a049;
+}
+
+/* Label cho các trường của form */
+.edit-form-container label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Điều chỉnh textarea để nó cao hơn */
+.edit-form-container textarea {
+  height: 100px;
+  resize: vertical;
+}
+
+/* Định dạng cho file input để trông gọn gàng hơn */
+.edit-form-container input[type="file"] {
+  padding: 5px;
+  border: none;
+}
+
+/* Phần hiển thị trạng thái đang tải dữ liệu */
+.edit-form-container .loading {
+  text-align: center;
+  font-size: 18px;
+  color: #555;
+  margin-top: 20px;
+}
+
+/* CSS cho hiển thị ảnh và video xem trước */
+.preview-media {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.preview-image,
+.preview-video {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.preview-video {
+  background-color: #000;
+}
+
+/* Nút tải lên với gradient màu */
+.upload-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 15px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff; /* Màu chữ trắng */
+  background: linear-gradient(135deg, #112d60, #b6c0c5); /* Gradient màu */
+  border: none;
+  border-radius: 8px; /* Bo góc nhẹ */
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  margin: 10px auto;
+  max-width: 200px;
+  display: block;
+}
+
+.upload-button:hover {
+  transform: scale(1.05); /* Tăng nhẹ kích thước khi hover */
+}
+
+.upload-button svg {
+  margin-right: 5px; /* Khoảng cách giữa icon và text */
+}

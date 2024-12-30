@@ -1,0 +1,58 @@
+.collateral-info {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.collateral-info h4 {
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.collateral-info p {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.collateral-info p b {
+    font-weight: bold;
+}
+
+
+.attention-form {
+    display: flex;
+    gap: 20px;
+    border: 3px solid #333;
+    padding-bottom: 20px;
+}
+
+.attention-title {
+    margin-bottom: 15px;
+}
+
+.fees-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.fees-table th,
+.fees-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.fees-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.fees-title {
+    margin-bottom: 15px;
+}
+
+.fees-table tr:hover {
+    background-color: #f9f9f9;
+}

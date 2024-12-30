@@ -4,30 +4,98 @@ import { calculateDistance, getCoordinates } from '../utility';
 
 
 //GET AVAILABILITY
-export const GetCarAvailability = async (req: Request, res: Response, next: NextFunction) => {
+// export const GetCarAvailability = async (req: Request, res: Response, next: NextFunction) => {
+//     try {
+//         const result = await Car.findAll({
+//             where: { isAvailable: true, booked: false },
+//             include: [
+//                 {
+//                     model: Overview,
+//                     attributes: ['model', 'type', 'year', 'transmission', 'fuelType', 'seats', 'pricePerDay', 'address', 'description']
+//                 },
+//                 {
+//                     model: Images,
+//                     attributes: ['imageUrl']
+//                 }
+//             ]
+//         });
+
+//         if (result.length > 0)   return res.status(200).json(result);
+
+//         return res.status(400).json('Không tìm thấy xe nào');
+//     } catch (error) {
+//         return res.status(500).json('Lỗi! ');
+//     }
+// };
+
+//GET AVAILABILITY WITH PAGINATION
+export const GetCarAvailability = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
-        const result = await Car.findAll({
-            where: { isAvailable: true, booked: false },
-            include: [
-                {
-                    model: Overview,
-                    attributes: ['model', 'type', 'year', 'transmission', 'fuelType', 'seats', 'pricePerDay', 'address', 'description']
-                },
-                {
-                    model: Images,
-                    attributes: ['imageUrl']
-                }
-            ]
+      // 1. Lấy tham số page & limit từ query (mặc định page=1, limit=10)
+      const page = parseInt((req.query.page as string) || "1", 10);
+      const limit = parseInt((req.query.limit as string) || "10", 10);
+  
+      // 2. Tính offset
+      const offset = (page - 1) * limit;
+  
+      // 3. Truy vấn song song:
+      //    - Lấy danh sách xe khả dụng kèm các bản ghi liên kết (Overview, Images)
+      //    - Đếm tổng số xe thoả điều kiện
+      const [result, totalCount] = await Promise.all([
+        Car.findAll({
+          where: { isAvailable: true, booked: false },
+          include: [
+            {
+              model: Overview,
+              attributes: [
+                "model",
+                "type",
+                "year",
+                "transmission",
+                "fuelType",
+                "seats",
+                "pricePerDay",
+                "address",
+                "description",
+              ],
+            },
+            {
+              model: Images,
+              attributes: ["imageUrl"],
+            },
+          ],
+          offset, // Số bản ghi bỏ qua
+          limit,  // Số bản ghi lấy
+          // order: [["createdAt", "DESC"]], // Có thể sắp xếp nếu muốn
+        }),
+        Car.count({
+          where: { isAvailable: true, booked: false },
+        }),
+      ]);
+  
+      // 4. Nếu có dữ liệu, tính totalPages và trả về
+      if (result.length > 0) {
+        const totalPages = Math.ceil(totalCount / limit);
+        return res.status(200).json({
+          data: result,
+          currentPage: page,
+          limit,
+          totalPages,
+          totalCount,
         });
-
-        if (result.length > 0)   return res.status(200).json(result);
-
-        return res.status(400).json('Không tìm thấy xe nào');
+      }
+  
+      return res.status(400).json("Không tìm thấy xe nào");
     } catch (error) {
-        return res.status(500).json('Lỗi! ');
+      console.error("Lỗi GetCarAvailability:", error);
+      return res.status(500).json("Lỗi!");
     }
-};
-
+  };
+  
 
 //GET CAR BY ID
 export const GetCarByID = async(req: Request, res: Response, next: NextFunction) => {

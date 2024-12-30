@@ -1,0 +1,86 @@
+/* RentalHistory.css */
+
+.rental-history-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.rental-history-container h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.browse-rentals-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 auto;
+}
+
+.browse-rentals-table th,
+.browse-rentals-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.browse-rentals-table th {
+  background-color: #f4f4f4;
+  color: #333;
+  font-weight: bold;
+}
+
+.browse-rentals-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.browse-rentals-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.browse-rentals-table td {
+  color: #555;
+}
+
+.browse-rentals-table th {
+  font-size: 16px;
+}
+
+.browse-rentals-table td {
+  font-size: 14px;
+}
+
+.browse-rentals-table .browse-rentals-approve-button {
+  background-color: #4caf50;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.browse-rentals-table .browse-rentals-complete-button {
+  background-color: #007bff;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.browse-rentals-table .browse-rentals-approve-button:hover {
+  background-color: #45a049;
+}
+
+.browse-rentals-table .browse-rentals-complete-button:hover {
+  background-color: #0056b3;
+}
+
+.browse-rentals-table td,
+.browse-rentals-table th {
+  white-space: nowrap;
+}
+
+.browse-rentals-container {
+  padding: 20px;
+}

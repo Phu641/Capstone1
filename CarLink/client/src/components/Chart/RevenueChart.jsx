@@ -24,7 +24,7 @@ ChartJS.register(
 );
 
 const RevenueChart = () => {
-  const [lineData, setLineData] = useState([]);
+  const [lineData, setLineData] = useState(Array(12).fill(0)); // Doanh thu từng tháng
   const [carBrandsData, setCarBrandsData] = useState({
     labels: [],
     datasets: [
@@ -44,7 +44,6 @@ const RevenueChart = () => {
   });
 
   useEffect(() => {
-    // Gọi API để lấy dữ liệu tổng doanh thu theo tháng và thị phần xe
     const fetchStats = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -53,36 +52,62 @@ const RevenueChart = () => {
           return;
         }
 
-        // Gọi API để lấy thông tin xe
-        const response = await fetch(
+        // Gọi API booking-completed
+        const bookingResponse = await fetch(
+          "http://localhost:3000/admin/booking-completed",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!bookingResponse.ok) {
+          console.error(
+            "Không thể truy cập dữ liệu booking. Vui lòng kiểm tra quyền admin."
+          );
+          return;
+        }
+
+        const bookingData = await bookingResponse.json();
+
+        // Tính doanh thu từng tháng
+        const monthlyRevenue = Array(12).fill(0); // Mảng doanh thu từ tháng 1 đến 12
+        bookingData.data.forEach((booking) => {
+          const month = new Date(booking.bookingDate).getMonth(); // Xác định tháng (0-11)
+          const amount = parseFloat(booking.totalAmount) * 0.1; // Áp dụng 10%
+          monthlyRevenue[month] += amount;
+        });
+
+        setLineData(monthlyRevenue);
+
+        // Tính toán thị phần xe (dữ liệu đã có từ trước, không thay đổi)
+        const carsResponse = await fetch(
           "http://localhost:3000/admin/all-cars-availability",
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`, // Thêm token vào header
+              Authorization: `Bearer ${token}`,
             },
           }
         );
 
-        if (!response.ok) {
+        if (!carsResponse.ok) {
           console.error(
             "Không thể truy cập dữ liệu xe. Vui lòng kiểm tra quyền admin."
           );
           return;
         }
 
-        const data = await response.json();
+        const carsData = await carsResponse.json();
 
-        // Tính toán số lượng xe cho từng model
         const carModelCount = {};
-        data.forEach((car) => {
+        carsData.forEach((car) => {
           const model = car.overview.model;
-
-          // Sử dụng Regex để tách lấy tên hãng xe (phần đầu tiên trước dấu cách)
-          const brandName = model.split(" ")[0]; // Lấy phần đầu tiên trước dấu cách
-
-          // Chuyển chữ cái đầu của tên hãng thành chữ hoa
+          const brandName = model.split(" ")[0];
           const formattedBrandName =
             brandName.charAt(0).toUpperCase() +
             brandName.slice(1).toLowerCase();
@@ -94,7 +119,6 @@ const RevenueChart = () => {
           }
         });
 
-        // Tạo dữ liệu cho biểu đồ Pie chart về thị phần các hãng xe
         const carLabels = Object.keys(carModelCount);
         const carData = Object.values(carModelCount);
 
@@ -115,9 +139,6 @@ const RevenueChart = () => {
             },
           ],
         });
-
-        // Giả lập dữ liệu lineData (doanh thu từng tháng)
-        // setLineData([12000, 15000, 13000, 18000, 20000, 22000, 24000, 21000, 25000, 23000, 26000, 27000]);
       } catch (error) {
         console.error("Lỗi khi gọi API:", error);
       }
@@ -143,7 +164,7 @@ const RevenueChart = () => {
     ],
     datasets: [
       {
-        label: "Danh thu (VND)",
+        label: "Doanh thu (VND)",
         data: lineData,
         fill: false,
         backgroundColor: "#0dcaf0",
@@ -157,7 +178,7 @@ const RevenueChart = () => {
     maintainAspectRatio: false,
     plugins: {
       legend: { position: "top" },
-      title: { display: true, text: "Tổng doanh thu theo từng tháng" },
+      title: { display: true, text: "Tổng doanh thu theo từng tháng (10%)" },
     },
   };
 

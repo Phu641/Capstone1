@@ -37,34 +37,70 @@ select {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+
 /* Features grid styling */
 /* Full-width heading styling */
 
 fieldset {
-  border: none; /* Remove the default fieldset border */
+  border: none;
+  /* Remove the default fieldset border */
   padding: 0;
 }
 
 legend {
   font-size: 16px;
   font-weight: bold;
-  margin-bottom: 10px; /* Add space below the legend */
+  margin-bottom: 10px;
+  /* Add space below the legend */
 }
 
 label {
   display: block;
-  margin-bottom: 8px; /* Add space between each checkbox */
+  margin-bottom: 8px;
+  /* Add space between each checkbox */
   font-size: 14px;
 }
 
 input[type="checkbox"] {
-  margin-right: 8px; /* Space between checkbox and label text */
+  margin-right: 8px;
+  /* Space between checkbox and label text */
   vertical-align: middle;
 }
 
 .description {
   height: 100px;
 }
+
+.grid-item {
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.error {
+  color: red;
+  margin-top: 5px;
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  font-size: 12px;
+}
+
+.checkbox-container {
+  position: relative;
+}
+
+span.error {
+  top: 38px;
+}
+
+.problem {
+  position: relative;
+}
+
+.hidden {
+  display: none;
+}
+
 
 @media (max-width: 768px) {
   .features-grid {
@@ -91,6 +127,7 @@ button {
 button:hover {
   background-color: rgb(27, 46, 143);
 }
+
 input[type="radio"] {
   margin-right: 8px;
 }
