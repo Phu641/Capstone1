@@ -60,7 +60,7 @@ const HomePage = () => {
                   textAlign: 'end',
                   marginTop: '10px',
                   textDecoration: 'underline',
-                  color: '#007bff', 
+                  color: '#007bff',
                   fontWeight: 'bold'
                 }}
               >
@@ -80,7 +80,6 @@ const HomePage = () => {
             </Row>
           </Container>
         </section>
-        <Property />
         {/* <Footer/> */}
       </div>
       {/* <Companies/>
