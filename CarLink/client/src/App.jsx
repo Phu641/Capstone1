@@ -27,6 +27,7 @@ import Privacy from "../pages/Privacy";
 import Terms from "../pages/Terms";
 import OwnerReportsPage from "../pages/OwnerReportsPage";
 import ReportHistoryPage from "../pages/ReportHistoryPage";
+import ResetPasswordForm from "./components/ForgotPassword/ResetPasswordForm";
 //owner
 import ManageVehiclesPage from "../pages/ManageVehiclesPage";
 import UpdateVehiclePage from "../pages/UpdateVehiclePage";
@@ -76,6 +77,7 @@ function App() {
         <Route path="/withdraw-approval" element={<WithdrawApprovalPage />} />
         <Route path="/browse-rentals" element={<BrowseRentals />} />
         <Route path="/rental-history" element={<RentalHistory />} />
+        <Route path="/reset-password" element={<ResetPasswordForm />} />
       </Routes>
       <Footer />
       <ToastContainer />
