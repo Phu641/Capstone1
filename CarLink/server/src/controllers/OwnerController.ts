@@ -47,7 +47,8 @@ export const AddCar = async (
       fuelType,
       seats,
       pricePerDay,
-      address
+      address,
+      description
     } = <CreateCarInputs>req.body;
 
     const owner = await FindOwner(user.customerID);
@@ -72,7 +73,7 @@ export const AddCar = async (
         seats,
         pricePerDay,
         address,
-        description: 'pending payment'
+        description,
       });
 
       const resultCar = await createdCar.save();

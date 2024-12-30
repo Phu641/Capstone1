@@ -21,4 +21,5 @@ export interface CreateCarInputs {
     highwayMPG: number;
     pricePerDay: number;
     address: string;
+    description: string;
 }
