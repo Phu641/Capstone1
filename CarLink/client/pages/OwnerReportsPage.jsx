@@ -34,7 +34,7 @@ const OwnerReportsPage = () => {
         );
 
         if (!response.ok) {
-          setError("Không thể truy cập dữ liệu báo cáo.");
+          setError(".");
           setLoading(false);
           return;
         }
@@ -160,7 +160,7 @@ const OwnerReportsPage = () => {
         {loading ? (
           <div>Đang tải dữ liệu...</div>
         ) : error ? (
-          <div>Lỗi: {error}</div>
+          <div>Hiện tại không có báo cáo nào từ chủ xe {error}</div>
         ) : reports.length === 0 ? (
           <p>Không có báo cáo nào.</p>
         ) : (
